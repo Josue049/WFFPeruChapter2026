@@ -80,4 +80,21 @@
     $('html, body').animate({ scrollTop: 0 }, 1200);
   });
 
+  const imagenes = document.querySelectorAll('.clickable-img');
+
+imagenes.forEach(img => {
+  let timer;
+  
+  img.addEventListener('touchstart', e => {
+    timer = setTimeout(() => {
+      window.open(img.src, '_blank');
+    }, 500); // 500 ms de presión larga
+  });
+
+  img.addEventListener('touchend', e => {
+    clearTimeout(timer);
+  });
+});
+
+
 })(jQuery);
