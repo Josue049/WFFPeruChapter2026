@@ -340,6 +340,7 @@ h6,
 
 .sombreadoBloque {
   box-shadow: 0 0.6rem 1.1rem rgba(0, 0, 0, .15) !important;
+  padding: 30px !important;
 }
 
 .boxShadowRosa {
@@ -564,4 +565,61 @@ body {
 p.m-0.text-uppercase {
   font-weight: 600;
   padding-top: 20px;
+}
+
+.imagen-agricultura {
+  aspect-ratio: 16 / 9;
+  min-height: auto;
+}
+
+.pd-30{
+  padding: 30px;
+}
+
+.nav-2{
+  background-color: #ff9a2b;
+  height: 25px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.nav-2 ul {
+  /* list-style: none;        */
+  display: flex;             /* horizontal */
+  justify-content: flex-end; /* hacia la derecha */
+  gap: 24px;                 /* espacio entre items */
+  padding: 0px 50px;
+  margin: 0;
+}
+
+.nav-2 li {
+  color: #ffffff;            /* letra blanca */
+  font-weight: 600;          /* letra gruesa */
+  cursor: pointer;           /* opcional, se siente más nav */
+  font-size: 14px;
+  transition: font-size 0.2s ease;
+}
+
+.nav-2 li:hover {
+  font-size: 16px;
+}
+
+.desktop769 {
+  display: block;
+}
+
+.movil769 {
+  display: none;
+}
+
+@media (max-width: 769px) {
+  .desktop769 {
+    display: none;
+  }
+
+  .movil769 {
+    display: block;
+  }
 }
