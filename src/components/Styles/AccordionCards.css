@@ -1,0 +1,82 @@
+.accordion-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 1rem;
+}
+
+.accordion-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+/* HEADER */
+.accordion-header {
+  width: 100%;
+  border: none;
+  padding: 1rem 1.2rem;
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accordion-header:hover {
+  opacity: 0.92;
+}
+
+/* ICON */
+.arrow {
+  transition: transform 0.3s ease;
+}
+
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+/* CONTENT (CLAVE) */
+.accordion-content {
+  padding: 0 1.2rem;
+  color: #333;
+  line-height: 1.6;
+  font-size: 0.95rem;
+
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+/* SOLO cuando está abierto */
+.accordion-card.open .accordion-content {
+  max-height: 300px; /* suficiente para tu texto */
+  padding: 1rem 1.2rem;
+}
+
+
+.accordion-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 1rem;
+
+  align-items: start; /* 🔥 ESTA ES LA CLAVE */
+}
+
+
+/* 📱 Responsive */
+@media (max-width: 768px) {
+  .accordion-container {
+    grid-template-columns: 1fr;
+  }
+}
