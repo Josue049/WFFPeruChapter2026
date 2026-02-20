@@ -17,7 +17,7 @@
     "title": "NuevoNuevo33333",
     "slug": "nuevonuevo33333",
     "subtitle": "NuevoJosue",
-    "date": "2026-02-01T05:00:00.000Z",
+    "date": "2026-02-01T00:00:00.000Z",
     "author": {
       "name": "GianMarco",
       "role": "Representante",
@@ -37,5 +37,31 @@
       "photo": "https://drive.google.com/open?id=1kc8SFgVb8FPi5JqkwLZLqEknJcTT8IYr"
     },
     "content": "import React, { useEffect, useState } from \"react\";\nimport Footer from \"../components/Footer\";\nimport { VocesSection } from \"../components/VocesSection\";\nimport { TopBar } from \"../components/Header/TopBar\";\nimport { NavBar } from \"../components/Header/NavBar\";\nimport { ScrollTopButton } from \"../components/ScrollTopButton\";\nimport { Article } from \"../types/article\";\n\n\nexport interface Article {\n  id: number;\n  title: string;\n  slug: string;\n  subtitle: string;\n  date: string;\n  author: {\n    name: string;\n    role: string;\n    photo: string;\n  };\n  content: string;\n}\n\nexport const Voces: React.FC = () => {\n  const [posts, setPosts] = useState<Article[]>([]);\n  const [loading, setLoading] = useState(true);\n\n  useEffect(() => {\n    fetch(\"/data/voces.json\")\n      .then((res) => res.json())\n      .then((data) => {\n        setPosts(data);\n        setLoading(false);\n      })\n      .catch((err) => {\n        console.error(\"Error cargando voces.json:\", err);\n        setLoading(false);\n      });\n  }, []);\n\n  return (\n    <>\n      <TopBar />\n      <NavBar />\n\n      <section>\n        <div className=\"voces-header\">\n          <img\n            src=\"/img/voces-logo.png\"\n            alt=\"Voces Header\"\n            style={{ maxWidth: \"400px\" }}\n          />\n        </div>\n\n        {loading ? (\n          <p style={{ textAlign: \"center\" }}>Cargando artículos...</p>\n        ) : (\n          <VocesSection posts={posts} />\n        )}\n      </section>\n\n      <Footer />\n      <ScrollTopButton />\n    </>\n  );\n};\n\nexport default Voces;\n"
+  },
+  {
+    "id": 4,
+    "title": "La ingenieria de Software es la mejor ingenieria del mundo?",
+    "slug": "la-ingenieria-de-software-es-la-mejor-ingenieria-del-mundo",
+    "subtitle": "Tengo pruebas no estoy loco",
+    "date": "2026-02-28T00:00:00.000Z",
+    "author": {
+      "name": "Josué Gutiérrez",
+      "role": "Ingeniero de Software",
+      "photo": "https://drive.google.com/open?id=19KGoIsBnOyrJE-yrAvYHOey7N6AVZKEp"
+    },
+    "content": "engo pruebas no estoy locoengo pruebas no estoy locoengo pruebas no estoy locoengo pruebas no estoy loco"
+  },
+  {
+    "id": 5,
+    "title": "Articulo 3333",
+    "slug": "articulo-3333",
+    "subtitle": "Articulo 3333",
+    "date": "2026-02-17T00:00:00.000Z",
+    "author": {
+      "name": "Olga",
+      "role": "Nuevo Olga",
+      "photo": "https://drive.google.com/open?id=1m6i_dqbyoTTb5n08M2qic4-mb8li4ND0"
+    },
+    "content": "Articulo 3333Articulo 3333Articulo 3333Articulo 3333Articulo 3333Articulo 3333Articulo 3333Articulo 3333Articulo 3333"
   }
 ]
