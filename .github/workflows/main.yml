@@ -2,7 +2,7 @@ name: Daily Voces Update
 
 on:
   schedule:
-    - cron: "19 7 * * *"  # 2:10 AM Perú (UTC-5)
+    - cron: "42 7 * * *"  # 2:10 AM Perú (UTC-5)
   workflow_dispatch:       # para poder ejecutarlo manualmente
 
 permissions:
