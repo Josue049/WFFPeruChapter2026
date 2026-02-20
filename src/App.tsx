@@ -1,4 +1,3 @@
-// import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Inicio from "./pages/inicio";
 import Nosotros from "./pages/nosotros";
 import Cienciaeinnovacion from "./pages/cienciaeinnovacion";
@@ -8,10 +7,8 @@ import Relacionamiento from "./pages/relacionamiento";
 import Comunicaciones from "./pages/comunicaciones";
 import WomensEmpowerment from "./pages/womensEmpowerment";
 import Voces from "./pages/Voces";
-// import { Articulo } from "./pages/Articulo";
-// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import Articulo from "./pages/Articulo";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
@@ -28,8 +25,6 @@ function App() {
         <Route path="/comunicaciones" element={<Comunicaciones />} />
         <Route path="/relacionamiento" element={<Relacionamiento />} />
         <Route path="/womensEmpowerment" element={<WomensEmpowerment />} />
-        <Route path="/voces" element={<Voces />} />
-        <Route path="/articulo" element={<Articulo />} />
         <Route path="/voces" element={<Voces />} />
         <Route path="/voces/:slug" element={<Articulo />} />
       </Routes>
