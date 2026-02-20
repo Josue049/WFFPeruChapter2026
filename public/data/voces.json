@@ -1,0 +1,41 @@
+[
+  {
+    "id": 1,
+    "title": "La regulación emocional en la nutrición",
+    "slug": "la-regulacion-emocional-en-la-nutricion",
+    "subtitle": "La educación en la nutrición debe incluir el aspecto psicológico.",
+    "date": "2026-02-18T00:00:00.000Z",
+    "author": {
+      "name": "Piero Nuevo",
+      "role": "Ingeniero",
+      "photo": "https://drive.google.com/open?id=1kN7ukgETfZtgGVWC0Ro59A-5TlnW5J0a"
+    },
+    "content": "Desde la mañana del 20 de enero, “El Peruano” daba cuenta del Decreto Legislativo 1696, una reforma penal que endurece las sanciones por resistencia o desobediencia a la autoridad y que, en abstracto, resulta razonable para cualquier democracia que aspire al orden. Toda comunidad política necesita reglas, y toda regla necesita autoridad; sin autoridad, la ley se convierte en un decorado retórico, y sin ley, la convivencia se reduce a un pacto precario y siempre negociable. \"Diario El Comercio. Todos los derechos reservados.\""
+  },
+  {
+    "id": 2,
+    "title": "NuevoNuevo33333",
+    "slug": "nuevonuevo33333",
+    "subtitle": "NuevoJosue",
+    "date": "2026-02-01T05:00:00.000Z",
+    "author": {
+      "name": "GianMarco",
+      "role": "Representante",
+      "photo": "https://drive.google.com/open?id=19-048P7lnkF2-_j0bgH4bWjcW8iDRJgY"
+    },
+    "content": "Desde la mañana del 20 de enero, “El Peruano” daba cuenta del Decreto Legislativo 1696, una reforma penal que endurece las sanciones por resistencia o desobediencia a la autoridad y que, en abstracto, resulta razonable para cualquier democracia que aspire al orden. Toda comunidad política necesita reglas, y toda regla necesita autoridad; sin autoridad, la ley se convierte en un decorado retórico, y sin ley, la convivencia se reduce a un pacto precario y siempre negociable. \"Diario El Comercio. Todos los derechos reservados.\"\n"
+  },
+  {
+    "id": 3,
+    "title": "Apicultura",
+    "slug": "apicultura",
+    "subtitle": "Apicultura para todos, BEE TO LIVE",
+    "date": "2026-02-10T00:00:00.000Z",
+    "author": {
+      "name": "Apicultura",
+      "role": "Representante",
+      "photo": "https://drive.google.com/open?id=1kc8SFgVb8FPi5JqkwLZLqEknJcTT8IYr"
+    },
+    "content": "import React, { useEffect, useState } from \"react\";\nimport Footer from \"../components/Footer\";\nimport { VocesSection } from \"../components/VocesSection\";\nimport { TopBar } from \"../components/Header/TopBar\";\nimport { NavBar } from \"../components/Header/NavBar\";\nimport { ScrollTopButton } from \"../components/ScrollTopButton\";\nimport { Article } from \"../types/article\";\n\n\nexport interface Article {\n  id: number;\n  title: string;\n  slug: string;\n  subtitle: string;\n  date: string;\n  author: {\n    name: string;\n    role: string;\n    photo: string;\n  };\n  content: string;\n}\n\nexport const Voces: React.FC = () => {\n  const [posts, setPosts] = useState<Article[]>([]);\n  const [loading, setLoading] = useState(true);\n\n  useEffect(() => {\n    fetch(\"/data/voces.json\")\n      .then((res) => res.json())\n      .then((data) => {\n        setPosts(data);\n        setLoading(false);\n      })\n      .catch((err) => {\n        console.error(\"Error cargando voces.json:\", err);\n        setLoading(false);\n      });\n  }, []);\n\n  return (\n    <>\n      <TopBar />\n      <NavBar />\n\n      <section>\n        <div className=\"voces-header\">\n          <img\n            src=\"/img/voces-logo.png\"\n            alt=\"Voces Header\"\n            style={{ maxWidth: \"400px\" }}\n          />\n        </div>\n\n        {loading ? (\n          <p style={{ textAlign: \"center\" }}>Cargando artículos...</p>\n        ) : (\n          <VocesSection posts={posts} />\n        )}\n      </section>\n\n      <Footer />\n      <ScrollTopButton />\n    </>\n  );\n};\n\nexport default Voces;\n"
+  }
+]
