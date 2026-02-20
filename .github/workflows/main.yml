@@ -1,9 +1,7 @@
 name: Deploy React Site
 
 on:
-  push:
-    branches:
-      - react-site   # se ejecuta solo cuando hagas push a react-site
+  workflow_dispatch:      # permite ejecutar manualmente desde GitHub
   schedule:
     - cron: "0 8 * * *"  # opcional: diario a las 8 AM UTC (3 AM Perú)
 
@@ -37,7 +35,11 @@ jobs:
       - name: Build project
         run: npm run build
 
-      # 6️⃣ Deploy a GitHub Pages
+      # 6️⃣ Crear CNAME
+      - name: Create CNAME file
+        run: echo "www.wffperuchapter.page" > dist/CNAME
+
+      # 7️⃣ Deploy a GitHub Pages
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
