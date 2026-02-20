@@ -3,7 +3,7 @@ name: Deploy React Site
 on:
   workflow_dispatch:      # permite ejecutar manualmente desde GitHub
   schedule:
-    - cron: "0 8 * * *"  # opcional: diario a las 8 AM UTC (3 AM Perú)
+    - cron: "50 7 * * *"  # Diario a las 2:50 AM Perú (UTC-5)
 
 permissions:
   contents: write
