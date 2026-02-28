@@ -3,32 +3,32 @@ export default function AreasSection() {
     {
       title: "Educación y Cultura",
       image: "img/FondoFAO4.png",
-      href: "educacionycultura",
+      href: "#/educacionycultura",
     },
     {
       title: "Ciencia e Innovación",
       image: "img/FondoFAO4.png",
-      href: "cienciaeinnovacion",
+      href: "#/cienciaeinnovacion",
     },
     {
       title: "Políticas y Gobernanza",
       image: "img/FondoFAO4.png",
-      href: "politicasygobernanza",
+      href: "#/politicasygobernanza",
     },
     {
       title: "Gestión de las comunicaciones",
       image: "img/FondoFAO4.png",
-      href: "comunicaciones",
+      href: "#/comunicaciones",
     },
     {
       title: "Relacionamiento y Gestión de Recursos",
       image: "img/FondoFAO4.png",
-      href: "relacionamiento",
+      href: "#/relacionamiento",
     },
     {
       title: "Empoderamiento Femenino",
       image: "img/FondoFAO5.png",
-      href: "womensEmpowerment",
+      href: "#/womensEmpowerment",
     },
   ]
 

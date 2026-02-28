@@ -22,38 +22,46 @@ const getDriveImage = (url: string) => {
 export const VocesSection: React.FC<Props> = ({ posts }) => {
   return (
     <div className="voces-grid">
-      {posts.map((post) => (
-        <div key={post.id} className="blog-card">
-          {post.author.photo && (
-            <img
-              src={getDriveImage(post.author.photo)}
-              alt={post.author.name}
-              className="author-photo"
-              style={{ width: "80px", borderRadius: "50%" }}
-            />
-          )}
+      {posts
+        .slice()
+        .reverse()
+        .map((post) => (
+          <Link
+            key={post.id}
+            to={`/voces/${post.slug}`}
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <div className="blog-card" key={post.id}>
+              <p style={{ fontSize: "13px", opacity: 0.6 }}>
+                {new Date(post.date).toLocaleDateString()}
+              </p>
+              <h3>{post.title}</h3>
 
-          <h3>{post.title}</h3>
+              <p style={{ fontStyle: "italic" }}>{post.subtitle}</p>
 
-          <p style={{ fontStyle: "italic" }}>{post.subtitle}</p>
+              <p style={{ fontSize: "13px", opacity: 0.6 }}>Escrito por:</p>
 
-          <p>
-            <strong>{post.author.name}</strong>
-          </p>
+              <div className="perfil-grid">
+                
+                {post.author.photo && (
+                  <img
+                    src={getDriveImage(post.author.photo)}
+                    alt={post.author.name}
+                    className="author-photo"
+                    style={{ width: "40px", filter: "grayscale(100%)" }}
+                  />
+                )}
 
-          <p style={{ fontSize: "14px", opacity: 0.7 }}>
-            {post.author.role}
-          </p>
-
-          <p style={{ fontSize: "13px", opacity: 0.6 }}>
-            {new Date(post.date).toLocaleDateString()}
-          </p>
-
-          <Link to={`/voces/${post.slug}`}>
-            Leer artículo →
+                <p className="perfilDatos-grid">
+                  <strong>{post.author.name}</strong>
+                  <p style={{ fontSize: "14px", opacity: 0.7 }}>
+                    {post.author.role}
+                  </p>
+                </p>
+              </div>
+            </div>
           </Link>
-        </div>
-      ))}
+        ))}
     </div>
   );
 };

@@ -26,6 +26,7 @@ export const Voces: React.FC = () => {
 
   return (
     <>
+    
       <TopBar />
       <NavBar />
 

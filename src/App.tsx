@@ -9,10 +9,12 @@ import WomensEmpowerment from "./pages/womensEmpowerment";
 import Voces from "./pages/Voces";
 import Articulo from "./pages/Articulo";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { ScrollToTop } from "./components/ScrollToTop";
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Inicio />} />
         <Route path="/nosotros" element={<Nosotros />} />

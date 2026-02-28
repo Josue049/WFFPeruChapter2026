@@ -11535,21 +11535,98 @@ a.text-dark:focus {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 40px;
-  padding: 0px 20px;
+  padding: 0 20px;
+  align-items: stretch; /* fuerza misma altura */
 }
 
-/* Card */
+.voces-grid a {
+  display: flex; /* hace que el link ocupe todo */
+}
+
 .blog-card {
-  background: white;
-  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* distribuye contenido */
+  width: 100%;
+  height: 100%;
+}
+
+.blog-card {
+  position: relative;
   padding: 35px;
-  border: 1px solid #e5e5e5;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: 0.3s ease;
+  background: white;
+  border: 3px solid transparent;
+  background-clip: padding-box, border-box;
+  overflow: hidden;
+  border-radius: 18px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.perfil-grid {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-direction: row;
+}
+
+.perfilDatos-grid{
+  align-items: center;
+  margin-bottom: 0px;
+
+  p{
+    margin-bottom: 0px;
+  }
+}
+
+/* Variable animable */
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.blog-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  padding: 3px;
+  background: conic-gradient(
+    from var(--angle),
+    #f7ae26,
+    #e75733,
+    #f7ae26
+  );
+
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+
+  opacity: 0;
+  transition: opacity 0.4s ease; /* suaviza aparición */
+}
+
+.blog-card:hover::before {
+  opacity: 1;
+  animation: spin 4s linear infinite;
 }
 
 .blog-card:hover {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transform: scale(1.05);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+}
+
+.blog-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes spin {
+  to {
+    --angle: 360deg;
+  }
 }
 
 .blog-date {
@@ -11743,3 +11820,16 @@ html, body{
   }
 }
 
+/* .navbar-nav{
+  background-color: #FAFAFA;
+} */
+
+@media (max-width: 397px) {
+  .voces-grid {
+    padding: 0px;
+  }
+
+  .blog-card {
+    padding: 30px 20px;
+  }
+}
