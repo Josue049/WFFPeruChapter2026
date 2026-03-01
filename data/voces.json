@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "id": 1,
+    "title": "The Beatles",
+    "slug": "the-beatles",
+    "subtitle": "\"aaaaaaaaaaa\"",
+    "date": "2026-03-01T16:50:04.487Z",
+    "author": {
+      "name": "Jhon Lenon",
+      "role": "Cantante",
+      "photo": "https://i.scdn.co/image/ab6761610000e5ebe336079626f2a1be7456486c"
+    },
+    "content": "asdasdddddddddddddddddddddddddddddddddd"
+  }
+]
