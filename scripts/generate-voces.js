@@ -2,8 +2,9 @@ import fs from "fs";
 import fetch from "node-fetch";
 import { parse } from "csv-parse/sync";
 
+// ⚠️ Usa aquí el link PUBLICADO como CSV
 const CSV_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vT9HrLDoonMRE6eOhkfFqGQjyWrx20IOutUg-DfSW1iLpsxt69TNauW2snwBGuhMyUyLToVN3gUciiP/pub?gid=1779952858&single=true&output=csv";
+  "https://docs.google.com/spreadsheets/d/13WWQigQHQDbNtlZhYLYjgrB4E-rn35a5bFy8x0rbrPk/export?format=csv&gid=670065470";
 
 function slugify(text) {
   return text
@@ -19,12 +20,13 @@ function slugify(text) {
 function parseDate(value) {
   if (!value) return new Date().toISOString();
 
-  // Formato típico Google Sheets: dd/mm/yyyy
   const parts = value.split("/");
   if (parts.length === 3) {
     const [day, month, year] = parts;
     const isoDate = new Date(`${year}-${month}-${day}`);
-    return isNaN(isoDate) ? new Date().toISOString() : isoDate.toISOString();
+    return isNaN(isoDate)
+      ? new Date().toISOString()
+      : isoDate.toISOString();
   }
 
   const date = new Date(value);
@@ -44,10 +46,12 @@ async function generate() {
     const articles = records.map((row, index) => {
       const title = row["Nombre del Articulo"] || "sin-titulo";
 
-      const rawDate =
-        row[
-          "Fecha de publicación | (Poner la fecha de hoy) para marcar el día en que se sube"
-        ];
+      const rawDate = row["Fecha de publicación"] || "";
+
+      const photoUrl =
+        row["Link de la foto del autor"]?.startsWith("http")
+          ? row["Link de la foto del autor"]
+          : "";
 
       return {
         id: index + 1,
@@ -59,12 +63,9 @@ async function generate() {
         date: parseDate(rawDate),
 
         author: {
-          name:
-            row["Nombre y Apellido del autor del articulo"] || "",
-          role:
-            row["Cargo o descripción del autor del articulo"] || "",
-          photo:
-            row["Subir foto del autor del articulo"] || "",
+          name: row["Nombre y Apellido del autor del articulo"] || "",
+          role: row["Cargo o entidad del autor del articulo"] || "",
+          photo: photoUrl,
         },
 
         content: row["Articulo Completo"] || "",
@@ -74,7 +75,7 @@ async function generate() {
     fs.mkdirSync("./public/data", { recursive: true });
 
     fs.writeFileSync(
-      "./public/data/voces.json",
+      "../public/data/voces.json",
       JSON.stringify(articles, null, 2)
     );
 
