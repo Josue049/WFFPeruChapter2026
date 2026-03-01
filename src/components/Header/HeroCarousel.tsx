@@ -84,18 +84,10 @@ const HeroCarousel = () => {
                   textAlign: "center",
                 }}
               >
-                <h3
-                  style={{
-                    fontSize: "1.5rem",
-                    fontWeight: "300",
-                    marginBottom: "30px",
-                  }}
-                >
-                  {slide.subtitle.toUpperCase()}
-                </h3>
-                <h1 style={{ fontSize: "4.5rem", margin: "0 0 10px 0" }}>
-                  {slide.title}
-                </h1>
+                <h3 className="hero-subtitle">
+  {slide.subtitle.toUpperCase()}
+</h3>
+                <h1 className="hero-title">{slide.title}</h1>
                 <button
                   style={{
                     padding: "12px 24px",
