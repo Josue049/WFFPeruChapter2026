@@ -1,13 +1,13 @@
+import { NavLink } from "react-router-dom";
+
 export function SubNav() {
   return (
     <div className="nav-2">
       <ul>
-        {/* <li>PUBLICACIONES</li>
-        <li>GALERIA</li> */}
         <li>
-          <a href="/voces">VOCES</a>
+          <NavLink to="/voces">VOCES</NavLink>
         </li>
       </ul>
     </div>
-  )
+  );
 }
