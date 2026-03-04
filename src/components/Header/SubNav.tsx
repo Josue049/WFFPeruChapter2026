@@ -5,7 +5,7 @@ export function SubNav() {
         {/* <li>PUBLICACIONES</li>
         <li>GALERIA</li> */}
         <li>
-          <a href="/#/voces">VOCES</a>
+          <a href="/voces">VOCES</a>
         </li>
       </ul>
     </div>
