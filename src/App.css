@@ -631,9 +631,6 @@ p.m-0.text-uppercase {
   }
 }
 
-body {
-  background: #f5f5f5; /* fondo de tu página */
-}
 
 /* área inferior del notch / gesture bar */
 body::after {
