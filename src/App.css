@@ -630,3 +630,20 @@ p.m-0.text-uppercase {
     display: block;
   }
 }
+
+body {
+  background: #f5f5f5; /* fondo de tu página */
+}
+
+/* área inferior del notch / gesture bar */
+body::after {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: env(safe-area-inset-bottom);
+  background: #000; /* color que quieres para esa zona */
+  z-index: 9999;
+  pointer-events: none;
+}
