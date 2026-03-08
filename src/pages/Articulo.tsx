@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import { TopBar } from "../components/Header/TopBar";
 import { NavBar } from "../components/Header/NavBar";
@@ -22,6 +22,10 @@ export const Articulo: React.FC = () => {
       .catch(() => setLoading(false));
   }, [slug]);
 
+  if (!loading && !post) {
+    return <Navigate to="/404" replace />;
+  }
+
   return (
     <>
       <TopBar />
@@ -29,12 +33,6 @@ export const Articulo: React.FC = () => {
 
       {loading && (
         <p style={{ textAlign: "center" }}>Cargando...</p>
-      )}
-
-      {!loading && !post && (
-        <p style={{ textAlign: "center" }}>
-          Artículo no encontrado
-        </p>
       )}
 
       {!loading && post && (
