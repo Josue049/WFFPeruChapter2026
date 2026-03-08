@@ -1,9 +1,8 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Navigation, Autoplay } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/navigation";
-import "swiper/css/pagination";
 
 const slides = [
   {
@@ -12,6 +11,7 @@ const slides = [
     title: "Comite de coordinación 2026",
     btnText: "Ver Info",
     img: "img/comite.jpg",
+    link: "https://www.fao.org/peru/noticias/detail-events/en/c/1742822/",
   },
   {
     id: 2,
@@ -19,6 +19,7 @@ const slides = [
     title: "Únete al Capítulo Nacional",
     btnText: "UNIRME",
     img: "img/Inauguración.jpg",
+    link: "https://forms.office.com/pages/responsepage.aspx?id=aMQ6Frir0ESB_dnbFeOvlnq8OrflyhZOrnoT41c-u6BUMFpMWjk3WlFJUVVIN0k2OVpHNEpBN0FUMC4u&route=shorturl",
   },
 ];
 
@@ -26,13 +27,12 @@ const HeroCarousel = () => {
   return (
     <div className="hero-carousel" style={{ width: "100%" }}>
       <Swiper
-        modules={[Navigation, Pagination, Autoplay]}
+        modules={[Navigation, Autoplay]}
         navigation
-        pagination={{ clickable: true }}
         autoplay={{ delay: 5000 }}
         loop={true}
-        slidesPerView={1} // solo un slide visible
-        spaceBetween={0} // sin espacio entre slides
+        slidesPerView={1}
+        spaceBetween={0}
         style={{ width: "100%", height: "auto" }}
       >
         {slides.map((slide) => (
@@ -42,7 +42,7 @@ const HeroCarousel = () => {
                 position: "relative",
                 width: "100%",
                 height: "auto",
-                overflow: "hidden", // oculta cualquier desborde
+                overflow: "hidden",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -54,14 +54,13 @@ const HeroCarousel = () => {
                 src={slide.img}
                 alt={slide.title}
                 style={{
-                  width: "100%", // ocupa todo el ancho del contenedor
-                  height: "auto", // mantiene proporción
+                  width: "100%",
+                  height: "auto",
                   objectFit: "contain",
                   display: "block",
                 }}
               />
 
-              {/* Overlay */}
               <div
                 style={{
                   position: "absolute",
@@ -74,7 +73,6 @@ const HeroCarousel = () => {
                 }}
               />
 
-              {/* Contenido */}
               <div
                 style={{
                   maxWidth: 900,
@@ -85,29 +83,16 @@ const HeroCarousel = () => {
                 }}
               >
                 <h3 className="hero-subtitle">
-  {slide.subtitle.toUpperCase()}
-</h3>
+                  {slide.subtitle.toUpperCase()}
+                </h3>
+
                 <h1 className="hero-title">{slide.title}</h1>
-                <button
-                  style={{
-                    padding: "12px 24px",
-                    fontSize: "1rem",
-                    cursor: "pointer",
-                    backgroundColor: "#ff9a2b",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "5px",
-                    transition: "background 0.3s",
-                  }}
-                  onMouseOver={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#e88821")
-                  }
-                  onMouseOut={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#ff9a2b")
-                  }
-                >
-                  {slide.btnText.toUpperCase()}
-                </button>
+
+                <a href={slide.link}>
+                  <button className="slider-btn">
+                    {slide.btnText.toUpperCase()}
+                  </button>
+                </a>
               </div>
             </div>
           </SwiperSlide>

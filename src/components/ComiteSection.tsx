@@ -1,10 +1,10 @@
 type Member = {
-  name: string
-  role: string
-  image: string
-  instagram?: string
-  linkedin?: string
-}
+  name: string;
+  role: string;
+  image: string;
+  instagram?: string;
+  linkedin?: string;
+};
 
 export default function CommiteSection() {
   const members: Member[] = [
@@ -21,16 +21,14 @@ export default function CommiteSection() {
       role: "Educación y Cultura",
       image: "img/Ronal.jpg",
       instagram: "https://www.instagram.com/ronalguevarag/",
-      linkedin:
-        "https://www.linkedin.com/in/ronal-guevara-guevara-9045172a1/",
+      linkedin: "https://www.linkedin.com/in/ronal-guevara-guevara-9045172a1/",
     },
     {
       name: "Isabella Chancahuana",
       role: "Ciencia e Innovación",
       image: "img/Isabella.jpg",
       instagram: "https://www.instagram.com/isabllanicole/",
-      linkedin:
-        "https://www.linkedin.com/in/isabella-chancahuana-castillo/",
+      linkedin: "https://www.linkedin.com/in/isabella-chancahuana-castillo/",
     },
     {
       name: "Josué Gutiérrez Cuéllar",
@@ -44,16 +42,14 @@ export default function CommiteSection() {
       role: "Políticas y Gobernanza",
       image: "img/Lizet.jpg",
       instagram: "https://www.instagram.com/lizmejiape/",
-      linkedin:
-        "https://www.linkedin.com/in/lizet-mejia-penadillo-2a654b142/",
+      linkedin: "https://www.linkedin.com/in/lizet-mejia-penadillo-2a654b142/",
     },
     {
       name: "Kristel Leiva",
       role: "Políticas y Gobernanza",
       image: "img/Kristel.png",
       instagram: "https://www.instagram.com/kleiva.12/",
-      linkedin:
-        "https://www.linkedin.com/in/kristelleivamoreano/",
+      linkedin: "https://www.linkedin.com/in/kristelleivamoreano/",
     },
     {
       name: "Olga Lopez",
@@ -66,16 +62,15 @@ export default function CommiteSection() {
       name: "María Paz Ferrand",
       role: "Gestión de\nlas Comunicaciones",
       image: "img/MariaPaz.jpg",
-      linkedin:
-        "https://www.linkedin.com/in/maria-paz-ferrand-gordillo/",
+      instagram: "https://www.instagram.com/pzferr/",
+      linkedin: "https://www.linkedin.com/in/maria-paz-ferrand-gordillo/",
     },
     {
       name: "Piero Contreras",
       role: "Relacionamiento y\nGestión de Recursos",
       image: "img/Piero.jpg",
       instagram: "https://www.instagram.com/pierojcr/",
-      linkedin:
-        "https://www.linkedin.com/in/piero-contreras-ruiz/",
+      linkedin: "https://www.linkedin.com/in/piero-contreras-ruiz/",
     },
     {
       name: "GianMarco Quintanilla",
@@ -84,7 +79,7 @@ export default function CommiteSection() {
       instagram: "https://www.instagram.com/meninugian/",
       linkedin: "https://www.linkedin.com/in/gianmarcoq/",
     },
-  ]
+  ];
 
   return (
     <div className="container-fluid py-5">
@@ -95,10 +90,7 @@ export default function CommiteSection() {
 
         <div className="row">
           {members.map((member) => (
-            <div
-              key={member.name}
-              className="col-lg-3 col-md-4 col-sm-6 pb-2"
-            >
+            <div key={member.name} className="col-lg-3 col-md-4 col-sm-6 pb-2">
               <div className="perfil bg-white mb-4">
                 <div className="perfil-img position-relative overflow-hidden">
                   <img
@@ -153,5 +145,5 @@ export default function CommiteSection() {
         </div>
       </div>
     </div>
-  )
+  );
 }
