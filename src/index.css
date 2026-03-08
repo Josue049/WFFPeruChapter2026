@@ -11778,10 +11778,23 @@ a.text-dark:focus {
 
 body {
   margin: 0;
-  background-image: url('/img/matrizfondo.png');
+  background-image: url("/img/matrizfondo.png");
   background-repeat: repeat;
-  /* background-size: 300px;  */
   background-attachment: scroll;
+}
+
+/* zona inferior del notch / barra de gestos */
+body::after {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: env(safe-area-inset-bottom);
+  background-image: url("/img/matrizfondo.png"); /* mismo fondo */
+  background-repeat: repeat;
+  pointer-events: none;
+  z-index: 9999;
 }
 
 .ArticuloParrafos {
