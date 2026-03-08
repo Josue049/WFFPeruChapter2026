@@ -11860,3 +11860,7 @@ html, body{
     margin-bottom: 20px;
   }
 }
+
+:root {
+  --swiper-theme-color: #ffffff !important;
+}
