@@ -14,24 +14,23 @@ const wffItems: AccordionItem[] = [
     title: "¿Qué es el WFF?",
     color: "#FFC107",
     content:
-      "El Foro Mundial de la Alimentación (WFF) es una plataforma global cuya misión es impulsar la transformación de los sistemas agroalimentarios a través del liderazgo juvenil."
+      "El Foro Mundial de la Alimentación (WFF) es una plataforma global cuya misión es impulsar la transformación de los sistemas agroalimentarios a través del liderazgo juvenil.",
   },
   {
     id: 2,
     title: "Visión",
     color: "#5A9BD5",
     content:
-      "Ser una red juvenil nacional líder capaz de transformar los sistemas agroalimentarios mediante innovación, cooperación y participación inclusiva, conectando a jóvenes de todas las regiones."
+      "Ser una red juvenil nacional líder capaz de transformar los sistemas agroalimentarios mediante innovación, cooperación y participación inclusiva, conectando a jóvenes de todas las regiones.",
   },
   {
     id: 3,
     title: "Misión",
     color: "#FF8A8A",
     content:
-      "Fortalecer al Capítulo Nacional de Juventudes como una red interdisciplinaria y descentralizada, promoviendo alianzas estratégicas y acciones con impacto tangible."
-  }
+      "Fortalecer al Capítulo Nacional de Juventudes como una red interdisciplinaria y descentralizada, promoviendo alianzas estratégicas y acciones con impacto tangible.",
+  },
 ];
-
 
 export const Inicio: React.FC = () => {
   return (
@@ -49,16 +48,14 @@ export const Inicio: React.FC = () => {
         ]}
       />
 
-      <AccordionCards
-      items={wffItems}
-    />
+      <AccordionCards items={wffItems} />
 
-    <AreasGrid />
+      <AreasGrid />
 
-    <CommiteSection />
-    <Footer />
+      <CommiteSection />
+      <Footer />
 
-    <ScrollTopButton />
+      <ScrollTopButton />
     </>
   );
 };
