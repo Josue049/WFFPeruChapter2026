@@ -11783,20 +11783,6 @@ body {
   background-attachment: scroll;
 }
 
-/* zona inferior del notch / barra de gestos */
-body::after {
-  content: "";
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: env(safe-area-inset-bottom);
-  background-image: url("/img/matrizfondo.png"); /* mismo fondo */
-  background-repeat: repeat;
-  pointer-events: none;
-  z-index: 9999;
-}
-
 .ArticuloParrafos {
   background-color: rgba(255, 255, 255, 0.7);
   padding: 30px;
@@ -11938,4 +11924,25 @@ html, body{
 .accordion-header:focus-visible {
   border: none;
   outline: 0px solid rgba(255,255,255,0.5);
+}
+
+body {
+  margin: 0;
+  background-image: url("/img/matrizfondo.png");
+  background-repeat: repeat;
+  background-attachment: scroll;
+}
+
+/* zona inferior del notch / barra de gestos */
+body::after {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: env(safe-area-inset-bottom);
+  background-image: url("/img/matrizfondo.png"); /* mismo fondo */
+  background-repeat: repeat;
+  pointer-events: none;
+  z-index: 9999;
 }
