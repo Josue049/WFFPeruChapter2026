@@ -17,7 +17,7 @@ export default function CommiteSection() {
         "https://www.linkedin.com/in/ana-paula-guillen-yangali-a866881a2/",
     },
     {
-      name: "Ronald Guevara",
+      name: "Ronal Guevara",
       role: "Educación y Cultura",
       image: "img/Ronal.jpg",
       instagram: "https://www.instagram.com/ronalguevarag/",
