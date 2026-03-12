@@ -3,7 +3,15 @@ export function TopBar() {
     <div className="container-fluid pt-3 d-none d-lg-block bg-light">
       <div className="container">
         <div className="row">
-          <div className="col-lg-6" />
+          <div className="col-lg-6">
+          <a
+                className="btn btn-outline-primary"
+                href="https://www.facebook.com/WFFPeruChapter"
+                aria-label="Facebook WFF Perú Chapter"
+              >
+                Unirme como Miembro
+              </a>
+          </div>
           <div className="col-lg-6 text-center text-lg-right">
             <div className="d-flex justify-content-end">
               <a

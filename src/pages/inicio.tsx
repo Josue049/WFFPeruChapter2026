@@ -40,7 +40,7 @@ export const Inicio: React.FC = () => {
       <ImageCardsBlock
         eyebrow="CONÓCENOS"
         title="¿Qué es un Capítulo Nacional?"
-        description="Es una plataforma independiente liderada por juventudes y organizaciones civiles. Su función es movilizar acción local alineada al WFF y en coordinación con FAO."
+        gitdescription="Es una plataforma independiente liderada por juventudes y organizaciones civiles. Su función es movilizar acción local alineada al WFF y en coordinación con FAO."        
         mainImage="/img/BloquesONU.jpg"
         cards={[
           { image: "/img/tarjetas1.jpg", alt: "Actividad WFF 1" },
