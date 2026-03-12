@@ -11946,3 +11946,8 @@ body::after {
   pointer-events: none;
   z-index: 9999;
 }
+
+.join{
+  font-weight: 900;
+  border: 2px solid #ff9a2b;
+}
