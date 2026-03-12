@@ -9,7 +9,7 @@ export function TopBar() {
               href="https://forms.office.com/pages/responsepage.aspx?id=aMQ6Frir0ESB_dnbFeOvlnq8OrflyhZOrnoT41c-u6BUMFpMWjk3WlFJUVVIN0k2OVpHNEpBN0FUMC4u&route=shorturl"
               aria-label="Facebook WFF Perú Chapter"
             >
-              Unirme
+              Unete al Capítulo
             </a>
           </div>
           <div className="col-lg-6 text-center text-lg-right">

@@ -11948,6 +11948,6 @@ body::after {
 }
 
 .join{
-  font-weight: 900;
-  border: 2px solid #ff9a2b;
+  font-weight: 600;
+  border: 1px solid #ff9a2b;
 }
