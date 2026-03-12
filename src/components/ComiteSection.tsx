@@ -102,7 +102,7 @@ export default function CommiteSection() {
                   <div className="red">
                     {member.instagram && (
                       <a
-                        className="btn btn-outline-primary"
+                        className="btn btn-primary"
                         href={member.instagram}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -115,7 +115,7 @@ export default function CommiteSection() {
 
                     {member.linkedin && (
                       <a
-                        className="btn btn-outline-primary"
+                        className="btn btn-primary"
                         href={member.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
