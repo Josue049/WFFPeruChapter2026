@@ -3,16 +3,16 @@ export function TopBar() {
     <div className="container-fluid pt-3 d-none d-lg-block bg-light">
       <div className="container">
         <div className="row">
-          <div className="col-lg-6">
+          <div className="flex-start vertical-align col-lg-6">
             <a
               className="btn btn-outline-primary join"
               href="https://forms.office.com/pages/responsepage.aspx?id=aMQ6Frir0ESB_dnbFeOvlnq8OrflyhZOrnoT41c-u6BUMFpMWjk3WlFJUVVIN0k2OVpHNEpBN0FUMC4u&route=shorturl"
               aria-label="Facebook WFF Perú Chapter"
             >
-              Unete al Capítulo
+              Únete al Capítulo
             </a>
           </div>
-          <div className="col-lg-6 text-center text-lg-right">
+          <div className="flex-end vertical-align col-lg-6 text-center text-lg-right">
             <div className="d-flex justify-content-end">
               <a
                 className="btn btn-outline-primary btn-redes mr-2"

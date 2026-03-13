@@ -11951,3 +11951,19 @@ body::after {
   font-weight: 600;
   border: 1px solid #ff9a2b;
 }
+
+.vertical-align{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-start{
+  display: flex;
+  justify-content: flex-start;
+}
+
+.flex-end{
+  display: flex;
+  justify-content: flex-end;
+}
