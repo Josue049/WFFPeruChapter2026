@@ -573,8 +573,7 @@ p.m-0.text-uppercase {
 
 .nav-2 {
   background: linear-gradient(to right, #e75733, #f7ae26);
-  /* height: 25px; */
-  height: 10px;
+  height: 25px;
   width: 100%;
   display: flex;
   align-items: center;

@@ -11,6 +11,8 @@ import Articulo from "./pages/Articulo";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ScrollToTop } from "./components/ScrollToTop";
 import NotFound from "./pages/NotFound";
+import Admin from "./pages/Admin";
+
 
 function App() {
   return (
@@ -31,6 +33,9 @@ function App() {
         <Route path="/voces" element={<Voces />} />
         <Route path="/voces/:slug" element={<Articulo />} />
         <Route path="*" element={<NotFound />} />
+
+        
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </Router>
   );
