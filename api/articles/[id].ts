@@ -5,7 +5,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { id } = req.query;
 
   try {
-    // 🔹 ACTUALIZAR
+    // ✅ GET UNO (opcional pero útil)
+    if (req.method === 'GET') {
+      const { rows } = await pool.query(
+        'SELECT * FROM wff_peru.articles WHERE id = $1',
+        [id]
+      );
+      return res.json(rows[0]);
+    }
+
+    // ✅ UPDATE
     if (req.method === 'PUT') {
       const {
         authorName,
@@ -47,10 +56,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.json(rows[0]);
     }
 
-    // 🔹 ELIMINAR
+    // ✅ DELETE
     if (req.method === 'DELETE') {
       await pool.query(
-        `DELETE FROM wff_peru.articles WHERE id = $1`,
+        'DELETE FROM wff_peru.articles WHERE id = $1',
         [id]
       );
 
