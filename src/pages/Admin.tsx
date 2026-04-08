@@ -48,11 +48,24 @@ export default function Admin() {
 
         console.log("DATA DESDE API:", data);
 
-        // 🔥 FORMATEAR FECHA
+        // // 🔥 FORMATEAR FECHA
+        // const formatted = data.map((a: any) => ({
+        //   ...a,
+        //   date: a.date ? a.date.split("T")[0] : "",
+        // }));
         const formatted = data.map((a: any) => ({
-          ...a,
+          id: a.id,
+          authorName: a.author_name,
+          authorLastname: a.author_lastname,
+          authorPhoto: a.author_photo,
+          authorCargo: a.author_cargo,
+          title: a.title,
+          subtitle: a.subtitle,
           date: a.date ? a.date.split("T")[0] : "",
+          body: a.body,
         }));
+
+        setArticles(formatted);
 
         setArticles(formatted);
       } catch (err) {
