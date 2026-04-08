@@ -32,7 +32,7 @@ function App() {
         <Route path="/womensEmpowerment" element={<WomensEmpowerment />} />
         <Route path="/voces" element={<Voces />} />
         <Route path="/voces/:slug" element={<Articulo />} />
-        <Route path="*" element={<NotFound />} />
+        {/* <Route path="*" element={<NotFound />} /> */}
 
         
         <Route path="/admin" element={<Admin />} />
