@@ -13,13 +13,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === 'PUT') {
-    const { author_name, author_lastname, author_photo, author_cargo, title, subtitle, date, body } = req.body;
+    const { authorName, authorLastname, authorPhoto, authorCargo, title, subtitle, date, body } = req.body;
     const { rows } = await pool.query(
       `UPDATE wff_peru.articles SET
         author_name=$1, author_lastname=$2, author_photo=$3, author_cargo=$4,
         title=$5, subtitle=$6, date=$7, body=$8
        WHERE id=$9 RETURNING *`,
-      [author_name, author_lastname, author_photo, author_cargo, title, subtitle, date, body, id]
+      [authorName, authorLastname, authorPhoto, authorCargo, title, subtitle, date, body, id]
     );
     return res.json(rows[0]);
   }
