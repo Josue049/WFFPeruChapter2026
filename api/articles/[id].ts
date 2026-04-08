@@ -5,8 +5,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { id } = req.query;
 
   try {
-    // 🔥 UPDATE
-    if (req.method === "PUT") {
+    // 🔹 ACTUALIZAR
+    if (req.method === 'PUT') {
       const {
         authorName,
         authorLastname,
@@ -20,15 +20,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       const { rows } = await pool.query(
         `UPDATE wff_peru.articles SET
-          author_name=$1,
-          author_lastname=$2,
-          author_photo=$3,
-          author_cargo=$4,
-          title=$5,
-          subtitle=$6,
-          date=$7,
-          body=$8
-        WHERE id=$9
+          author_name = $1,
+          author_lastname = $2,
+          author_photo = $3,
+          author_cargo = $4,
+          title = $5,
+          subtitle = $6,
+          date = $7,
+          body = $8,
+          updated_at = NOW()
+        WHERE id = $9
         RETURNING *`,
         [
           authorName,
@@ -43,23 +44,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         ]
       );
 
-      return res.status(200).json(rows[0]);
+      return res.json(rows[0]);
     }
 
-    // 🔥 DELETE
-    if (req.method === "DELETE") {
+    // 🔹 ELIMINAR
+    if (req.method === 'DELETE') {
       await pool.query(
-        "DELETE FROM wff_peru.articles WHERE id = $1",
+        `DELETE FROM wff_peru.articles WHERE id = $1`,
         [id]
       );
 
       return res.json({ success: true });
     }
 
-    return res.status(405).json({ error: "Método no permitido" });
+    res.status(405).json({ error: 'Método no permitido' });
 
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Error interno" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error del servidor' });
   }
 }
