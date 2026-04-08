@@ -11,12 +11,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === 'POST') {
-    const { author_name, author_lastname, author_photo, author_cargo, title, subtitle, date, body } = req.body;
+    const { authorName, authorLastname, authorPhoto, authorCargo, title, subtitle, date, body } = req.body;
     const { rows } = await pool.query(
       `INSERT INTO wff_peru.articles 
         (author_name, author_lastname, author_photo, author_cargo, title, subtitle, date, body)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`,
-      [author_name, author_lastname, author_photo, author_cargo, title, subtitle, date, body]
+      [authorName, authorLastname, authorPhoto, authorCargo, title, subtitle, date, body]
     );
     return res.status(201).json(rows[0]);
   }
