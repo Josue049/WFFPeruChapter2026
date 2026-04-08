@@ -38,10 +38,29 @@ export default function Admin() {
 
   // 🔥 CARGAR DESDE LA BD
   useEffect(() => {
-    fetch("/api/articles")
-      .then((res) => res.json())
-      .then((data) => setArticles(data))
-      .catch((err) => console.error(err));
+    const load = async () => {
+      try {
+        const res = await fetch("/api/articles");
+
+        if (!res.ok) throw new Error("API error");
+
+        const data = await res.json();
+
+        console.log("DATA DESDE API:", data);
+
+        // 🔥 FORMATEAR FECHA
+        const formatted = data.map((a: any) => ({
+          ...a,
+          date: a.date ? a.date.split("T")[0] : "",
+        }));
+
+        setArticles(formatted);
+      } catch (err) {
+        console.error("Error cargando:", err);
+      }
+    };
+
+    load();
   }, []);
 
   useEffect(() => {
@@ -83,7 +102,7 @@ export default function Admin() {
       setMobileTab("editor");
       setPreviewData(art ? { ...art } : null);
     },
-    [articles]
+    [articles],
   );
 
   const newArticle = useCallback(() => {
@@ -109,7 +128,7 @@ export default function Admin() {
           const updated = await res.json();
 
           setArticles((prev) =>
-            prev.map((a) => (a.id === currentId ? updated : a))
+            prev.map((a) => (a.id === currentId ? updated : a)),
           );
 
           showToast("✅", "Artículo actualizado.");
@@ -132,7 +151,7 @@ export default function Admin() {
         showToast("❌", "Error al guardar.");
       }
     },
-    [currentId, showToast]
+    [currentId, showToast],
   );
 
   const handleCancel = useCallback(() => {
@@ -155,9 +174,7 @@ export default function Admin() {
         method: "DELETE",
       });
 
-      setArticles((prev) =>
-        prev.filter((a) => a.id !== deleteTargetId)
-      );
+      setArticles((prev) => prev.filter((a) => a.id !== deleteTargetId));
 
       showToast("🗑️", "Artículo eliminado.");
     } catch (err) {
@@ -238,7 +255,9 @@ export default function Admin() {
           />
         )}
 
-        <div className={`${styles.sidebarWrap} ${sidebarOpen ? styles.sidebarVisible : ""}`}>
+        <div
+          className={`${styles.sidebarWrap} ${sidebarOpen ? styles.sidebarVisible : ""}`}
+        >
           <ArticleList
             articles={articles}
             currentId={currentId}
@@ -305,7 +324,11 @@ export default function Admin() {
         />
       )}
 
-      <Toast icon={toast.icon} message={toast.message} visible={toast.visible} />
+      <Toast
+        icon={toast.icon}
+        message={toast.message}
+        visible={toast.visible}
+      />
     </div>
   );
 }
