@@ -97,6 +97,7 @@ export default function Admin() {
   // 🔥 GUARDAR (POST / PUT)
   const handleSave = useCallback(
     async (data: Omit<Article, "id">) => {
+      console.log("DATA QUE SE ENVÍA:", data);
       try {
         if (currentId) {
           const res = await fetch(`/api/articles/${currentId}`, {
