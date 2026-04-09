@@ -140,8 +140,21 @@ export default function Admin() {
 
           const updated = await res.json();
 
+          // 👇 AQUÍ VA
+          const formatted = {
+            id: updated.id,
+            authorName: updated.author_name,
+            authorLastname: updated.author_lastname,
+            authorPhoto: updated.author_photo,
+            authorCargo: updated.author_cargo,
+            title: updated.title,
+            subtitle: updated.subtitle,
+            date: updated.date ? updated.date.split("T")[0] : "",
+            body: updated.body,
+          };
+
           setArticles((prev) =>
-            prev.map((a) => (a.id === currentId ? updated : a)),
+            prev.map((a) => (a.id === currentId ? formatted : a)),
           );
 
           showToast("✅", "Artículo actualizado.");
