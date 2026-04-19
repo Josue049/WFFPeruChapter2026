@@ -12,7 +12,8 @@ export const Articulo: React.FC = () => {
   const [post, setPost] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const API = "http://159.112.142.234:8010";
+  const API = "https://api.wffperuchapter.page";
+  
 
 
   useEffect(() => {

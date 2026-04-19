@@ -11,7 +11,7 @@ export const Voces: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://159.112.142.234:8010/articles/published")
+    fetch("https://api.wffperuchapter.page/articles/published")
       .then((res) => {
         if (!res.ok) throw new Error("Error al cargar artículos");
         return res.json();
