@@ -12039,6 +12039,11 @@ body::after {
     padding-top: 50px;
   }
 
+  .ArticuloCompleto{
+    max-width: 100%;
+    padding: 20px;
+  }
+
 }
 
 
