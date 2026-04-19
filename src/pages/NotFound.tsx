@@ -20,9 +20,9 @@ export default function NotFound() {
         }}
       >
         <picture style={{ display: "flex", flexDirection: "column", alignContent: "center", alignItems: "center" }}>
-          <source media="(max-width: 968px)" srcSet="/img/404mobile.webp" />
+          <source media="(max-width: 968px)" srcSet="/img/404mobile.png" />
           <img
-            src="/img/404desktop.webp"
+            src="/img/404desktop.png"
             alt="404 WFF Perú"
             style={{
               width: "80%",
