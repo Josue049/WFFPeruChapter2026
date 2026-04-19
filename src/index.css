@@ -12039,7 +12039,10 @@ body::after {
     padding-top: 50px;
   }
 
-  .space-white {
-    background-color: white;
-  }
 }
+
+
+  .ArticuloCompleto {
+    background-color: white;
+    margin-top: 0px;
+  }
