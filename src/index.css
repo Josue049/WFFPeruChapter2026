@@ -11536,17 +11536,20 @@ a.text-dark:focus {
   grid-template-columns: repeat(3, 1fr);
   gap: 40px;
   padding: 0 20px;
-  align-items: stretch; /* fuerza misma altura */
+  align-items: stretch;
+  /* fuerza misma altura */
 }
 
 .voces-grid a {
-  display: flex; /* hace que el link ocupe todo */
+  display: flex;
+  /* hace que el link ocupe todo */
 }
 
 .blog-card {
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* distribuye contenido */
+  justify-content: space-between;
+  /* distribuye contenido */
   width: 100%;
   height: 100%;
 }
@@ -11569,11 +11572,11 @@ a.text-dark:focus {
   flex-direction: row;
 }
 
-.perfilDatos-grid{
+.perfilDatos-grid {
   align-items: center;
   margin-bottom: 0px;
 
-  p{
+  p {
     margin-bottom: 0px;
   }
 }
@@ -11591,12 +11594,10 @@ a.text-dark:focus {
   inset: 0;
   border-radius: 18px;
   padding: 3px;
-  background: conic-gradient(
-    from var(--angle),
-    #f7ae26,
-    #e75733,
-    #f7ae26
-  );
+  background: conic-gradient(from var(--angle),
+      #f7ae26,
+      #e75733,
+      #f7ae26);
 
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
@@ -11605,7 +11606,8 @@ a.text-dark:focus {
   mask-composite: exclude;
 
   opacity: 0;
-  transition: opacity 0.4s ease; /* suaviza aparición */
+  transition: opacity 0.4s ease;
+  /* suaviza aparición */
 
 }
 
@@ -11619,7 +11621,7 @@ a.text-dark:focus {
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
 }
 
-.blog-card > * {
+.blog-card>* {
   position: relative;
   z-index: 1;
 }
@@ -11794,15 +11796,10 @@ body {
   background-attachment: scroll;
 }
 
-.ArticuloParrafos {
-  background-color: rgba(255, 255, 255, 0.7);
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  text-align: justify;
-}
 
-html, body{
+
+html,
+body {
   max-width: 100%;
   overflow-x: hidden;
 }
@@ -11815,17 +11812,17 @@ html, body{
     background-size: 300px !important;
     background-attachment: scroll;
 
-    
-  }
- 
-.voces-header {
-      img {
-        width: 80vw !important;
-        height: auto;
-      }
-    }
 
-  .FechaArticulo{
+  }
+
+  .voces-header {
+    img {
+      width: 80vw !important;
+      height: auto;
+    }
+  }
+
+  .FechaArticulo {
     text-align: center;
   }
 }
@@ -11835,9 +11832,9 @@ html, body{
 } */
 
 @media (max-width: 397px) {
-  .voces-grid {
+  /* .voces-grid {
     padding: 0px;
-  }
+  } */
 
   .blog-card {
     padding: 30px 20px;
@@ -11883,6 +11880,7 @@ html, body{
 
 /* mobile */
 @media (max-width: 768px) {
+
   .swiper-button-next,
   .swiper-button-prev {
     transform: scale(0.5);
@@ -11934,7 +11932,7 @@ html, body{
 /* opcional: mantener accesibilidad con un focus más suave */
 .accordion-header:focus-visible {
   border: none;
-  outline: 0px solid rgba(255,255,255,0.5);
+  outline: 0px solid rgba(255, 255, 255, 0.5);
 }
 
 body {
@@ -11952,34 +11950,35 @@ body::after {
   left: 0;
   width: 100%;
   height: env(safe-area-inset-bottom);
-  background-image: url("/img/matrizfondo.webp"); /* mismo fondo */
+  background-image: url("/img/matrizfondo.webp");
+  /* mismo fondo */
   background-repeat: repeat;
   pointer-events: none;
   z-index: 9999;
 }
 
-.join{
+.join {
   font-weight: 600;
   border: 1px solid #ff9a2b;
 }
 
-.vertical-align{
+.vertical-align {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.flex-start{
+.flex-start {
   display: flex;
   justify-content: flex-start;
 }
 
-.flex-end{
+.flex-end {
   display: flex;
   justify-content: flex-end;
 }
 
-.articulo-categoria{
+.articulo-categoria {
   font-weight: 400;
 }
 
@@ -11994,4 +11993,53 @@ body::after {
 
 .hidden {
   display: none;
+}
+
+
+.bgDesktopWhite {
+  background-color: white;
+  border-radius: 12px;
+  padding-bottom: 50px;
+}
+
+
+.FechaArticulo {
+  padding: 0px 80px;
+  padding-top: 40px;
+}
+
+/* mobile */
+@media (max-width: 403px) {
+  .slider-btn {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+}
+
+.ArticuloParrafos {
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 20px 80px;
+  border-radius: 12px;
+  text-align: justify;
+  /* font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif */
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+
+  .ArticuloParrafos {
+    background-color: rgba(255, 255, 255, 0);
+    box-shadow: none;
+    padding: 0px;
+  }
+
+  .FechaArticulo {
+    text-align: left;
+    padding: 0px;
+    padding-top: 50px;
+  }
+
+  .space-white {
+    background-color: white;
+  }
 }
