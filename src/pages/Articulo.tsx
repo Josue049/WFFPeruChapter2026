@@ -101,7 +101,7 @@ export const Articulo: React.FC = () => {
         </>
       )}
 
-      <Footer />
+      {/* <Footer /> */}
       <ScrollTopButton />
     </>
   );

@@ -47,7 +47,7 @@ export const Voces: React.FC = () => {
         )}
       </section>
 
-      <Footer />
+      {/* <Footer /> */}
       <ScrollTopButton />
     </>
   );

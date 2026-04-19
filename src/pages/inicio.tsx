@@ -53,7 +53,7 @@ export const Inicio: React.FC = () => {
       <AreasGrid />
 
       <CommiteSection />
-      <Footer />
+      {/* <Footer /> */}
 
       <ScrollTopButton />
     </>

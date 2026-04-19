@@ -22,7 +22,7 @@ export const Inicio: React.FC = () => {
       <Educacion />
       <Proyectos />
 
-      <Footer />
+      {/* <Footer /> */}
 
       <ScrollTopButton />
     </>

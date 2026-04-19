@@ -56,7 +56,7 @@ export const Inicio: React.FC = () => {
         ]}
       />
 
-      <Footer />
+      {/* <Footer /> */}
 
       <ScrollTopButton />
     </>

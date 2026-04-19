@@ -46,7 +46,7 @@ export const Inicio: React.FC = () => {
 
       <VisibilidadHitos />
 
-      <Footer />
+      {/* <Footer /> */}
 
       <ScrollTopButton />
     </>
