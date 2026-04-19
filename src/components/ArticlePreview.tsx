@@ -60,31 +60,11 @@ export function ArticlePreview({
           </div>
         ) : (
           <div className={styles.page}>
-            {/* Fake nav */}
-            {/* <div className={styles.topbarWrap}>
-              <div className={styles.topbarInner}>
-                <div className={styles.logoWrap}>
-                  <div className={styles.logoCircle}>🌾</div>
-                  <div>
-                    <p className={styles.logoTxt}>Foro Mundial de la Alimentación</p>
-                    <p className={styles.logoCountry}>Perú</p>
-                  </div>
-                </div>
-                <nav className={styles.nav}>
-                  <span>Inicio</span>
-                  <span>Nosotros</span>
-                  <span>Áreas</span>
-                  <span>Women's Empowerment</span>
-                </nav>
-              </div>
-            </div> */}
-
             {/* Article body */}
             <div className={styles.body}>
               <p className={styles.crumb}>
                 Voces del Capítulo <span>/ Artículo</span>
               </p>
-
               {data?.author_photo ? (
                 <img
                   className={styles.photo}
@@ -100,14 +80,12 @@ export function ArticlePreview({
                   👤
                 </div>
               )}
-
               {fullName && <p className={styles.authorName}>{fullName}</p>}
               {data?.author_cargo ? (
                 <p className={styles.authorCargo}>{data.author_cargo}</p>
               ) : (
                 <div style={{ marginBottom: 32 }} />
               )}
-
               {data?.title && <h1 className={styles.artTitle}>{data.title}</h1>}
               {data?.subtitle && (
                 <p className={styles.subtitle}>{data.subtitle}</p>
@@ -117,10 +95,13 @@ export function ArticlePreview({
                   Publicado el {formatDate(data.date)}
                 </p>
               )}
-
               <div className={styles.divider} />
-
-              {data?.body && <div className={styles.content}>{data.body}</div>}
+              {data?.body && (
+                <div
+                  className={styles.content}
+                  dangerouslySetInnerHTML={{ __html: data.body }}
+                />
+              )}{" "}
             </div>
           </div>
         )}

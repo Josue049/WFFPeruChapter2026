@@ -13,8 +13,6 @@ export const Articulo: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   const API = "https://api.wffperuchapter.page";
-  
-
 
   useEffect(() => {
     fetch(`${API}/articles/published`)
@@ -79,22 +77,26 @@ export const Articulo: React.FC = () => {
             </p>
           </section>
 
-          <div className="ArticuloCompleto">
-            <h6 className="FechaArticulo">
-              Publicado el{" "}
-              {new Date(post.date).toLocaleDateString("es-ES", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            </h6>
+          <div className="space-white">
+            <div className="ArticuloCompleto">
+              <div className="bgDesktopWhite">
+                <h6 className="FechaArticulo">
+                  Publicado el{" "}
+                  {new Date(post.date).toLocaleDateString("es-ES", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </h6>
 
-            <div className="lineaWidth"></div>
+                <div className="lineaWidth"></div>
 
-            <div
-              className="ArticuloParrafos"
-              dangerouslySetInnerHTML={{ __html: post.body }}
-            />
+                <div
+                  className="ArticuloParrafos"
+                  dangerouslySetInnerHTML={{ __html: post.body }}
+                ></div>
+              </div>
+            </div>
           </div>
         </>
       )}

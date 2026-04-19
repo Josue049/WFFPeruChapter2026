@@ -12,14 +12,14 @@
 
 /* ── TOP STRIPE ── */
 .topStripe {
-  height: 5px;
+  height: 1vh;
   flex-shrink: 0;
   background: linear-gradient(90deg, #f5821f, #f5c518);
 }
 
 /* ── HEADER ── */
 .header {
-  height: 64px;
+  height: 9vh;
   flex-shrink: 0;
   background: #fff;
   border-bottom: 1px solid #ddd8d0;
@@ -368,4 +368,10 @@
 
 .logo {
   height: 40px;
+}
+
+@media (max-width: 474px) {
+  .logo {
+    display: none;
+  }
 }
