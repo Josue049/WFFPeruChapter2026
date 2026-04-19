@@ -31,7 +31,15 @@ export const Articulo: React.FC = () => {
 
   const formatDate = (dateStr: string) => {
     const [year, month, day] = dateStr.split("-").map(Number);
-    return new Date(year, month - 1, day).toLocaleDateString();
+
+    const date = new Date(Date.UTC(year, month - 1, day));
+
+    return date.toLocaleDateString("es-PE", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      timeZone: "America/Lima",
+    });
   };
 
   return (
