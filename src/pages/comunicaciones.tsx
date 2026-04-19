@@ -21,7 +21,7 @@ export const Inicio: React.FC = () => {
       <Informacion />
       <LoQueHacemos />
 
-      <Footer />
+      {/* <Footer /> */}
 
       <ScrollTopButton />
     </>

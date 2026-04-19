@@ -40,7 +40,7 @@ export const Inicio: React.FC = () => {
 
       {/* <ContentSelector /> */}
 
-      <Footer />
+      {/* <Footer /> */}
 
       <ScrollTopButton />
     </>

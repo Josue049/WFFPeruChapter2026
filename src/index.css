@@ -12051,3 +12051,23 @@ body::after {
     background-color: white;
     margin-top: 0px;
   }
+
+
+  html, body {
+  height: 100%;
+  margin: 0;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+}
