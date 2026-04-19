@@ -41,10 +41,10 @@ export const Inicio: React.FC = () => {
         eyebrow="CONÓCENOS"
         title="¿Qué es un Capítulo Nacional?"
         description="Es una plataforma independiente liderada por juventudes y organizaciones civiles. Su función es movilizar acción local alineada al WFF y en coordinación con FAO."        
-        mainImage="/img/BloquesONU.jpg"
+        mainImage="/img/BloquesONU.webp"
         cards={[
-          { image: "/img/tarjetas1.jpg", alt: "Actividad WFF 1" },
-          { image: "/img/tarjetas2.jpg", alt: "Actividad WFF 2" },
+          { image: "/img/tarjetas1.webp", alt: "Actividad WFF 1" },
+          { image: "/img/tarjetas2.webp", alt: "Actividad WFF 2" },
         ]}
       />
 

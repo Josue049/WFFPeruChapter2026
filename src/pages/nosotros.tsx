@@ -11,7 +11,7 @@ export const Inicio: React.FC = () => {
         variant="static"
         title="ESTRUCTURA CAPÍTULO NACIONAL 2026"
         subtitle="Conoce nuestra estructura interna"
-        backgroundImage="/img/mesacomite.jpg"
+        backgroundImage="/img/mesacomite.webp"
           backgroundAlign="center"
       />
 

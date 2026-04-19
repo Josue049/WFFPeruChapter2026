@@ -3,7 +3,7 @@ type EstructuraSectionProps = {
 };
 
 export function EstructuraSection({
-  imageSrc = "/img/Estructura.png",
+  imageSrc = "/img/Estructura.webp",
 }: EstructuraSectionProps) {
   return (
     <div className="container-fluid py-5">

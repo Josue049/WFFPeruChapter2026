@@ -13,7 +13,7 @@ export const Inicio: React.FC = () => {
         label="Área de Soporte"
         title="Gestión de las Comunicaciones"
         subtitle="Olga Lopez y María Paz Ferrand"
-        backgroundImage="/img/FondoFAO4.png"
+        backgroundImage="/img/FondoFAO4.webp"
         backgroundAlign="top"
       />
 

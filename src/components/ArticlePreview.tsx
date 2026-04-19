@@ -1,5 +1,5 @@
-import type { Article } from '../types';
-import styles from './ArticlePreview.module.css';
+import type { Article } from "../types";
+import styles from "./ArticlePreview.module.css";
 
 interface Props {
   data: Partial<Article> | null;
@@ -8,15 +8,29 @@ interface Props {
 }
 
 function formatDate(dateStr: string): string {
-  return new Date(dateStr + 'T00:00:00').toLocaleDateString('es-PE', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
+  return new Date(dateStr + "T00:00:00").toLocaleDateString("es-PE", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
   });
 }
 
-export function ArticlePreview({ data, onClose, closeLabel = '✕' }: Props) {
-  const fullName = [data?.authorName, data?.authorLastname].filter(Boolean).join(' ');
+interface Props {
+  data: Partial<Article> | null;
+  onClose: () => void;
+  closeLabel?: string;
+  isMobile: boolean; // 👈 agregar
+}
+
+export function ArticlePreview({
+  data,
+  onClose,
+  closeLabel = "✕",
+  isMobile,
+}: Props) {
+  const fullName = [data?.author_name, data?.author_lastname]
+    .filter(Boolean)
+    .join(" ");
   const isEmpty = !data?.title && !fullName && !data?.body;
 
   return (
@@ -27,9 +41,11 @@ export function ArticlePreview({ data, onClose, closeLabel = '✕' }: Props) {
           <span className={styles.dot} />
           <span className={styles.label}>Vista previa en tiempo real</span>
         </div>
-        <button className={styles.btnClose} onClick={onClose} title="Cerrar">
-          {closeLabel}
-        </button>
+        {!isMobile && (
+          <button className={styles.btnClose} onClick={onClose} title="Cerrar">
+            {closeLabel}
+          </button>
+        )}
       </div>
 
       {/* Scrollable preview content */}
@@ -38,12 +54,14 @@ export function ArticlePreview({ data, onClose, closeLabel = '✕' }: Props) {
           <div className={styles.empty}>
             <span className={styles.emptyIcon}>👁️</span>
             <p className={styles.emptyTitle}>Vista previa</p>
-            <p className={styles.emptySub}>Empieza a escribir para ver cómo lucirá el artículo</p>
+            <p className={styles.emptySub}>
+              Empieza a escribir para ver cómo lucirá el artículo
+            </p>
           </div>
         ) : (
           <div className={styles.page}>
             {/* Fake nav */}
-            <div className={styles.topbarWrap}>
+            {/* <div className={styles.topbarWrap}>
               <div className={styles.topbarInner}>
                 <div className={styles.logoWrap}>
                   <div className={styles.logoCircle}>🌾</div>
@@ -59,7 +77,7 @@ export function ArticlePreview({ data, onClose, closeLabel = '✕' }: Props) {
                   <span>Women's Empowerment</span>
                 </nav>
               </div>
-            </div>
+            </div> */}
 
             {/* Article body */}
             <div className={styles.body}>
@@ -67,28 +85,37 @@ export function ArticlePreview({ data, onClose, closeLabel = '✕' }: Props) {
                 Voces del Capítulo <span>/ Artículo</span>
               </p>
 
-              {data?.authorPhoto ? (
+              {data?.author_photo ? (
                 <img
                   className={styles.photo}
-                  src={data.authorPhoto}
-                  onError={(e) => ((e.currentTarget as HTMLImageElement).style.display = 'none')}
+                  src={data.author_photo}
+                  onError={(e) =>
+                    ((e.currentTarget as HTMLImageElement).style.display =
+                      "none")
+                  }
                   alt={fullName}
                 />
               ) : (
-                <div className={`${styles.photo} ${styles.photoPlaceholder}`}>👤</div>
+                <div className={`${styles.photo} ${styles.photoPlaceholder}`}>
+                  👤
+                </div>
               )}
 
               {fullName && <p className={styles.authorName}>{fullName}</p>}
-              {data?.authorCargo ? (
-                <p className={styles.authorCargo}>{data.authorCargo}</p>
+              {data?.author_cargo ? (
+                <p className={styles.authorCargo}>{data.author_cargo}</p>
               ) : (
                 <div style={{ marginBottom: 32 }} />
               )}
 
               {data?.title && <h1 className={styles.artTitle}>{data.title}</h1>}
-              {data?.subtitle && <p className={styles.subtitle}>{data.subtitle}</p>}
+              {data?.subtitle && (
+                <p className={styles.subtitle}>{data.subtitle}</p>
+              )}
               {data?.date && (
-                <p className={styles.date}>Publicado el {formatDate(data.date)}</p>
+                <p className={styles.date}>
+                  Publicado el {formatDate(data.date)}
+                </p>
               )}
 
               <div className={styles.divider} />

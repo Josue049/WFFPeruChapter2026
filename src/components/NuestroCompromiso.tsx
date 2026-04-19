@@ -14,7 +14,7 @@ const NuestroCompromiso: React.FC = () => {
         <div className="row">
           <div className="col-lg-4 col-md-6 mb-4">
             <div className="bloque-info bg-white mb-2">
-              <img className="img-fluid" src="img/ODS4.png" alt="ODS 4" />
+              <img className="img-fluid" src="img/ODS4.webp" alt="ODS 4" />
               <div className="p-4">
                 <div className="border-top pt-4">
                   <span>
@@ -30,7 +30,7 @@ const NuestroCompromiso: React.FC = () => {
 
           <div className="col-lg-4 col-md-6 mb-4">
             <div className="bloque-info bg-white mb-2">
-              <img className="img-fluid" src="img/ODS5.png" alt="ODS 5" />
+              <img className="img-fluid" src="img/ODS5.webp" alt="ODS 5" />
               <div className="p-4">
                 <div className="border-top pt-4">
                   <span>
@@ -46,7 +46,7 @@ const NuestroCompromiso: React.FC = () => {
 
           <div className="col-lg-4 col-md-6 mb-4">
             <div className="bloque-info bg-white mb-2">
-              <img className="img-fluid" src="img/ODS8.png" alt="ODS 8" />
+              <img className="img-fluid" src="img/ODS8.webp" alt="ODS 8" />
               <div className="p-4">
                 <div className="border-top pt-4">
                   <span>

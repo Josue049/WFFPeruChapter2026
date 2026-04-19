@@ -68,7 +68,7 @@ export function PlanAccionSection({ title, blocks }: PlanAccionSectionProps) {
 
                       <div>
                         <img
-                          src={block.image || "/img/deco.png"}
+                          src={block.image || "/img/deco.webp"}
                           className="decor-img img-fluid"
                           alt=""
                         />

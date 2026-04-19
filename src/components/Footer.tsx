@@ -8,12 +8,12 @@ export function Footer() {
         <div className="footer-sub">
           {/* Logo Desktop */}
           <a href="/" className="desktop">
-            <img className="logoWFF" src="/img/WFFPeru.png" alt="Logo WFF Perú" />
+            <img className="logoWFF" src="/img/WFFPeru.webp" alt="Logo WFF Perú" />
           </a>
 
           {/* Logo Mobile */}
           <a href="/" className="movil">
-            <img className="logoWFF" src="/img/logoWFFPeru.png" alt="Logo WFF Perú" />
+            <img className="logoWFF" src="/img/logoWFFPeru.webp" alt="Logo WFF Perú" />
           </a>
 
           {/* Redes */}

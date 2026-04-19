@@ -6,34 +6,35 @@ import { NavBar } from "../components/Header/NavBar";
 import { ScrollTopButton } from "../components/ScrollTopButton";
 import type { Article } from "../types/article";
 
-
 export const Voces: React.FC = () => {
   const [posts, setPosts] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/data/voces.json")
-      .then((res) => res.json())
-      .then((data) => {
+    fetch("http://159.112.142.234:8010/articles/published")
+      .then((res) => {
+        if (!res.ok) throw new Error("Error al cargar artículos");
+        return res.json();
+      })
+      .then((data: Article[]) => {
         setPosts(data);
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Error cargando voces.json:", err);
+        console.error("Error cargando artículos:", err);
         setLoading(false);
       });
   }, []);
 
   return (
     <>
-    
       <TopBar />
       <NavBar />
 
       <section>
         <div className="voces-header">
           <img
-            src="/img/voces-logo.png"
+            src="/img/voces-logo.webp"
             alt="Voces Header"
             style={{ maxWidth: "400px" }}
           />

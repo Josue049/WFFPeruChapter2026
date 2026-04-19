@@ -11606,6 +11606,7 @@ a.text-dark:focus {
 
   opacity: 0;
   transition: opacity 0.4s ease; /* suaviza aparición */
+
 }
 
 .blog-card:hover::before {
@@ -11621,6 +11622,15 @@ a.text-dark:focus {
 .blog-card > * {
   position: relative;
   z-index: 1;
+}
+
+.author-photo {
+  filter: grayscale(100%);
+  transition: filter 0.4s ease;
+}
+
+.blog-card:hover .author-photo {
+  filter: grayscale(0%);
 }
 
 @keyframes spin {
@@ -11728,19 +11738,19 @@ a.text-dark:focus {
 }
 
 .articulo-titulo {
-  font-size: 50px;
+  font-size: 35px;
   font-weight: 700;
   color: #000;
+  margin-top: 45px;
   margin-bottom: 15px;
-  font-family: 'Playfair Display', serif;
+  font-family: Arial, 'Playfair Display', serif;
 
 }
 
 .articulo-subtitulo {
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 100;
   color: #555;
-  /* font-style: italic; */
 }
 
 .lineaWidth {
@@ -11764,8 +11774,9 @@ a.text-dark:focus {
 
 .ArticuloCompleto {
   white-space: pre-wrap;
-  max-width: 900px;
+  max-width: 80%;
   margin: 40px auto;
+  margin-top: 20px;
   line-height: 1.8;
   font-size: 18px;
 
@@ -11778,7 +11789,7 @@ a.text-dark:focus {
 
 body {
   margin: 0;
-  background-image: url("/img/matrizfondo.png");
+  background-image: url("/img/matrizfondo.webp");
   background-repeat: repeat;
   background-attachment: scroll;
 }
@@ -11799,14 +11810,14 @@ html, body{
 @media (max-width: 415px) {
   body {
     margin: 0;
-    background-image: url('/img/matrizfondo.png');
+    background-image: url('/img/matrizfondo.webp');
     background-repeat: repeat;
     background-size: 300px !important;
     background-attachment: scroll;
 
     
   }
-
+ 
 .voces-header {
       img {
         width: 80vw !important;
@@ -11928,7 +11939,7 @@ html, body{
 
 body {
   margin: 0;
-  background-image: url("/img/matrizfondo.png");
+  background-image: url("/img/matrizfondo.webp");
   background-repeat: repeat;
   background-attachment: scroll;
 }
@@ -11941,7 +11952,7 @@ body::after {
   left: 0;
   width: 100%;
   height: env(safe-area-inset-bottom);
-  background-image: url("/img/matrizfondo.png"); /* mismo fondo */
+  background-image: url("/img/matrizfondo.webp"); /* mismo fondo */
   background-repeat: repeat;
   pointer-events: none;
   z-index: 9999;
@@ -11966,4 +11977,21 @@ body::after {
 .flex-end{
   display: flex;
   justify-content: flex-end;
+}
+
+.articulo-categoria{
+  font-weight: 400;
+}
+
+.voz1 {
+  color: #545454;
+}
+
+.voz2 {
+  color: #000000;
+}
+
+
+.hidden {
+  display: none;
 }

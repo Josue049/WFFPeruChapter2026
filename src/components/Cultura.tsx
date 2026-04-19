@@ -10,7 +10,7 @@ export const Cultura: React.FC = () => {
             <div className="position-relative h-100">
               <img
                 className="position-absolute w-100 h-100"
-                src="/img/AboutCultura.png"
+                src="/img/AboutCultura.webp"
                 style={{ objectFit: "cover" }}
                 alt="Cultura"
               />
@@ -30,10 +30,10 @@ export const Cultura: React.FC = () => {
               </p>
               <div className="row mb-4">
                 <div className="col-6">
-                  <img className="img-fluid" src="/img/CineEcologico.png" alt="Cine Ecológico" />
+                  <img className="img-fluid" src="/img/CineEcologico.webp" alt="Cine Ecológico" />
                 </div>
                 <div className="col-6">
-                  <img className="img-fluid" src="/img/FestiFAO.png" alt="Festi FAO" />
+                  <img className="img-fluid" src="/img/FestiFAO.webp" alt="Festi FAO" />
                 </div>
               </div>
             </div>

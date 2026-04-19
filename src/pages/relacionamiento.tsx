@@ -12,7 +12,7 @@ export const Inicio: React.FC = () => {
         label="Área de Soporte"
         title="Relacionamiento y Gestión de Recursos"
         subtitle="Piero Contreras y GianMarco Quintanilla"
-        backgroundImage="/img/FondoFAO4.png"
+        backgroundImage="/img/FondoFAO4.webp"
         backgroundAlign="top"
       />
 

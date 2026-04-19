@@ -1,9 +1,9 @@
 export interface Article {
   id: number;
-  authorName: string;
-  authorLastname: string;
-  authorPhoto: string;
-  authorCargo: string;
+  author_name: string;
+  author_lastname: string;
+  author_photo: string;
+  author_cargo: string;
   title: string;
   subtitle: string;
   date: string;

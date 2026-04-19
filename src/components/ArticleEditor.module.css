@@ -1,3 +1,5 @@
+/* articleeditor.module.css */
+
 .wrapper {
   padding: 24px 28px;
   animation: fadeUp 0.22s ease both;
@@ -14,7 +16,7 @@
   align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 22px;
-  padding-bottom: 18px;
+  padding: 30px;
   border-bottom: 1.5px solid #ddd8d0;
   gap: 12px;
   flex-wrap: wrap;

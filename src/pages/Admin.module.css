@@ -48,7 +48,11 @@
   border-radius: 8px;
   transition: background 0.15s;
 }
-.menuBtn:hover { background: #e8e4df; }
+
+.menuBtn:hover {
+  background: #e8e4df;
+}
+
 .menuBtn span {
   display: block;
   width: 22px;
@@ -57,9 +61,18 @@
   border-radius: 2px;
   transition: all 0.25s;
 }
-.menuOpen span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.menuOpen span:nth-child(2) { opacity: 0; }
-.menuOpen span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.menuOpen span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.menuOpen span:nth-child(2) {
+  opacity: 0;
+}
+
+.menuOpen span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
 
 .logoCircle {
   width: 40px;
@@ -90,7 +103,11 @@
   text-transform: uppercase;
 }
 
-.hdrRight { display: flex; align-items: center; gap: 10px; }
+.hdrRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
 .adminPill {
   font-family: 'Syne', sans-serif;
@@ -112,6 +129,7 @@
   color: #7a7a7a;
   font-weight: 600;
 }
+
 .liveDot::before {
   content: '';
   width: 7px;
@@ -131,7 +149,7 @@
   padding: 0 16px;
 }
 
-.mobileTab {
+.mobileTabs button {
   flex: 1;
   padding: 12px 8px;
   font-family: 'Syne', sans-serif;
@@ -147,7 +165,11 @@
   margin-bottom: -1.5px;
   transition: color 0.2s, border-color 0.2s;
 }
-.activeTab { color: #f5821f; border-bottom-color: #f5821f; }
+
+.activeTab {
+  color: #f5821f !important;
+  border-bottom-color: #f5821f !important;
+}
 
 /* ── LAYOUT ── */
 .layout {
@@ -199,7 +221,11 @@
   position: relative;
   transition: background 0.15s;
 }
-.resizer:hover { background: #f5821f; }
+
+.resizer:hover {
+  background: #f5821f;
+}
+
 .resizer::after {
   content: '';
   position: absolute;
@@ -212,7 +238,10 @@
   background: rgba(245, 130, 31, 0.22);
   transition: background 0.15s;
 }
-.resizer:hover::after { background: #f5821f; }
+
+.resizer:hover::after {
+  background: #f5821f;
+}
 
 /* Preview panel */
 .previewPanel {
@@ -225,33 +254,56 @@
 
 /* ════ TABLET ≤ 900px ════ */
 @media (max-width: 900px) {
-  .liveDot { display: none; }
+  .liveDot {
+    display: none;
+  }
 }
 
 /* ════ MOBILE ≤ 640px ════ */
 @media (max-width: 640px) {
-  .root { height: auto; overflow: auto; }
+  .root {
+    height: auto;
+    min-height: 100vh;
+    overflow: auto;
+  }
 
-  .menuBtn { display: flex; }
+  .menuBtn {
+    display: flex;
+  }
 
-  .mobileTabs { display: flex; }
+  .mobileTabs {
+    display: flex;
+  }
 
-  .sidebarOverlay { display: block; }
+  /* Overlay visible en mobile */
+  .sidebarOverlay {
+    display: block;
+  }
 
-  /* Sidebar slides in as drawer */
+  /* Sidebar drawer — controlado SOLO por sidebarWrap en el padre */
   .sidebarWrap {
     position: fixed;
-    top: 0; left: 0; bottom: 0;
+    left: 0;
+    bottom: 0;
     width: 82vw;
     max-width: 320px;
+    height: 90vh;
     z-index: 160;
+    background: #fff;
+    overflow-y: auto;
     transform: translateX(-110%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
   }
-  .sidebarVisible { transform: translateX(0); }
 
-  .layout { overflow: visible; }
+  /* Clase que React aplica cuando sidebarOpen = true */
+  .sidebarOpen {
+    transform: translateX(0) !important;
+  }
+
+  .layout {
+    overflow: visible;
+  }
 
   .workArea {
     flex-direction: column;
@@ -278,7 +330,42 @@
 
 /* ════ VERY SMALL ≤ 380px ════ */
 @media (max-width: 380px) {
-  .logoTitle { font-size: 10px; }
-  .logoSub   { display: none; }
-  .adminPill { font-size: 9px; padding: 3px 10px; }
+  .logoTitle {
+    font-size: 10px;
+  }
+
+  .logoSub {
+    display: none;
+  }
+
+  .adminPill {
+    font-size: 9px;
+    padding: 3px 10px;
+  }
+}
+
+.btnLogout {
+  font-family: 'Syne', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: #f5821f;
+  border: 1.5px solid #f5821f;
+  padding: 3px 12px;
+  border-radius: 20px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
+}
+
+.btnLogout:hover {
+  background-color: #f5821f;
+  color: #fff;
+  border-color: #f5821f;
+  transform: scale(1.05);
+}
+
+.logo {
+  height: 40px;
 }

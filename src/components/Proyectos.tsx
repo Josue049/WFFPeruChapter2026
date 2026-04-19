@@ -8,19 +8,19 @@ interface Proyecto {
 
 const proyectos: Proyecto[] = [
   {
-    img: "/img/CineEcologico.png",
+    img: "/img/CineEcologico.webp",
     descripcion: `Evento cultural que promueve la conciencia ambiental mediante cine y diálogo juvenil. Incluye proyección de cortometrajes sobre cambio climático, sostenibilidad y economía circular. Culmina con un conversatorio de jóvenes líderes y un llamado a la acción por el planeta en la región Amazonas. Fecha tentativa: 6 DE DICIEMBRE DEL 2025`,
   },
   {
-    img: "/img/FestiFAO.png",
+    img: "/img/FestiFAO.webp",
     descripcion: `Festi FAO es un festival juvenil que celebra la cultura peruana y la creatividad para transformar los sistemas alimentarios. Incluye cocina con insumos locales, cine, arte, música y apoyo a emprendimientos regionales. Fecha tentativa: 9 DE ABRIL DEL 2026`,
   },
   {
-    img: "/img/SemillasDeFuerza.png",
+    img: "/img/SemillasDeFuerza.webp",
     descripcion: `Trabajaremos con colegios públicos cercanos, aliados especializados y una metodología propia para desarrollar talleres educativos (4 en total) en inicial. También se elaborarán materiales didácticos y se mapearán organizaciones de apoyo.`,
   },
   {
-    img: "/img/ProyectosJovenes.png",
+    img: "/img/ProyectosJovenes.webp",
     descripcion: `Implementaremos un encuentro/taller con agricultores de Campo Alegre, con apoyo de MIDAGRI y actores locales, para documentar saberes sostenibles y difundirlos con contenido audiovisual.`,
   },
 ];

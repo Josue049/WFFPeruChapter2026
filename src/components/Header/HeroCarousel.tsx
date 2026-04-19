@@ -10,7 +10,7 @@ const slides = [
     subtitle: "Capítulo nacional del WFF",
     title: "Comite de coordinación 2026",
     btnText: "Ver Info",
-    img: "img/comite.jpg",
+    img: "img/comite.webp",
     link: "https://www.fao.org/peru/noticias/detail-events/en/c/1742822/",
   },
   {
@@ -18,7 +18,7 @@ const slides = [
     subtitle: "Jóvenes peruanos por los sistemas agroalimentarios",
     title: "Únete al Capítulo Nacional",
     btnText: "UNIRME",
-    img: "img/Inauguración.jpg",
+    img: "img/Inauguración.webp",
     link: "https://forms.office.com/pages/responsepage.aspx?id=aMQ6Frir0ESB_dnbFeOvlnq8OrflyhZOrnoT41c-u6BUMFpMWjk3WlFJUVVIN0k2OVpHNEpBN0FUMC4u&route=shorturl",
   },
 ];

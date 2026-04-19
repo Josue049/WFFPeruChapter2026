@@ -37,7 +37,7 @@ export function NavBar() {
           <NavLink to="/" className="desktop" onClick={closeMenu}>
             <img
               className="logoWFF"
-              src="https://www.wffperuchapter.page/img/WFFPeru.png"
+              src="https://www.wffperuchapter.page/img/WFFPeru.webp"
               alt="Logo WFF Perú"
             />
           </NavLink>
@@ -45,7 +45,7 @@ export function NavBar() {
           <NavLink to="/" className="movil" onClick={closeMenu}>
             <img
               className="logoWFF"
-              src="https://www.wffperuchapter.page/img/logoWFFPeru.png"
+              src="https://www.wffperuchapter.page/img/logoWFFPeru.webp"
               alt="Logo WFF Perú"
             />
           </NavLink>

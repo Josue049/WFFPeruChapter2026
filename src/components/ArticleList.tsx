@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Article } from '../types';
 import styles from './ArticleList.module.css';
 
@@ -9,15 +10,42 @@ interface Props {
 }
 
 function formatDate(dateStr: string): string {
-  return new Date(dateStr + 'T00:00:00').toLocaleDateString('es-PE', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
+  const [year, month, day] = dateStr.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString("es-PE", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
   });
 }
 
+const PAGE_SIZE = 9;
+
 export function ArticleList({ articles, currentId, onSelect, onNew }: Props) {
-  const sorted = [...articles].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+
+  const sorted = [...articles].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+
+  const filtered = sorted.filter((art) => {
+    const q = search.toLowerCase().trim();
+    if (!q) return true;
+    const fullName = `${art.author_name} ${art.author_lastname}`.toLowerCase();
+    return (
+      art.title.toLowerCase().includes(q) ||
+      fullName.includes(q)
+    );
+  });
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const start = (page - 1) * PAGE_SIZE;
+  const paginated = filtered.slice(start, start + PAGE_SIZE);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+    setPage(1); // resetear a página 1 al buscar
+  };
 
   return (
     <aside className={styles.sidebar}>
@@ -27,22 +55,65 @@ export function ArticleList({ articles, currentId, onSelect, onNew }: Props) {
           + Nuevo Artículo
         </button>
       </div>
-      <div className={styles.list}>
-        {sorted.length === 0 && (
-          <p className={styles.empty}>No hay artículos aún.</p>
+
+      <div className={styles.searchWrap}>
+        <input
+          type="text"
+          className={styles.searchInput}
+          placeholder="Buscar por título o autor..."
+          value={search}
+          onChange={handleSearch}
+        />
+        {search && (
+          <button
+            className={styles.searchClear}
+            onClick={() => { setSearch(""); setPage(1); }}
+          >
+            ×
+          </button>
         )}
-        {sorted.map((art) => (
+      </div>
+
+      <div className={styles.list}>
+        {filtered.length === 0 && (
+          <p className={styles.empty}>
+            {search ? "Sin resultados." : "No hay artículos aún."}
+          </p>
+        )}
+        {paginated.map((art) => (
           <div
             key={art.id}
-            className={`${styles.item} ${art.id === currentId ? styles.active : ''}`}
+            className={`${styles.item} ${art.id === currentId ? styles.active : ""}`}
             onClick={() => onSelect(art.id)}
           >
             <p className={styles.date}>{formatDate(art.date)}</p>
             <p className={styles.title}>{art.title}</p>
-            <p className={styles.author}>{art.authorName} {art.authorLastname}</p>
+            <p className={styles.author}>{art.author_name} {art.author_lastname}</p>
           </div>
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <div className={styles.pagination}>
+          <button
+            className={styles.pageBtn}
+            onClick={() => setPage((p) => p - 1)}
+            disabled={page === 1}
+          >
+            ←
+          </button>
+          <span className={styles.pageInfo}>{page} / {totalPages}</span>
+          <button
+            className={styles.pageBtn}
+            onClick={() => setPage((p) => p + 1)}
+            disabled={page === totalPages}
+          >
+            →
+          </button>
+        </div>
+      )}
     </aside>
   );
 }
+
+

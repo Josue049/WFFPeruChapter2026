@@ -12,7 +12,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ScrollToTop } from "./components/ScrollToTop";
 import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin";
-
+import LoginAdmin from "./pages/LoginAdmin";
 
 function App() {
   return (
@@ -23,19 +23,16 @@ function App() {
         <Route path="/nosotros" element={<Nosotros />} />
         <Route path="/cienciaeinnovacion" element={<Cienciaeinnovacion />} />
         <Route path="/educacionycultura" element={<Educacionycultura />} />
-        <Route
-          path="/politicasygobernanza"
-          element={<Politicasygobernanza />}
-        />
+        <Route path="/politicasygobernanza" element={<Politicasygobernanza />} />
         <Route path="/comunicaciones" element={<Comunicaciones />} />
         <Route path="/relacionamiento" element={<Relacionamiento />} />
         <Route path="/womensEmpowerment" element={<WomensEmpowerment />} />
         <Route path="/voces" element={<Voces />} />
         <Route path="/voces/:slug" element={<Articulo />} />
-        {/* <Route path="*" element={<NotFound />} /> */}
+        <Route path="*" element={<NotFound />} />
 
-        
         <Route path="/admin" element={<Admin />} />
+        <Route path="/LoginAdmin" element={<LoginAdmin />} />
       </Routes>
     </Router>
   );

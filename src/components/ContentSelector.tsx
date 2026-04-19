@@ -33,7 +33,7 @@ const contentData: ContentItem[] = [
     description: 'Transform your workspace into a hub of creativity and innovation. Collaborate with talented teams to bring groundbreaking ideas to life in a dynamic environment.',
     fullText: 'Innovation spaces are designed to foster creativity and collaboration. These environments break down traditional barriers and encourage cross-functional teamwork. Open layouts promote spontaneous conversations and idea sharing.\n\nThe physical space influences how teams work together. Natural light, comfortable seating, and flexible furniture arrangements support different work styles. Quiet zones for focused work coexist with collaborative areas for group activities.\n\nTechnology integration is seamless, with tools for virtual collaboration, digital whiteboards, and presentation systems. Hybrid work models are supported with spaces designed for both in-person and remote participation.\n\nCulture and community are built through shared spaces. Coffee stations, lounges, and recreational areas encourage informal interactions that often lead to breakthrough ideas. The workspace becomes more than a place to work—it becomes a place to innovate.',
     image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&h=800&fit=crop',
-    thumbnail: './img/LogoDataAgro5.png'
+    thumbnail: './img/LogoDataAgro5.webp'
   }
 ];
 

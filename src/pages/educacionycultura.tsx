@@ -14,7 +14,7 @@ export const Inicio: React.FC = () => {
         label="Área Estratégica"
         title="EDUCACIÓN Y CULTURA"
         subtitle="Ana Paula Guillen y Ronal Guevara"
-        backgroundImage="/img/FondoFAO4.png"
+        backgroundImage="/img/FondoFAO4.webp"
         backgroundAlign="top"
       />
 

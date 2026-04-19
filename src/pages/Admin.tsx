@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import type { Article, TabType } from "../types";
 import { useResizer } from "../hooks/useResizer";
 import { useToast } from "../hooks/useToast";
@@ -12,7 +12,29 @@ import styles from "./Admin.module.css";
 
 type Mode = "idle" | "edit";
 
+const API = "http://127.0.0.1:8000";
+
+// ── Wrapper: solo maneja auth ─────────────────────────────────
 export default function Admin() {
+  const [ready, setReady] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const t = localStorage.getItem("token");
+    if (!t) {
+      window.location.href = "/LoginAdmin";
+      return;
+    }
+    setToken(t);
+    setReady(true);
+  }, []);
+
+  if (!ready || !token) return <div></div>;
+  return <AdminPanel token={token} />;
+}
+
+// ── Panel real ────────────────────────────────────────────────
+function AdminPanel({ token }: { token: string }) {
   const [articles, setArticles] = useState<Article[]>([]);
   const [currentId, setCurrentId] = useState<number | null>(null);
   const [mode, setMode] = useState<Mode>("idle");
@@ -29,6 +51,14 @@ export default function Admin() {
   const editorPanelRef = useRef<HTMLDivElement>(null);
   const previewPanelRef = useRef<HTMLDivElement>(null);
 
+  const headers = useMemo(
+    () => ({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    }),
+    [token],
+  );
+
   const { onMouseDown: onResizerMouseDown } = useResizer({
     containerRef: workAreaRef,
     editorRef: editorPanelRef,
@@ -36,52 +66,35 @@ export default function Admin() {
     enabled: previewOpen && !isMobile,
   });
 
-  // 🔥 CARGAR DESDE LA BD
+  // ── Cargar artículos ──
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch("/api/articles");
-
+        const res = await fetch(`${API}/articles`, { headers });
         if (!res.ok) throw new Error("API error");
-
         const data = await res.json();
-
-        console.log("DATA DESDE API:", data);
-
-        // // 🔥 FORMATEAR FECHA
-        // const formatted = data.map((a: any) => ({
-        //   ...a,
-        //   date: a.date ? a.date.split("T")[0] : "",
-        // }));
-        const formatted = data.map((a: any) => ({
-          id: a.id,
-          authorName: a.author_name,
-          authorLastname: a.author_lastname,
-          authorPhoto: a.author_photo,
-          authorCargo: a.author_cargo,
-          title: a.title,
-          subtitle: a.subtitle,
-          date: a.date ? a.date.split("T")[0] : "",
-          body: a.body,
-        }));
-
-        setArticles(formatted);
-
-        setArticles(formatted);
+        setArticles(
+          data.map((a: any) => ({
+            ...a,
+            date: a.date ? a.date.split("T")[0] : "",
+          })),
+        );
       } catch (err) {
         console.error("Error cargando:", err);
+        showToast("❌", "No se pudo conectar al servidor.");
       }
     };
-
     load();
-  }, []);
+  }, [headers]);
 
+  // ── Responsive ──
   useEffect(() => {
     const handle = () => setIsMobile(window.innerWidth <= 640);
     window.addEventListener("resize", handle);
     return () => window.removeEventListener("resize", handle);
   }, []);
 
+  // ── Resizer: abrir preview ──
   useEffect(() => {
     if (!previewOpen || isMobile) return;
     const wa = workAreaRef.current;
@@ -95,6 +108,7 @@ export default function Admin() {
     pp.style.width = `${totalW - edW - 5}px`;
   }, [previewOpen, isMobile]);
 
+  // ── Resizer: cerrar preview ──
   useEffect(() => {
     if (previewOpen || isMobile) return;
     const ep = editorPanelRef.current;
@@ -106,6 +120,7 @@ export default function Admin() {
 
   const currentArticle = articles.find((a) => a.id === currentId) ?? null;
 
+  // ── Seleccionar artículo ──
   const selectArticle = useCallback(
     (id: number) => {
       const art = articles.find((a) => a.id === id);
@@ -126,50 +141,39 @@ export default function Admin() {
     setPreviewData(null);
   }, []);
 
-  // 🔥 GUARDAR (POST / PUT)
+  // ── Guardar ──
   const handleSave = useCallback(
     async (data: Omit<Article, "id">) => {
-      console.log("DATA QUE SE ENVÍA:", data);
       try {
         if (currentId) {
-          const res = await fetch(`/api/articles/${currentId}`, {
+          const res = await fetch(`${API}/articles/${currentId}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers,
             body: JSON.stringify(data),
           });
-
+          if (!res.ok) throw new Error("Error al actualizar");
           const updated = await res.json();
-
-          // 👇 AQUÍ VA
-          const formatted = {
-            id: updated.id,
-            authorName: updated.author_name,
-            authorLastname: updated.author_lastname,
-            authorPhoto: updated.author_photo,
-            authorCargo: updated.author_cargo,
-            title: updated.title,
-            subtitle: updated.subtitle,
-            date: updated.date ? updated.date.split("T")[0] : "",
-            body: updated.body,
-          };
-
           setArticles((prev) =>
-            prev.map((a) => (a.id === currentId ? formatted : a)),
+            prev.map((a) =>
+              a.id === currentId
+                ? { ...updated, date: updated.date?.split("T")[0] ?? "" }
+                : a,
+            ),
           );
-
           showToast("✅", "Artículo actualizado.");
         } else {
-          const res = await fetch("/api/articles", {
+          const res = await fetch(`${API}/articles`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers,
             body: JSON.stringify(data),
           });
-
+          if (!res.ok) throw new Error("Error al crear");
           const created = await res.json();
-
-          setArticles((prev) => [...prev, created]);
+          setArticles((prev) => [
+            ...prev,
+            { ...created, date: created.date?.split("T")[0] ?? "" },
+          ]);
           setCurrentId(created.id);
-
           showToast("🚀", "Artículo publicado.");
         }
       } catch (err) {
@@ -177,44 +181,36 @@ export default function Admin() {
         showToast("❌", "Error al guardar.");
       }
     },
-    [currentId, showToast],
+    [currentId, headers],
   );
 
-  const handleCancel = useCallback(() => {
-    setMode("idle");
-    setCurrentId(null);
-    setPreviewOpen(false);
-    setPreviewData(null);
-  }, []);
-
-  const handleDeleteRequest = useCallback(() => {
-    if (currentId !== null) setDeleteTargetId(currentId);
-  }, [currentId]);
-
-  // 🔥 ELIMINAR
+  // ── Eliminar ──
   const handleDeleteConfirm = useCallback(async () => {
     if (deleteTargetId === null) return;
-
     try {
-      await fetch(`/api/articles/${deleteTargetId}`, {
+      const res = await fetch(`${API}/articles/${deleteTargetId}`, {
         method: "DELETE",
+        headers,
       });
-
+      if (!res.ok) throw new Error("Error al eliminar");
       setArticles((prev) => prev.filter((a) => a.id !== deleteTargetId));
-
       showToast("🗑️", "Artículo eliminado.");
     } catch (err) {
       console.error(err);
       showToast("❌", "Error al eliminar.");
     }
-
     setDeleteTargetId(null);
     setMode("idle");
     setCurrentId(null);
     setPreviewOpen(false);
     setPreviewData(null);
-  }, [deleteTargetId, showToast]);
+  }, [deleteTargetId, headers]);
 
+  const handleDeleteRequest = useCallback(() => {
+    if (currentId !== null) setDeleteTargetId(currentId);
+  }, [currentId]);
+
+  // ── UI helpers ──
   const togglePreview = useCallback(() => {
     if (isMobile) {
       setMobileTab("preview");
@@ -227,9 +223,18 @@ export default function Admin() {
     setPreviewData(data);
   }, []);
 
+  // ── Cerrar sesión ──
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem("token");
+    window.location.href = "/LoginAdmin";
+  }, []);
+
   const showPreviewPanel =
     (previewOpen && !isMobile) || (isMobile && mobileTab === "preview");
 
+  const hideEditor = isMobile && mobileTab === "preview";
+
+  // ── Render ──
   return (
     <div className={styles.root}>
       <div className={styles.topStripe} />
@@ -237,35 +242,33 @@ export default function Admin() {
       <header className={styles.header}>
         <div className={styles.logoWrap}>
           <button
-            className={`${styles.menuBtn} ${sidebarOpen ? styles.menuOpen : ""}`}
+            className={styles.menuBtn}
             onClick={() => setSidebarOpen((v) => !v)}
           >
             <span />
             <span />
             <span />
           </button>
-          <div className={styles.logoCircle}>🌾</div>
-          <div>
-            <p className={styles.logoTitle}>Foro Mundial de la Alimentación</p>
-            <p className={styles.logoSub}>Capítulo Perú · Admin</p>
-          </div>
+          <img src="img/WFFVOCES.webp" alt="WFF Perú" className={styles.logo} />
         </div>
+
         <div className={styles.hdrRight}>
-          <span className={styles.liveDot}>En línea</span>
-          <span className={styles.adminPill}>Admin</span>
+          <button className={styles.btnLogout} onClick={handleLogout}>
+            Cerrar sesión
+          </button>
         </div>
       </header>
 
       {mode === "edit" && (
         <div className={styles.mobileTabs}>
           <button
-            className={`${styles.mobileTab} ${mobileTab === "editor" ? styles.activeTab : ""}`}
+            className={mobileTab === "editor" ? styles.activeTab : ""}
             onClick={() => setMobileTab("editor")}
           >
             ✏️ Editor
           </button>
           <button
-            className={`${styles.mobileTab} ${mobileTab === "preview" ? styles.activeTab : ""}`}
+            className={mobileTab === "preview" ? styles.activeTab : ""}
             onClick={() => setMobileTab("preview")}
           >
             👁 Vista previa
@@ -274,15 +277,9 @@ export default function Admin() {
       )}
 
       <div className={styles.layout}>
-        {sidebarOpen && (
-          <div
-            className={styles.sidebarOverlay}
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-
+        {/* ── SIDEBAR DRAWER ── */}
         <div
-          className={`${styles.sidebarWrap} ${sidebarOpen ? styles.sidebarVisible : ""}`}
+          className={`${styles.sidebarWrap} ${sidebarOpen ? styles.sidebarOpen : ""}`}
         >
           <ArticleList
             articles={articles}
@@ -292,53 +289,84 @@ export default function Admin() {
           />
         </div>
 
-        <div className={styles.workArea} ref={workAreaRef}>
+        {/* ── OVERLAY (cierra el drawer al tocar fuera) ── */}
+        {sidebarOpen && (
           <div
-            ref={editorPanelRef}
-            className={styles.editorPanel}
-            style={{
-              display: isMobile && mobileTab === "preview" ? "none" : undefined,
-            }}
-          >
-            {mode === "idle" ? (
-              <EmptyState
-                icon="✍️"
-                title="Ningún artículo seleccionado"
-                sub="Selecciona uno o crea uno nuevo."
-              />
+            className={styles.sidebarOverlay}
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
+        {/* ── ÁREA DE TRABAJO ── */}
+        <div className={styles.workArea} ref={workAreaRef}>
+          {/* 🟢 MOBILE */}
+          {isMobile ? (
+            mobileTab === "editor" ? (
+              <div ref={editorPanelRef} className={styles.editorPanel}>
+                {mode === "idle" ? (
+                  <EmptyState
+                    icon="✍️"
+                    title="Ningún artículo seleccionado"
+                    sub="Selecciona uno o crea uno nuevo."
+                  />
+                ) : (
+                  <ArticleEditor
+                    article={currentArticle}
+                    onSave={handleSave}
+                    onDelete={handleDeleteRequest}
+                    onCancel={() => setMode("idle")}
+                    onTogglePreview={togglePreview}
+                    previewOpen={previewOpen}
+                    isMobile={isMobile}
+                    onPreviewDataChange={handlePreviewDataChange}
+                    mobileTab={mobileTab}
+                  />
+                )}
+              </div>
             ) : (
-              <ArticleEditor
-                article={currentArticle}
-                onSave={handleSave}
-                onDelete={handleDeleteRequest}
-                onCancel={handleCancel}
-                onTogglePreview={togglePreview}
-                previewOpen={previewOpen}
-                isMobile={isMobile}
-                onPreviewDataChange={handlePreviewDataChange}
-              />
-            )}
-          </div>
+              <div ref={previewPanelRef} className={styles.previewPanel}>
+                <ArticlePreview
+                  data={previewData}
+                  onClose={() => setPreviewOpen(false)}
+                  isMobile={isMobile}
+                />
+              </div>
+            )
+          ) : (
+            /* 🟣 DESKTOP (tu lógica actual) */
+            <>
+              <div ref={editorPanelRef} className={styles.editorPanel}>
+                {mode === "idle" ? (
+                  <EmptyState
+                    icon="✍️"
+                    title="Ningún artículo seleccionado"
+                    sub="Selecciona uno o crea uno nuevo."
+                  />
+                ) : (
+                  <ArticleEditor
+                    article={currentArticle}
+                    onSave={handleSave}
+                    onDelete={handleDeleteRequest}
+                    onCancel={() => setMode("idle")}
+                    onTogglePreview={togglePreview}
+                    previewOpen={previewOpen}
+                    isMobile={isMobile}
+                    onPreviewDataChange={handlePreviewDataChange}
+                    mobileTab={mobileTab}
+                  />
+                )}
+              </div>
 
-          {previewOpen && !isMobile && mode === "edit" && (
-            <div className={styles.resizer} onMouseDown={onResizerMouseDown} />
-          )}
-
-          {showPreviewPanel && mode === "edit" && (
-            <div
-              ref={previewPanelRef}
-              className={styles.previewPanel}
-              style={isMobile ? { width: "100%" } : undefined}
-            >
-              <ArticlePreview
-                data={previewData}
-                onClose={
-                  isMobile
-                    ? () => setMobileTab("editor")
-                    : () => setPreviewOpen(false)
-                }
-              />
-            </div>
+              {showPreviewPanel && mode === "edit" && (
+                <div ref={previewPanelRef} className={styles.previewPanel}>
+                  <ArticlePreview
+                    data={previewData}
+                    onClose={() => setPreviewOpen(false)}
+                    isMobile={isMobile} // 👈 aquí
+                  />
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

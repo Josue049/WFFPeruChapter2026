@@ -15,7 +15,7 @@ export const Inicio: React.FC = () => {
         label="Área Estratégica"
         title="CIENCIA E INNOVACIÓN"
         subtitle="Isabella Chancahuana y Josué Gutiérrez"
-        backgroundImage="/img/FondoFAO4.png"
+        backgroundImage="/img/FondoFAO4.webp"
         backgroundAlign="top"
       />
 
@@ -34,9 +34,9 @@ export const Inicio: React.FC = () => {
         ]}
       />
 
-      <ProyectoSection imageSrc="/img/agricultura.jpg" />
+      <ProyectoSection imageSrc="/img/agricultura.webp" />
 
-      <ClubProyectosSection imageSrc="/img/conferencia.jpg" />
+      <ClubProyectosSection imageSrc="/img/conferencia.webp" />
 
       {/* <ContentSelector /> */}
 

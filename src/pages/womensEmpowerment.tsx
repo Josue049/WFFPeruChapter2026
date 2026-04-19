@@ -14,7 +14,7 @@ export const Inicio: React.FC = () => {
         label="EJE TRANSVERSAL"
         title="Empoderamiento de las mujeres Jóvenes"
         subtitle="Puntos focales: Kristel Leiva y Ana Paula Guillen"
-        backgroundImage="/img/womenIlustration.png"
+        backgroundImage="/img/womenIlustration.webp"
         backgroundAlign="center"
       />
 

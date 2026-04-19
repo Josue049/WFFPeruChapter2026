@@ -13,7 +13,7 @@ export const Inicio: React.FC = () => {
         label="Área Estratégica"
         title="POLÍTICAS Y GOBERNANZA"
         subtitle="Lizet Mejía y Kristel Leiva"
-        backgroundImage="/img/FondoFAO4.png"
+        backgroundImage="/img/FondoFAO4.webp"
         backgroundAlign="top"
       />
 
@@ -21,7 +21,7 @@ export const Inicio: React.FC = () => {
         titulo="¿QUÉ HACEMOS EN POLÍTICAS Y GOBERNANZA?"
         linkText="INFORMACIÓN"
         descripcion="Incorpora activamente a las y los jóvenes en la formulación de políticas públicas y en la creación de espacios de gobernanza agroalimentaria. Facilita la canalización de propuestas, manifiestos y procesos de diálogo que fortalecen la participación juvenil y promueven acciones sostenibles, inclusivas y con enfoque territorial."
-        imgSrc="/img/mujeres.png"
+        imgSrc="/img/mujeres.webp"
         bloques={[
           { texto: "Participación juvenil", color: "Rosa" },
           { texto: "Articulación", color: "Amarillo" },
