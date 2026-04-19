@@ -32,13 +32,10 @@ export const Articulo: React.FC = () => {
   const formatDate = (dateStr: string) => {
     const [year, month, day] = dateStr.split("-").map(Number);
 
-    const date = new Date(Date.UTC(year, month - 1, day));
-
-    return date.toLocaleDateString("es-PE", {
+    return new Date(year, month - 1, day).toLocaleDateString("es-PE", {
       day: "numeric",
       month: "long",
       year: "numeric",
-      timeZone: "America/Lima",
     });
   };
 
@@ -89,12 +86,7 @@ export const Articulo: React.FC = () => {
             <div className="ArticuloCompleto">
               <div className="bgDesktopWhite">
                 <h6 className="FechaArticulo">
-                  Publicado el{" "}
-                  {new Date(post.date).toLocaleDateString("es-ES", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
+                  Publicado el {post.date && formatDate(post.date)}
                 </h6>
 
                 <div className="lineaWidth"></div>
