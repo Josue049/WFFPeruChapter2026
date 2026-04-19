@@ -12,7 +12,7 @@ import styles from "./Admin.module.css";
 
 type Mode = "idle" | "edit";
 
-const API = "http://127.0.0.1:8000";
+const API = "https://api.wffperuchapter.page";
 
 // ── Wrapper: solo maneja auth ─────────────────────────────────
 export default function Admin() {
