@@ -22,3 +22,10 @@ declare module '*.module.styl' {
   const classes: { [key: string]: string };
   export default classes;
 }
+
+// Declarations for plain/global style imports (e.g. import "swiper/css")
+declare module '*.css';
+declare module '*.scss';
+declare module '*.sass';
+declare module '*.less';
+declare module '*.styl';

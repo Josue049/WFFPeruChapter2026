@@ -11,7 +11,7 @@ h2,
 h3,
 h4,
 .font-weight-semi-bold {
-  font-weight: 600 ;
+  font-weight: 600;
 }
 
 h5,
@@ -578,26 +578,34 @@ p.m-0.text-uppercase {
   display: flex;
   align-items: center;
 
-  overflow-x: auto;      /* permite scroll horizontal */
+  overflow-x: auto;
+  /* permite scroll horizontal */
   overflow-y: hidden;
-  white-space: nowrap;   /* evita salto de línea */
-  -webkit-overflow-scrolling: touch; /* mejor en móvil */
+  white-space: nowrap;
+  /* evita salto de línea */
+  -webkit-overflow-scrolling: touch;
+  /* mejor en móvil */
 
   /* Ocultar scrollbar */
-  scrollbar-width: none;      /* Firefox */
-  -ms-overflow-style: none;   /* IE/Edge viejo */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge viejo */
 }
 
 .nav-2 ul {
   display: flex;
-  flex-wrap: nowrap;     /* que no se parta en varias líneas */
+  flex-wrap: nowrap;
+  /* que no se parta en varias líneas */
   gap: 24px;
   padding: 0 50px;
   margin: 0;
-  min-width: max-content; /* mantiene ancho real del contenido */
+  min-width: max-content;
+  /* mantiene ancho real del contenido */
 }
 
-.nav-2 li, .nav-2 li a {
+.nav-2 li,
+.nav-2 li a {
   color: #ffffff;
   /* letra blanca */
   font-weight: 600;
@@ -629,4 +637,14 @@ p.m-0.text-uppercase {
   .movil769 {
     display: block;
   }
+}
+
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  /* ✅ esto hace que el scroll ocurra aquí */
+  height: 100vh;
+  /* ✅ necesario para que overflow-y funcione */
 }

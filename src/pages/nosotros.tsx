@@ -16,6 +16,7 @@ export const Inicio: React.FC = () => {
       />
 
 
+
       <EstructuraSection />
 
       {/* <Footer /> */}

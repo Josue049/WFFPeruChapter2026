@@ -6,7 +6,7 @@ import { PlanAccionSection } from "../components/PlanAccionSection";
 import NuestroCompromiso from "../components/NuestroCompromiso";
 import VisibilidadHitos from "../components/VisibilidadHitos";
 
-export const Inicio: React.FC = () => {
+export const empoderamientoFemenino: React.FC = () => {
   return (
     <>
       <Header
@@ -53,4 +53,4 @@ export const Inicio: React.FC = () => {
   );
 };
 
-export default Inicio;
+export default empoderamientoFemenino;

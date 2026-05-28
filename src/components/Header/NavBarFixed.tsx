@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { SubNav } from "./SubNav";
 
-export function NavBar() {
+export function NavBarFixed() {
   const [open, setOpen] = useState(false);
   const [areasOpen, setAreasOpen] = useState(false);
   const location = useLocation();
@@ -42,7 +42,7 @@ export function NavBar() {
   return (
     <div className="container-fluid position-relative nav-bar p-0">
       <div
-        className="container-lg position-relative p-0 px-lg-3"
+        className="container-lg-fixed position-relative p-0 "
         style={{ zIndex: 9 }}
       >
         <nav className="navbar navbar-expand-lg bg-light navbar-light shadow-lg py-3 py-lg-0 pl-3 pl-lg-5">

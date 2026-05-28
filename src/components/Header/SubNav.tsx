@@ -7,6 +7,9 @@ export function SubNav() {
         <li>
           <NavLink to="/voces">VOCES</NavLink>
         </li>
+        <li>
+          <NavLink to="/empoderamiento-femenino">EMPODERAMIENTO FEMENINO</NavLink>
+        </li>
       </ul>
     </div>
   );

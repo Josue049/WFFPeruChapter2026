@@ -441,7 +441,7 @@ h6,
 
 .display-4 {
   font-size: 3.5rem;
-  font-weight: 300;
+  font-weight: 900;
   line-height: 1.2;
 }
 
@@ -12081,3 +12081,12 @@ body {
 .content {
   flex: 1;
 }
+
+container-lg-fixed{
+  width: 100vw;
+}
+
+
+/* .hero-subtitle{
+  font-weight: 600 !important;
+} */
