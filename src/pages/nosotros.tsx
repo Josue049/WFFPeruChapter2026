@@ -15,6 +15,7 @@ export const Inicio: React.FC = () => {
           backgroundAlign="center"
       />
 
+
       <EstructuraSection />
 
       {/* <Footer /> */}

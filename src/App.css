@@ -11,7 +11,7 @@ h2,
 h3,
 h4,
 .font-weight-semi-bold {
-  font-weight: 600 !important;
+  font-weight: 600 ;
 }
 
 h5,
@@ -572,7 +572,7 @@ p.m-0.text-uppercase {
 }
 
 .nav-2 {
-  background: linear-gradient(to right, #e75733, #f7ae26);
+  background: linear-gradient(90deg, #ff6e6e, #fbb800);
   height: 25px;
   width: 100%;
   display: flex;

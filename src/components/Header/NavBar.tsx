@@ -33,7 +33,6 @@ export function NavBar() {
         style={{ zIndex: 9 }}
       >
         <nav className="navbar navbar-expand-lg bg-light navbar-light shadow-lg py-3 py-lg-0 pl-3 pl-lg-5">
-          
           <NavLink to="/" className="desktop" onClick={closeMenu}>
             <img
               className="logoWFF"
@@ -66,7 +65,6 @@ export function NavBar() {
             }`}
           >
             <div className="navbar-nav ml-auto py-0">
-              
               <NavLink
                 to="/"
                 end
@@ -134,7 +132,9 @@ export function NavBar() {
                     className="dropdown-item"
                     onClick={closeMenu}
                   >
-                    Gestión de las<br />Comunicaciones
+                    Gestión de las
+                    <br />
+                    Comunicaciones
                   </NavLink>
 
                   <NavLink
@@ -142,12 +142,32 @@ export function NavBar() {
                     className="dropdown-item"
                     onClick={closeMenu}
                   >
-                    Relacionamiento y<br />Gestión de Recursos
+                    Relacionamiento y<br />
+                    Gestión de Recursos
+                  </NavLink>
+
+                  <NavLink
+                    to="/womensEmpowerment"
+                    className="dropdown-item"
+                    onClick={closeMenu}
+                  >
+                    Empoderamiento
+                    <br /> Femenino
                   </NavLink>
                 </div>
               </div>
 
-              <NavLink
+              <div className="flex-start vertical-align col-lg-6">
+                <a
+                  className="btn btn-unirse join"
+                  href="https://forms.office.com/pages/responsepage.aspx?id=aMQ6Frir0ESB_dnbFeOvlnq8OrflyhZOrnoT41c-u6BUMFpMWjk3WlFJUVVIN0k2OVpHNEpBN0FUMC4u&route=shorturl"
+                  aria-label="Facebook WFF Perú Chapter"
+                >
+                  Únete al Capítulo
+                </a>
+              </div>
+
+              {/* <NavLink
                 to="/womensEmpowerment"
                 onClick={closeMenu}
                 className={({ isActive }) =>
@@ -155,8 +175,7 @@ export function NavBar() {
                 }
               >
                 Women&apos;s Empowerment
-              </NavLink>
-
+              </NavLink> */}
             </div>
           </div>
         </nav>
