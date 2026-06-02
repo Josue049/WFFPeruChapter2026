@@ -9,11 +9,11 @@ interface Proyecto {
 const proyectos: Proyecto[] = [
   {
     img: "/img/CineEcologico.webp",
-    descripcion: `Evento cultural que promueve la conciencia ambiental mediante cine y diálogo juvenil. Incluye proyección de cortometrajes sobre cambio climático, sostenibilidad y economía circular. Culmina con un conversatorio de jóvenes líderes y un llamado a la acción por el planeta en la región Amazonas. Fecha tentativa: 6 DE DICIEMBRE DEL 2025`,
+    descripcion: `Evento cultural que promueve la conciencia ambiental mediante cine y diálogo juvenil. Incluye proyección de cortometrajes sobre cambio climático, sostenibilidad y economía circular. Culmina con un conversatorio de jóvenes líderes y un llamado a la acción por el planeta en la región Amazonas.`,
   },
   {
     img: "/img/FestiFAO.webp",
-    descripcion: `Festi FAO es un festival juvenil que celebra la cultura peruana y la creatividad para transformar los sistemas alimentarios. Incluye cocina con insumos locales, cine, arte, música y apoyo a emprendimientos regionales. Fecha tentativa: 9 DE ABRIL DEL 2026`,
+    descripcion: `Festi FAO es un festival juvenil que celebra la cultura peruana y la creatividad para transformar los sistemas alimentarios. Incluye cocina con insumos locales, cine, arte, música y apoyo a emprendimientos regionales.`,
   },
   {
     img: "/img/SemillasDeFuerza.webp",
