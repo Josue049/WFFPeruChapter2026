@@ -3,11 +3,10 @@ import Footer from "./Footer";
 
 export function Layout() {
   return (
-    <div className="app-layout">
+    <div className="app-layout" id="main-scroll">  {/* ✅ agrega el id */}
       <div className="content">
         <Outlet />
       </div>
-
       <Footer />
     </div>
   );

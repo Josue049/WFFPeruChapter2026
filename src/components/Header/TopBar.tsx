@@ -3,7 +3,7 @@ export function TopBar() {
     <div className="container-fluid pt-3 d-none d-lg-block bg-light">
       <div className="container">
         <div className="row">
-          <div className="flex-start vertical-align col-lg-6">
+          {/* <div className="flex-start vertical-align col-lg-6">
             <a
               className="btn btn-outline-primary join"
               href="https://forms.office.com/pages/responsepage.aspx?id=aMQ6Frir0ESB_dnbFeOvlnq8OrflyhZOrnoT41c-u6BUMFpMWjk3WlFJUVVIN0k2OVpHNEpBN0FUMC4u&route=shorturl"
@@ -11,8 +11,8 @@ export function TopBar() {
             >
               Únete al Capítulo
             </a>
-          </div>
-          <div className="flex-end vertical-align col-lg-6 text-center text-lg-right">
+          </div> */}
+          <div className="flex-end">
             <div className="d-flex justify-content-end">
               <a
                 className="btn btn-outline-primary btn-redes mr-2"

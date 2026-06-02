@@ -441,7 +441,7 @@ h6,
 
 .display-4 {
   font-size: 3.5rem;
-  font-weight: 300;
+  font-weight: 900;
   line-height: 1.2;
 }
 
@@ -11893,20 +11893,20 @@ body {
 
 /* botón base */
 .slider-btn {
-  padding: 12px 24px;
+  padding: 12px 30px;
   font-size: 1rem;
   cursor: pointer;
-  background-color: #ff9a2b;
-  color: white;
-  border: none;
-  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 1);
+  color: #1F74C2;
+  border: 2px white solid;
+  border-radius: 20px;
   transition: background 0.3s, transform 0.2s;
   font-weight: bold;
 }
 
 /* hover */
 .slider-btn:hover {
-  background-color: #e88821;
+  transform: scale(1.05);
 }
 
 /* mobile */
@@ -11975,7 +11975,24 @@ body::after {
 
 .flex-end {
   display: flex;
+  width: 100%;
   justify-content: flex-end;
+  margin-right: 15px;
+}
+
+.btn-unirse {
+  background: linear-gradient(90deg, #ff8686, #fbb800);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-weight: bold;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.btn-unirse:hover {
+  transform: scale(1.05);
+  color: white;
 }
 
 .articulo-categoria {
@@ -12008,14 +12025,6 @@ body::after {
   padding-top: 40px;
 }
 
-/* mobile */
-@media (max-width: 403px) {
-  .slider-btn {
-    padding: 8px 16px;
-    font-size: 0.85rem;
-  }
-}
-
 .ArticuloParrafos {
   background-color: rgba(255, 255, 255, 0.7);
   padding: 20px 80px;
@@ -12039,7 +12048,7 @@ body::after {
     padding-top: 50px;
   }
 
-  .ArticuloCompleto{
+  .ArticuloCompleto {
     max-width: 100%;
     padding: 20px;
   }
@@ -12047,20 +12056,21 @@ body::after {
 }
 
 
-  .ArticuloCompleto {
-    background-color: white;
-    margin-top: 0px;
-  }
+.ArticuloCompleto {
+  background-color: white;
+  margin-top: 0px;
+}
 
 
-  html, body {
+html,
+body {
   height: 100%;
   margin: 0;
 }
 
 #root {
   min-height: 100vh;
-}
+} 
 
 .app-layout {
   min-height: 100vh;
@@ -12070,4 +12080,21 @@ body::after {
 
 .content {
   flex: 1;
+}
+
+container-lg-fixed{
+  width: 100vw;
+}
+
+
+/* .hero-subtitle{
+  font-weight: 600 !important;
+} */
+
+
+
+.NosotrosTexto{
+  font-weight: 900 !important;
+  color: #333;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
