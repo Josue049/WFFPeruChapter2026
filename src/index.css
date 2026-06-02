@@ -12070,7 +12070,7 @@ body {
 
 #root {
   min-height: 100vh;
-}
+} 
 
 .app-layout {
   min-height: 100vh;
@@ -12090,3 +12090,11 @@ container-lg-fixed{
 /* .hero-subtitle{
   font-weight: 600 !important;
 } */
+
+
+
+.NosotrosTexto{
+  font-weight: 900 !important;
+  color: #333;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}

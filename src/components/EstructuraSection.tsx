@@ -6,12 +6,12 @@ export function EstructuraSection({
   imageSrc = "/img/Estructura.webp",
 }: EstructuraSectionProps) {
   return (
-    <div className="container-fluid py-5">
-      <div className="container py-5">
+    <div className="container-fluid ">
+      <div className="container">
         <div className="row">
           <div>
             <div className="pb-3">
-              <div className="bloque-texto">
+              {/* <div className="bloque-texto">
                 <div className="position-relative">
                   <img
                     className="img-fluid w-100"
@@ -19,9 +19,9 @@ export function EstructuraSection({
                     alt="Estructura organizacional"
                   />
                 </div>
-              </div>
+              </div> */}
 
-              <div className="bg-white mb-3 clearfix" style={{ padding: 30 }}>
+              <div className="mb-3 clearfix" style={{ padding: 30 }}>
                 <div className="marcado Rosa">ESTRUCTURA</div>
 
                 <ol>
