@@ -10,7 +10,7 @@ const LoQueHacemos: React.FC = () => {
             <div className="cuadro-flotante shadow bg-white">
               <div className="cuadro">
                 <div className="imagen">
-                  <img src="img/comu.webp" className="img-fluid decor-img-comu" alt="" />
+                  <img src="img/comu1.webp" className="img-fluid decor-img-comu" alt="" />
                 </div>
                 <div className="cuadro-text">
                   <h2 className="">Lo que hacemos:</h2>

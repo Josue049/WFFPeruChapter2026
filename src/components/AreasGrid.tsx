@@ -28,7 +28,7 @@ export default function AreasSection() {
     {
       title: "Empoderamiento Femenino",
       image: "img/FondoFAO5.webp",
-      href: "/womensEmpowerment",
+      href: "/empoderamiento-femenino",
     },
   ]
 

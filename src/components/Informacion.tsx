@@ -14,7 +14,7 @@ const Informacion: React.FC = () => {
                     INFORMACIÓN
                   </a>
                 </div>
-                <img className="img-fluid img-w float-right mr-4 mb-2" src="img/Jovenes.webp" alt="Jóvenes" />
+                <img className="img-fluid img-w float-right mr-4 mb-2" src="img/comu2.webp" alt="Jóvenes" />
                 <h2 className="mb-3">¿QUIÉNES SOMOS?</h2>
                 <ul>
                   <li>Somos la voz y el puente visual del Capítulo Juvenil.</li>
