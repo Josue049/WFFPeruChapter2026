@@ -19,7 +19,6 @@ const LoQueHacemos: React.FC = () => {
                   <ul>
                     <li>Narrativa clara</li>
                     <li>Plan editorial</li>
-                    <li>Plan editorial</li>
                   </ul>
 
                   <h4>2. Redes sociales</h4>
