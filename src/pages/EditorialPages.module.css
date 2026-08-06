@@ -254,3 +254,463 @@
   color: inherit;
   text-decoration: none;
 }
+
+/* ===== Volunteer magazine system ===== */
+.volunteerLanding,
+.volunteerArticlePage {
+  --mag-orange: #f36f21;
+  --mag-coral: #ff5d56;
+  --mag-gold: #ffb000;
+  --mag-paper: #fbfaf7;
+  --mag-ink: #111111;
+  --mag-muted: #696969;
+  background: var(--mag-paper);
+  color: var(--mag-ink);
+}
+
+.volunteerBanner {
+  display: grid;
+  grid-template-columns: minmax(0, .92fr) minmax(420px, 1.08fr);
+  min-height: 500px;
+  overflow: hidden;
+  margin: 10px 0 72px;
+  border-radius: 30px;
+  background: #f6f0e8;
+  color: inherit;
+  text-decoration: none;
+  box-shadow: 0 24px 70px rgba(46, 33, 19, .1);
+}
+
+.volunteerBannerCopy {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(42px, 6vw, 84px);
+}
+
+.volunteerBannerCopy::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -15%;
+  right: -110px;
+  width: 230px;
+  height: 130%;
+  border-radius: 50%;
+  background: #f6f0e8;
+}
+
+.bannerEyebrow,
+.magazineSectionHeader span {
+  color: var(--mag-orange);
+  font-size: .76rem;
+  font-weight: 850;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.volunteerBannerCopy h1 {
+  max-width: 520px;
+  margin: 18px 0 8px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(3.2rem, 6vw, 6.3rem);
+  line-height: .86;
+  letter-spacing: -.055em;
+}
+
+.bannerRole {
+  margin: 14px 0 0;
+  color: #e54825;
+  font-size: clamp(1rem, 1.7vw, 1.3rem);
+  font-weight: 800;
+}
+
+.bannerHeadline {
+  max-width: 500px;
+  margin: 25px 0 0;
+  color: #5d5d5d;
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+.bannerButton {
+  width: fit-content;
+  margin-top: 30px;
+  padding: 13px 21px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--mag-coral), var(--mag-gold));
+  color: #fff;
+  font-weight: 850;
+}
+
+.volunteerBannerVisual {
+  position: relative;
+  overflow: hidden;
+  min-height: 500px;
+  background:
+    radial-gradient(circle at 85% 5%, rgba(255, 100, 52, .95) 0 18%, transparent 18.3%),
+    linear-gradient(145deg, #ffbf34, #f56a32 60%, #ff514e);
+}
+
+.volunteerBannerVisual::after {
+  content: "";
+  position: absolute;
+  right: -80px;
+  bottom: -70px;
+  width: 240px;
+  height: 170px;
+  border-radius: 50% 45% 0 0;
+  background: #ffb000;
+}
+
+.bannerBackdrop {
+  position: absolute;
+  inset: 10% 8% auto auto;
+  color: rgba(255,255,255,.22);
+  text-align: right;
+  line-height: .75;
+}
+
+.bannerBackdrop span {
+  display: block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(8rem, 16vw, 16rem);
+  font-weight: 900;
+}
+
+.bannerBackdrop small {
+  font-size: clamp(1.4rem, 3vw, 3rem);
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.volunteerBannerVisual img {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 0;
+  width: min(88%, 620px);
+  height: 94%;
+  object-fit: contain;
+  object-position: center bottom;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 18px 24px rgba(65, 26, 9, .2));
+}
+
+.magazineSection { margin-top: 20px; }
+.magazineSectionHeader {
+  display: grid;
+  grid-template-columns: 1fr minmax(300px, 560px);
+  gap: 35px;
+  align-items: end;
+  margin-bottom: 32px;
+}
+.magazineSectionHeader h2 {
+  margin: 8px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.3rem, 4vw, 4rem);
+}
+.magazineSectionHeader p { margin: 0; color: #696969; line-height: 1.65; }
+
+.magazineCoverGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.magazineCover,
+.articleCoverMini {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 5.35;
+  border: 1px solid #d8d8d8;
+  background: #f3f3f2;
+  color: #080808;
+  text-decoration: none;
+  box-shadow: 0 13px 30px rgba(0, 0, 0, .07);
+}
+
+.magazineCover {
+  transition: transform .28s ease, box-shadow .28s ease;
+}
+.magazineCover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 44px rgba(0, 0, 0, .13);
+}
+
+.coverMasthead {
+  position: absolute;
+  z-index: 3;
+  top: 4%;
+  left: 5%;
+  line-height: .78;
+}
+.coverMasthead strong {
+  display: block;
+  font-family: Didot, "Bodoni MT", Georgia, "Times New Roman", serif;
+  font-size: clamp(2.4rem, 4vw, 4.4rem);
+  letter-spacing: -.08em;
+}
+.coverMasthead span {
+  display: block;
+  margin-top: 7px;
+  font-size: clamp(.58rem, .85vw, .82rem);
+  font-weight: 900;
+  letter-spacing: .06em;
+}
+.coverEdition {
+  position: absolute;
+  z-index: 3;
+  top: 4%;
+  right: 5%;
+  font-size: .72rem;
+  font-weight: 900;
+}
+.coverVertical {
+  position: absolute;
+  z-index: 3;
+  left: 3.5%;
+  top: 29%;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: .58rem;
+  font-weight: 850;
+  letter-spacing: .16em;
+}
+.coverPortrait {
+  position: absolute;
+  inset: 15% 2% 0;
+}
+.coverPortrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: grayscale(1) contrast(1.06);
+}
+.coverIdentity {
+  position: absolute;
+  z-index: 4;
+  left: 6%;
+  right: 5%;
+  bottom: 4%;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0,0,0,.85);
+}
+.coverIdentity h3,
+.coverIdentity h2 {
+  max-width: 90%;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.7rem, 2.8vw, 3.1rem);
+  line-height: .82;
+  letter-spacing: -.055em;
+  text-transform: uppercase;
+}
+.coverIdentity p {
+  margin: 10px 0 0;
+  font-size: .68rem;
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.volunteerArticleShell {
+  width: min(1210px, calc(100% - 38px));
+  margin: 0 auto;
+  padding: 42px 0 90px;
+}
+
+.volunteerArticleHero {
+  display: grid;
+  grid-template-columns: minmax(270px, 360px) minmax(0, 1fr);
+  gap: clamp(45px, 7vw, 100px);
+  align-items: center;
+  margin-top: 30px;
+  padding-bottom: 65px;
+  border-bottom: 1px solid #ddd7cf;
+}
+
+.articleCoverMini { width: 100%; }
+.articleHeadlineBlock > span {
+  color: var(--mag-orange);
+  font-size: 1.05rem;
+  font-weight: 850;
+}
+.articleHeadlineBlock h1 {
+  max-width: 800px;
+  margin: 24px 0 32px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(3rem, 6vw, 6.6rem);
+  line-height: .92;
+  letter-spacing: -.055em;
+}
+.articleHeadlineBlock > p {
+  max-width: 760px;
+  margin: 34px 0 0;
+  color: #5d5d5d;
+  font-size: 1.08rem;
+  line-height: 1.8;
+}
+.articleByline {
+  display: flex;
+  gap: 13px;
+  align-items: center;
+}
+.articleByline > span {
+  color: var(--mag-orange);
+  font-size: 1.6rem;
+}
+.articleByline strong,
+.articleByline small { display: block; }
+.articleByline small { margin-top: 3px; color: #777; }
+
+.volunteerArticleLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 760px) 300px;
+  gap: clamp(45px, 7vw, 90px);
+  justify-content: center;
+  padding-top: 65px;
+}
+.volunteerStoryBody .richText {
+  font-size: 1.12rem;
+  line-height: 1.95;
+}
+.volunteerStoryBody .richText > p:first-child::first-letter {
+  float: left;
+  margin: .04em .11em 0 0;
+  color: var(--mag-orange);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 5.2rem;
+  line-height: .78;
+}
+.articleQuote {
+  position: relative;
+  margin: 55px 0;
+  padding: 34px 40px 34px 100px;
+  border-radius: 22px;
+  background: #fbefe3;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+  line-height: 1.35;
+}
+.articleQuote > span {
+  position: absolute;
+  left: 28px;
+  top: 12px;
+  color: var(--mag-orange);
+  font-size: 6rem;
+  line-height: 1;
+}
+.articleQuote p { margin: 0; }
+.articleGallerySection { margin-top: 55px; }
+.articleGallerySection h2,
+.volunteerArticleAside h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.8rem;
+}
+.editorialGallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.editorialGallery img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.editorialGallery img:first-child {
+  grid-column: 1 / -1;
+  aspect-ratio: 16 / 9;
+}
+.volunteerArticleAside {
+  display: grid;
+  align-content: start;
+  gap: 34px;
+}
+.volunteerArticleAside > section {
+  padding-top: 18px;
+  border-top: 2px solid var(--mag-orange);
+}
+.volunteerArticleAside dl { margin: 0; }
+.volunteerArticleAside dt {
+  margin-top: 16px;
+  color: var(--mag-orange);
+  font-size: .68rem;
+  font-weight: 850;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+.volunteerArticleAside dd { margin: 4px 0 0; line-height: 1.45; }
+.relatedVolunteerList { display: grid; }
+.relatedVolunteerList a {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #ded8cf;
+  color: inherit;
+  text-decoration: none;
+}
+.relatedPortrait {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  background: #eee;
+}
+.relatedPortrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: grayscale(1);
+}
+.relatedVolunteerList small,
+.relatedVolunteerList strong,
+.relatedVolunteerList span { display: block; }
+.relatedVolunteerList small { color: var(--mag-orange); font-weight: 850; }
+.relatedVolunteerList strong { margin-top: 4px; font-family: Georgia, "Times New Roman", serif; font-size: 1.13rem; }
+.relatedVolunteerList span { margin-top: 3px; color: #777; font-size: .78rem; }
+.relatedVolunteerList b { color: var(--mag-orange); }
+.articleSocials a {
+  display: block;
+  padding: 10px 0;
+  color: #222;
+  text-decoration: none;
+  border-bottom: 1px solid #e2ddd5;
+}
+
+@media (max-width: 1050px) {
+  .magazineCoverGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .volunteerArticleLayout { grid-template-columns: minmax(0, 1fr) 260px; gap: 45px; }
+}
+
+@media (max-width: 850px) {
+  .volunteerBanner { grid-template-columns: 1fr; }
+  .volunteerBannerCopy::after { display: none; }
+  .volunteerBannerVisual { min-height: 430px; }
+  .magazineSectionHeader { grid-template-columns: 1fr; }
+  .magazineCoverGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .volunteerArticleHero { grid-template-columns: minmax(220px, 300px) 1fr; gap: 35px; }
+  .volunteerArticleLayout { grid-template-columns: 1fr; }
+  .volunteerArticleAside { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 620px) {
+  .volunteerBanner { border-radius: 20px; min-height: 0; }
+  .volunteerBannerCopy { padding: 35px 28px; }
+  .volunteerBannerVisual { min-height: 360px; }
+  .magazineCoverGrid { gap: 13px; }
+  .coverIdentity h3 { font-size: 1.35rem; }
+  .volunteerArticleHero { grid-template-columns: 1fr; }
+  .articleCoverMini { width: min(100%, 330px); margin: 0 auto; }
+  .articleHeadlineBlock h1 { font-size: 3rem; }
+  .volunteerArticleAside { grid-template-columns: 1fr; }
+  .articleQuote { padding: 75px 25px 28px; }
+  .editorialGallery { grid-template-columns: 1fr; }
+  .editorialGallery img:first-child { grid-column: auto; }
+}

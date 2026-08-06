@@ -75,6 +75,67 @@ export function ImageField({ label, value, token, onChange, help, required }: Im
   );
 }
 
+export function TransparentPortraitField({ label, value, token, onChange, help, required }: ImageFieldProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState("");
+
+  const upload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (file.type !== "image/png") {
+      setError("El retrato debe ser un archivo PNG.");
+      event.target.value = "";
+      return;
+    }
+    setUploading(true);
+    setError("");
+    const body = new FormData();
+    body.append("file", file);
+    try {
+      const result = await apiRequest<UploadResponse>(
+        "/media/portraits",
+        { method: "POST", body },
+        { token, redirectOnUnauthorized: true },
+      );
+      onChange(result.url);
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : "No se pudo subir el retrato");
+    } finally {
+      setUploading(false);
+      if (inputRef.current) inputRef.current.value = "";
+    }
+  };
+
+  return (
+    <div className={styles.field}>
+      <label>{label}{required ? " *" : ""}</label>
+      <div className={styles.imageRow}>
+        <input
+          type="text"
+          value={value}
+          readOnly
+          placeholder="Sube un PNG transparente"
+          required={required}
+          aria-label="Ruta del retrato procesado"
+        />
+        <button type="button" className={styles.uploadButton} onClick={() => inputRef.current?.click()} disabled={uploading}>
+          {uploading ? "Validando…" : "Subir PNG"}
+        </button>
+        <input ref={inputRef} className={styles.hiddenInput} type="file" accept="image/png" onChange={upload} />
+      </div>
+      {help && <small>{help}</small>}
+      {error && <small className={styles.error}>{error}</small>}
+      {value && (
+        <div className={`${styles.imagePreview} ${styles.transparentPreview}`}>
+          <img src={mediaUrl(value)} alt="Vista previa del retrato" />
+          <button type="button" onClick={() => onChange("")}>Quitar</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 interface GalleryFieldProps {
   value: string[];
   token: string;

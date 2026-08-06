@@ -17,15 +17,15 @@ export interface Milestone {
 
 export interface VolunteerStory {
   id: number;
+  edition_number: number;
   name: string;
   slug: string;
   headline: string;
   introduction: string;
-  story: string;
-  achievement: string;
-  impact: string;
+  content_html: string;
   quote: string | null;
   role: string | null;
+  area: string | null;
   project: string | null;
   city: string | null;
   portrait_image: string;
