@@ -29,7 +29,23 @@ export function VolunteersManager({ token }: { token: string }) {
     ]);
     setItems(stories); setHighlight(setting);
   }, [token]);
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    let cancelled = false;
+
+    void Promise.all([
+      apiRequest<VolunteerStory[]>("/volunteer-stories", {}, { token, redirectOnUnauthorized: true }),
+      apiRequest<VolunteerHighlight>("/volunteer-highlight", {}, { token, redirectOnUnauthorized: true }),
+    ]).then(([stories, setting]) => {
+      if (!cancelled) {
+        setItems(stories);
+        setHighlight(setting);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [token]);
 
   const filtered = useMemo(() => items.filter((item) => `${item.name} ${item.headline} ${item.project ?? ""}`.toLowerCase().includes(search.toLowerCase())), [items, search]);
 

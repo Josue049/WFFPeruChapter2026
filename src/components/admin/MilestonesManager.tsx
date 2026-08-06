@@ -30,7 +30,18 @@ export function MilestonesManager({ token }: { token: string }) {
   const load = useCallback(async () => {
     setItems(await apiRequest<Milestone[]>("/milestones", {}, { token, redirectOnUnauthorized: true }));
   }, [token]);
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    let cancelled = false;
+
+    void apiRequest<Milestone[]>("/milestones", {}, { token, redirectOnUnauthorized: true })
+      .then((data) => {
+        if (!cancelled) setItems(data);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [token]);
 
   const filtered = useMemo(() => items.filter((item) => `${item.title} ${item.category} ${item.location ?? ""}`.toLowerCase().includes(search.toLowerCase())), [items, search]);
 

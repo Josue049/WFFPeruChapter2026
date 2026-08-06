@@ -38,9 +38,9 @@ export default function Admin() {
     user.manage_users && "users",
   ].filter(Boolean) as AdminSection[] : [], [user]);
 
-  useEffect(() => {
-    if (sections.length && !sections.includes(section)) setSection(sections[0]);
-  }, [section, sections]);
+  const activeSection: AdminSection = sections.includes(section)
+    ? section
+    : (sections[0] ?? "articles");
 
   if (loadError) return <main className={styles.loading}>{loadError}</main>;
   if (!token || !user) return <main className={styles.loading}>Cargando panel…</main>;
@@ -53,7 +53,7 @@ export default function Admin() {
       <aside className={`${styles.sidebar} ${menuOpen ? styles.sidebarOpen : ""}`}>
         <div className={styles.brand}><img src="/img/WFFPeru.webp" alt="WFF Perú" /><p>Centro de contenidos</p></div>
         <nav className={styles.nav} aria-label="Secciones administrativas">
-          {sections.map((item) => <button key={item} className={section === item ? styles.active : ""} onClick={() => choose(item)}>{sectionInfo[item].label}</button>)}
+          {sections.map((item) => <button key={item} className={activeSection === item ? styles.active : ""} onClick={() => choose(item)}>{sectionInfo[item].label}</button>)}
         </nav>
         <div className={styles.userArea}><strong>{user.display_name}</strong><span>@{user.username}</span><button className={styles.logout} onClick={logout}>Cerrar sesión</button></div>
       </aside>
@@ -61,15 +61,15 @@ export default function Admin() {
 
       <main className={styles.main}>
         <header className={styles.topbar}>
-          <div><button className={styles.menuButton} onClick={() => setMenuOpen(true)}>Menú</button><div><h1>{sectionInfo[section].title}</h1><p>{sectionInfo[section].description}</p></div></div>
+          <div><button className={styles.menuButton} onClick={() => setMenuOpen(true)}>Menú</button><div><h1>{sectionInfo[activeSection].title}</h1><p>{sectionInfo[activeSection].description}</p></div></div>
           <a className={styles.siteLink} href="/" target="_blank" rel="noreferrer">Ver sitio ↗</a>
         </header>
         {!sections.length ? <div className={styles.noPermissions}>Tu cuenta no tiene módulos asignados. Contacta a un gestor de accesos.</div> : (
           <>
-            {section === "articles" && <ArticlesManager token={token} />}
-            {section === "milestones" && <MilestonesManager token={token} />}
-            {section === "volunteers" && <VolunteersManager token={token} />}
-            {section === "users" && <UsersManager token={token} currentUserId={user.id} />}
+            {activeSection === "articles" && <ArticlesManager token={token} />}
+            {activeSection === "milestones" && <MilestonesManager token={token} />}
+            {activeSection === "volunteers" && <VolunteersManager token={token} />}
+            {activeSection === "users" && <UsersManager token={token} currentUserId={user.id} />}
           </>
         )}
       </main>
