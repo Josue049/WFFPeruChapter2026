@@ -1,13 +1,12 @@
-import React from "react";
+import type { FC } from "react";
 import { Header } from "../components/Header";
-import Footer from "../components/Footer";
 import { ScrollTopButton } from "../components/ScrollTopButton";
 // import ContentSelector from "../components/ContentSelector";
 import { TemasCienciaInnovacion } from "../components/TemasCienciaInnovacion";
 import { ProyectoSection } from "../components/ProyectosSection";
 import { ClubProyectosSection } from "../components/ClubProyectoSection";
 
-export const Inicio: React.FC = () => {
+export const Inicio: FC = () => {
   return (
     <>
       <Header
@@ -40,7 +39,6 @@ export const Inicio: React.FC = () => {
 
       {/* <ContentSelector /> */}
 
-      {/* <Footer /> */}
 
       <ScrollTopButton />
     </>

@@ -1,0 +1,67 @@
+:root {
+  --swiper-theme-color: #ffffff !important;
+}
+
+/* tamaño normal */
+.swiper-button-next,
+.swiper-button-prev {
+  transform: scale(1);
+}
+
+/* mobile */
+@media (max-width: 768px) {
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    transform: scale(0.5);
+    background-color: rgba(0, 0, 0, 0.6);
+    margin: 2px;
+    border-radius: 20%;
+    padding: 10px;
+  }
+}
+
+/* botón base */
+.slider-btn {
+  padding: 12px 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 1);
+  color: #1F74C2;
+  border: 2px white solid;
+  border-radius: 20px;
+  transition: background 0.3s, transform 0.2s;
+  font-weight: bold;
+}
+
+/* hover */
+.slider-btn:hover {
+  transform: scale(1.05);
+}
+
+/* mobile */
+@media (max-width: 768px) {
+  .slider-btn {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+}
+
+/* quitar borde negro al hacer click */
+.accordion-header {
+  border: none;
+  outline: none;
+}
+
+/* quitar focus default del navegador */
+.accordion-header:focus {
+  border: none;
+  outline: none;
+}
+
+/* opcional: mantener accesibilidad con un focus más suave */
+.accordion-header:focus-visible {
+  border: none;
+  outline: 0px solid rgba(255, 255, 255, 0.5);
+}
+

@@ -1,9 +1,9 @@
 // src/components/RelacionamientoGestion.tsx
-import React from "react";
+import type { FC } from "react";
 import { SectionTextImg } from "../components/SectionTextImg";
 import { ReverseSectionTextImg } from "../components/ReverseSectionTextImg";
 
-const RelacionamientoGestion: React.FC = () => {
+const RelacionamientoGestion: FC = () => {
   return (
     <>
       <SectionTextImg

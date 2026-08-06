@@ -1,11 +1,10 @@
-import React from "react";
+import type { FC } from "react";
 import { Header } from "../components/Header";
 import ImageCardsBlock from "../components/ImageCardsBlock";
 import AccordionCards from "../components/AccordionCards";
 import type { AccordionItem } from "../components/AccordionCards";
 import AreasGrid from "../components/AreasGrid";
 import CommiteSection from "../components/ComiteSection";
-import Footer from "../components/Footer";
 import { ScrollTopButton } from "../components/ScrollTopButton";
 
 const wffItems: AccordionItem[] = [
@@ -32,7 +31,7 @@ const wffItems: AccordionItem[] = [
   },
 ];
 
-export const Inicio: React.FC = () => {
+export const Inicio: FC = () => {
   return (
     <>
       <Header />
@@ -53,7 +52,6 @@ export const Inicio: React.FC = () => {
       <AreasGrid />
 
       <CommiteSection />
-      {/* <Footer /> */}
 
       <ScrollTopButton />
     </>

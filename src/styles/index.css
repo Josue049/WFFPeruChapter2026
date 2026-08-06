@@ -1,0 +1,10 @@
+/* Vendor */
+@import "./vendor/bootstrap-4.4.1.css";
+
+/* Global components and pages, kept in original cascade order */
+@import "./components/carousel.css";
+@import "./pages/voces.css";
+@import "./pages/article.css";
+@import "./components/interactive.css";
+@import "./global.css";
+@import "./site.css";

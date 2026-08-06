@@ -1,7 +1,7 @@
 // src/components/Educacion.tsx
-import React from "react";
+import type { FC } from "react";
 
-export const Educacion: React.FC = () => {
+export const Educacion: FC = () => {
   return (
     <div className="container-fluid py-5">
       <div className="container pt-5">

@@ -49,7 +49,7 @@ export function NavBar() {
           <NavLink to="/" className="desktop" onClick={closeMenu}>
             <img
               className="logoWFF"
-              src="https://www.wffperuchapter.page/img/WFFPeru.webp"
+              src="/img/WFFPeru.webp"
               alt="Logo WFF Perú"
             />
           </NavLink>
@@ -57,7 +57,7 @@ export function NavBar() {
           <NavLink to="/" className="movil" onClick={closeMenu}>
             <img
               className="logoWFF"
-              src="https://www.wffperuchapter.page/img/logoWFFPeru.webp"
+              src="/img/logoWFFPeru.webp"
               alt="Logo WFF Perú"
             />
           </NavLink>
@@ -174,7 +174,7 @@ export function NavBar() {
                 <a
                   className="btn btn-unirse join"
                   href="https://forms.office.com/pages/responsepage.aspx?id=aMQ6Frir0ESB_dnbFeOvlnq8OrflyhZOrnoT41c-u6BUMFpMWjk3WlFJUVVIN0k2OVpHNEpBN0FUMC4u&route=shorturl"
-                  aria-label="Facebook WFF Perú Chapter"
+                  aria-label="Formulario para unirse al capítulo"
                 >
                   Únete al Capítulo
                 </a>

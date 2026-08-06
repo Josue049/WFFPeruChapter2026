@@ -123,7 +123,7 @@ h6,
 .cabecera {
   background-image:
     linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)),
-    url(../img/FondoFAO4.webp);
+    url("/img/FondoFAO4.webp");
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -131,13 +131,13 @@ h6,
 .cabecera-women {
   background-image:
     linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)),
-    url(../img/womenIlustration.webp);
+    url("/img/womenIlustration.webp");
 }
 
 .cabecera-other {
   background-image:
     linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)),
-    url(../img/mesacomite.webp);
+    url("/img/mesacomite.webp");
 }
 
 /* =========================
@@ -647,4 +647,9 @@ p.m-0.text-uppercase {
   /* ✅ esto hace que el scroll ocurra aquí */
   height: 100vh;
   /* ✅ necesario para que overflow-y funcione */
+}
+.nav-2 li a.active {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
 }

@@ -1,5 +1,5 @@
 // src/components/CuadroFlotante.tsx
-import React from "react";
+import type { FC } from "react";
 
 interface CuadroFlotanteProps {
   titulo: string;
@@ -11,7 +11,7 @@ interface CuadroFlotanteProps {
   invert?: boolean;
 }
 
-export const CuadroFlotante: React.FC<CuadroFlotanteProps> = ({
+export const CuadroFlotante: FC<CuadroFlotanteProps> = ({
   titulo,
   objetivo,
   producto,

@@ -1,7 +1,7 @@
 // src/components/Cultura.tsx
-import React from "react";
+import type { FC } from "react";
 
-export const Cultura: React.FC = () => {
+export const Cultura: FC = () => {
   return (
     <div className="container-fluid py-5">
       <div className="container pt-5">
