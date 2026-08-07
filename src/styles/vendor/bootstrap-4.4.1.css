@@ -167,14 +167,56 @@ sup {
 }
 
 a {
-  color: #ff9a2b;
-  text-decoration: none;
-  background-color: transparent;
+    color: inherit;
+    text-decoration: none;
+    transition: color .35s ease;
 }
 
 a:hover {
-  color: #0056b3;
-  text-decoration: underline;
+    text-decoration: none;
+
+    text-shadow:
+        0 0 8px rgba(255,208,80,.18),
+        0 0 18px rgba(255,184,0,.08);
+
+    background:
+        linear-gradient(
+            105deg,
+            #222222 0%,
+            #222222 30%,
+            #FFF2B8 45%,
+            #F0C75A 49%,
+            #FFFFFF 50%,
+            #F0C75A 51%,
+            #E0B23B 60%,
+            #db9806 75%,
+            #db9806 100%
+        );
+
+    background-size: 250% 100%;
+    background-position: -150% 0;
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+
+    animation: goldShine .9s ease forwards;
+}
+
+@keyframes goldShine {
+
+    0%{
+        background-position:-150% 0;
+    }
+
+    65%{
+        background-position:70% 0;
+    }
+
+    100%{
+        background-position:100% 0;
+    }
+
 }
 
 a:not([href]) {

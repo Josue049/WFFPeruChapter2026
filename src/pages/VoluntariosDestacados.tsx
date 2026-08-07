@@ -18,9 +18,13 @@ export default function VoluntariosDestacados() {
 
   useEffect(() => {
     let active = true;
+
     void Promise.all([
       apiRequest<VolunteerStory[]>("/volunteer-stories/published"),
-      apiRequest<FeaturedVolunteer>("/volunteer-stories/featured", { cache: "no-store" }),
+      apiRequest<FeaturedVolunteer>(
+        "/volunteer-stories/featured",
+        { cache: "no-store" },
+      ),
     ])
       .then(([all, selected]) => {
         if (active) {
@@ -28,16 +32,29 @@ export default function VoluntariosDestacados() {
           setFeatured(selected);
         }
       })
-      .catch(() => active && setError("No se pudieron cargar las historias."))
-      .finally(() => active && setLoading(false));
+      .catch(() => {
+        if (active) {
+          setError("No se pudieron cargar las historias.");
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setLoading(false);
+        }
+      });
+
     return () => {
       active = false;
     };
   }, []);
 
   const lead = featured?.story ?? null;
+
   const orderedStories = useMemo(
-    () => [...stories].sort((a, b) => a.edition_number - b.edition_number),
+    () =>
+      [...stories].sort(
+        (a, b) => a.edition_number - b.edition_number,
+      ),
     [stories],
   );
 
@@ -45,33 +62,74 @@ export default function VoluntariosDestacados() {
     <>
       <TopBar />
       <NavBar />
-      <main className={`${styles.page} ${styles.volunteerLanding}`}>
-        <div className={styles.content}>
-          {loading && <div className={styles.empty}>Preparando la edición…</div>}
-          {error && <div className={styles.empty}>{error}</div>}
-          {!loading && !error && !lead && (
-            <div className={styles.empty}>Pronto conocerás las primeras historias destacadas.</div>
-          )}
 
-          {lead && (
-            <Link className={styles.volunteerBanner} to={`/voluntarios-destacados/${lead.slug}`}>
+      <main className={`${styles.page} ${styles.volunteerLanding}`}>
+
+        {/* HERO FULL WIDTH */}
+        {lead && (
+          <Link
+            className={styles.volunteerBanner}
+            to={`/voluntarios-destacados/${lead.slug}`}
+          >
+            <div className={styles.volunteerBannerInner}>
               <div className={styles.volunteerBannerCopy}>
                 <span className={styles.bannerEyebrow}>
-                  {featured?.selection_mode === "scheduled" ? "Edición especial" : "Voluntario destacado"}
+                  {featured?.selection_mode === "scheduled"
+                    ? "Edición especial"
+                    : "Voluntario destacado"}
                 </span>
+
                 <h1>{lead.name}</h1>
-                <p className={styles.bannerRole}>{lead.role || lead.area || lead.headline}</p>
-                <p className={styles.bannerHeadline}>{lead.headline}</p>
-                <span className={styles.bannerButton}>Leer su historia →</span>
+
+                <p className={styles.bannerRole}>
+                  {lead.role || lead.area || lead.headline}
+                </p>
+
+                <p className={styles.bannerHeadline}>
+                  {lead.headline}
+                </p>
+
+                <span className={styles.bannerButton}>
+                  Leer su historia →
+                </span>
               </div>
+
               <div className={styles.volunteerBannerVisual}>
-                <div className={styles.bannerBackdrop} aria-hidden="true">
+                <div
+                  className={styles.bannerBackdrop}
+                  aria-hidden="true"
+                >
                   <span>WFF</span>
                   <small>PERÚ CHAPTER</small>
                 </div>
-                <img src={mediaUrl(lead.portrait_image)} alt={lead.name} />
+
+                <img
+                  src={mediaUrl(lead.portrait_image)}
+                  alt={lead.name}
+                />
               </div>
-            </Link>
+            </div>
+          </Link>
+        )}
+
+        {/* CONTENIDO CENTRADO */}
+        <div className={styles.content}>
+          {loading && (
+            <div className={styles.empty}>
+              Preparando la edición…
+            </div>
+          )}
+
+          {error && (
+            <div className={styles.empty}>
+              {error}
+            </div>
+          )}
+
+          {!loading && !error && !lead && (
+            <div className={styles.empty}>
+              Pronto conocerás las primeras historias destacadas.
+            </div>
           )}
 
           {orderedStories.length > 0 && (
@@ -81,9 +139,11 @@ export default function VoluntariosDestacados() {
                   <span>Ediciones del capítulo</span>
                   <h2>Historias que inspiran</h2>
                 </div>
+
                 <p>
-                  Cada cubierta abre una historia sobre una idea, una acción o un proyecto que aporta a
-                  sistemas agroalimentarios más sostenibles.
+                  Cada cubierta abre una historia sobre una idea,
+                  una acción o un proyecto que aporta a sistemas
+                  agroalimentarios más sostenibles.
                 </p>
               </div>
 
@@ -99,14 +159,31 @@ export default function VoluntariosDestacados() {
                       <strong>WFF</strong>
                       <span>PERÚ CHAPTER</span>
                     </div>
-                    <span className={styles.coverEdition}>N.º {edition(story.edition_number)}</span>
-                    <span className={styles.coverVertical}>VOLUNTARIO DESTACADO</span>
+
+                    <span className={styles.coverEdition}>
+                      N.º {edition(story.edition_number)}
+                    </span>
+
+                    <span className={styles.coverVertical}>
+                      VOLUNTARIO DESTACADO
+                    </span>
+
                     <div className={styles.coverPortrait}>
-                      <img src={mediaUrl(story.portrait_image)} alt={story.name} loading="lazy" />
+                      <img
+                        src={mediaUrl(story.portrait_image)}
+                        alt={story.name}
+                        loading="lazy"
+                      />
                     </div>
+
                     <div className={styles.coverIdentity}>
                       <h3>{story.name}</h3>
-                      <p>{story.area || story.role || "World Food Forum Perú"}</p>
+
+                      <p>
+                        {story.area ||
+                          story.role ||
+                          "World Food Forum Perú"}
+                      </p>
                     </div>
                   </Link>
                 ))}
@@ -115,6 +192,7 @@ export default function VoluntariosDestacados() {
           )}
         </div>
       </main>
+
       <ScrollTopButton />
     </>
   );

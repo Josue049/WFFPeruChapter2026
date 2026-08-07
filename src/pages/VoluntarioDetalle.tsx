@@ -75,7 +75,7 @@ export default function VoluntarioDetalle() {
                 <span>N.º {edition(item.edition_number)}</span>
                 <h1>{item.headline}</h1>
                 <div className={styles.articleByline}>
-                  <span aria-hidden="true">◉</span>
+                  {/* <span aria-hidden="true">◉</span> */}
                   <div>
                     <strong>{item.name}</strong>
                     <small>{item.role || item.area}</small>
