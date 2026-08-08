@@ -1480,7 +1480,7 @@
 
 /* En el detalle mostramos la foto completa, sin recortarla. */
 .hitoSlider > img {
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
 }
 
