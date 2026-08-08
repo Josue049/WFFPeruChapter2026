@@ -230,22 +230,22 @@ export function VolunteersManager({ token }: { token: string }) {
         </p>
         <div className={styles.modeCards}>
           <label className={`${styles.modeCard} ${highlight.mode === "random" ? styles.modeCardActive : ""}`}>
-            <input
+            {/* <input
               type="radio"
               checked={highlight.mode === "random"}
               onChange={() =>
                 setHighlight({ ...highlight, mode: "random", story_id: null, starts_at: null, ends_at: null })
               }
-            />
+            /> */}
             <strong>Aleatorio</strong>
             <span>Escoge una historia publicada en cada recarga.</span>
           </label>
           <label className={`${styles.modeCard} ${highlight.mode === "scheduled" ? styles.modeCardActive : ""}`}>
-            <input
+            {/* <input
               type="radio"
               checked={highlight.mode === "scheduled"}
               onChange={() => setHighlight({ ...highlight, mode: "scheduled" })}
-            />
+            /> */}
             <strong>Programado</strong>
             <span>Fija una historia durante una campaña o fecha especial.</span>
           </label>
