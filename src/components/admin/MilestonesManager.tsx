@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Milestone } from "../../types";
 import { apiRequest } from "../../services/api";
 import { GalleryField, ImageField } from "./ImageField";
+import { HtmlPreview } from "./HtmlPreview";
 import styles from "./AdminForms.module.css";
 
 type MilestoneForm = Omit<Milestone, "id" | "created_at" | "updated_at">;
@@ -110,7 +111,7 @@ export function MilestonesManager({ token }: { token: string }) {
         </div>
         <div className={styles.formGrid}>
           {message && <div className={styles.status}>{message}</div>}
-          <ImageField label="Imagen principal" value={form.cover_image} token={token} onChange={(cover_image) => setForm({ ...form, cover_image })} help="Recomendado: formato horizontal. La imagen se optimiza automáticamente antes de subir." required />
+          <ImageField label="Imagen principal" value={form.cover_image} token={token} onChange={(cover_image) => setForm({ ...form, cover_image })} help="Recomendado: formato horizontal y alta resolución. Se conserva mucha más calidad y nunca se recorta en la vista pública." required />
           <div className={styles.twoColumns}>
             <Field label="Título" value={form.title} onChange={(title) => setForm({ ...form, title })} />
             <Field label="Slug opcional" value={form.slug} onChange={(slug) => setForm({ ...form, slug })} placeholder="Se genera automáticamente" />
@@ -135,5 +136,5 @@ export function MilestonesManager({ token }: { token: string }) {
 
 function formatMonth(value: string) { return new Date(`${value.slice(0, 10)}T12:00:00`).toLocaleDateString("es-PE", { month: "long", year: "numeric" }); }
 function Field({ label, value, onChange, type = "text", placeholder = "" }: { label: string; value: string; onChange: (value: string) => void; type?: string; placeholder?: string }) { return <div className={styles.field}><label>{label}</label><input type={type} value={value} placeholder={placeholder} onChange={(e) => onChange(e.target.value)} /></div>; }
-function TextArea({ label, value, onChange, rows }: { label: string; value: string; onChange: (value: string) => void; rows: number }) { return <div className={styles.field}><label>{label}</label><textarea rows={rows} value={value} onChange={(e) => onChange(e.target.value)} /></div>; }
+function TextArea({ label, value, onChange, rows }: { label: string; value: string; onChange: (value: string) => void; rows: number }) { return <div className={styles.field}><label>{label}</label><textarea rows={rows} value={value} onChange={(e) => onChange(e.target.value)} /><HtmlPreview value={value} compact={rows <= 4} /></div>; }
 function Check({ label, checked, onChange }: { label: string; checked: boolean; onChange: (value: boolean) => void }) { return <div className={styles.checkboxField}><input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} /><label>{label}</label></div>; }

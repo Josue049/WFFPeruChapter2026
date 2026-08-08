@@ -70,8 +70,16 @@ export default function HitoDetalle() {
                 <h1>{item.title}</h1>
                 <span className={styles.hitoTitleAccent} />
                 <div className={styles.hitoMetaRow}>
-                  <span>▣ {formatDate(item.event_date)}</span>
-                  {item.location && <span>⌖ {item.location}</span>}
+                  <span className={styles.hitoMetaItem}>
+                    <CalendarIcon />
+                    <span>{formatDate(item.event_date)}</span>
+                  </span>
+                  {item.location && (
+                    <span className={styles.hitoMetaItem}>
+                      <LocationIcon />
+                      <span>{item.location}</span>
+                    </span>
+                  )}
                 </div>
                 <p>{item.summary}</p>
               </div>
@@ -118,4 +126,24 @@ export default function HitoDetalle() {
 
 function formatDate(value: string): string {
   return new Date(`${value.slice(0, 10)}T12:00:00`).toLocaleDateString("es-PE", { day: "numeric", month: "long", year: "numeric" });
+}
+
+
+function CalendarIcon() {
+  return (
+    <svg className={styles.hitoMetaIcon} viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="3.5" y="5.5" width="17" height="15" rx="2.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M7.5 3.5v4M16.5 3.5v4M3.5 9.5h17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <rect x="7" y="13" width="3" height="3" rx=".6" fill="currentColor" />
+    </svg>
+  );
+}
+
+function LocationIcon() {
+  return (
+    <svg className={styles.hitoMetaIcon} viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 21s6-5.35 6-11a6 6 0 1 0-12 0c0 5.65 6 11 6 11Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+      <circle cx="12" cy="10" r="2.2" fill="currentColor" />
+    </svg>
+  );
 }

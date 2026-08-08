@@ -413,3 +413,74 @@
 @media (max-width: 640px) {
   .fourColumns { grid-template-columns: 1fr; }
 }
+
+/* ===== Vista previa editorial HTML ===== */
+.htmlPreview {
+  overflow: hidden;
+  border: 1px solid #f0d6c3;
+  border-radius: 16px;
+  background: #fffdf9;
+  box-shadow: inset 4px 0 0 #ef5b2a;
+}
+
+.htmlPreviewLabel {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 15px;
+  border-bottom: 1px solid #f3e2d4;
+  background: linear-gradient(90deg, #fff5ed, #fffaf1);
+}
+
+.htmlPreviewLabel span {
+  color: #d95027;
+  font-size: .76rem;
+  font-weight: 850;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.htmlPreviewLabel small {
+  color: #8b7666;
+  font-size: .72rem;
+}
+
+.htmlPreviewContent {
+  padding: 18px 20px;
+  color: #2d2a27;
+  font-size: .98rem;
+  line-height: 1.75;
+}
+
+.htmlPreviewCompact .htmlPreviewContent { padding: 14px 17px; }
+.htmlPreviewContent > :first-child { margin-top: 0; }
+.htmlPreviewContent > :last-child { margin-bottom: 0; }
+.htmlPreviewContent h1,
+.htmlPreviewContent h2,
+.htmlPreviewContent h3,
+.htmlPreviewContent h4 {
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.12;
+  color: #181614;
+}
+.htmlPreviewContent a { color: #e65329; font-weight: 700; }
+.htmlPreviewContent blockquote {
+  margin: 18px 0;
+  padding: 13px 18px;
+  border-left: 3px solid #ef5b2a;
+  background: #fff4ea;
+  font-family: Georgia, "Times New Roman", serif;
+}
+.htmlPreviewContent img { max-width: 100%; height: auto; border-radius: 8px; }
+.htmlPreviewEmpty { padding: 16px 20px; color: #9b928a; font-size: .85rem; }
+
+@media (max-width: 640px) {
+  .htmlPreviewLabel { align-items: flex-start; flex-direction: column; gap: 3px; }
+}
+
+/* Las vistas previas del admin respetan la foto completa. */
+.imagePreview { height: auto; aspect-ratio: auto; min-height: 180px; }
+.imagePreview img { display: block; width: 100%; height: auto; object-fit: contain; }
+.galleryItem { aspect-ratio: auto; min-height: 120px; background: #f4eee8; }
+.galleryItem img { display: block; width: 100%; height: auto; object-fit: contain; }

@@ -1,6 +1,6 @@
 .root {
   min-height: 100vh;
-  background: #f4f1eb;
+  background: linear-gradient(180deg, #fffaf5 0%, #f8f3ed 100%);
   color: #252a25;
   display: grid;
   grid-template-columns: 250px minmax(0, 1fr);
@@ -9,9 +9,11 @@
 
 .sidebar {
   min-height: 100vh;
-  background: #173f35;
-  color: #fff;
+  background: linear-gradient(180deg, #fff7ef 0%, #fff 44%, #fff8ef 100%);
+  color: #2b2723;
   padding: 24px 18px;
+  border-right: 1px solid #f0d7c4;
+  box-shadow: 10px 0 35px rgba(123, 67, 28, .05);
   display: flex;
   flex-direction: column;
   position: sticky;
@@ -21,20 +23,21 @@
 
 .brand {
   padding: 5px 8px 25px;
-  border-bottom: 1px solid rgba(255,255,255,.14);
+  border-bottom: 1px solid #f0d7c4;
 }
 
 .brand img {
   display: block;
-  max-width: 155px;
-  max-height: 54px;
+  width: 100%;
+  max-width: 190px;
+  max-height: 68px;
   object-fit: contain;
-  filter: brightness(0) invert(1);
+  object-position: left center;
 }
 
 .brand p {
   margin: 12px 0 0;
-  color: rgba(255,255,255,.65);
+  color: #b26031;
   font-size: .75rem;
   text-transform: uppercase;
   letter-spacing: .12em;
@@ -49,7 +52,7 @@
 .nav button {
   border: 0;
   background: transparent;
-  color: rgba(255,255,255,.75);
+  color: #665a51;
   text-align: left;
   padding: 12px 13px;
   border-radius: 12px;
@@ -59,13 +62,14 @@
 
 .nav button:hover,
 .nav .active {
-  background: rgba(255,255,255,.13);
-  color: #fff;
+  background: linear-gradient(90deg, #ffede1, #fff4dd);
+  color: #d94f26;
+  box-shadow: inset 3px 0 0 #ef5b2a;
 }
 
 .userArea {
   margin-top: auto;
-  border-top: 1px solid rgba(255,255,255,.14);
+  border-top: 1px solid #f0d7c4;
   padding: 20px 8px 4px;
 }
 
@@ -75,7 +79,7 @@
 }
 
 .userArea span {
-  color: rgba(255,255,255,.62);
+  color: #9b8474;
   font-size: .82rem;
   margin-top: 3px;
 }
@@ -83,9 +87,9 @@
 .logout {
   margin-top: 14px;
   width: 100%;
-  border: 1px solid rgba(255,255,255,.3);
-  background: transparent;
-  color: #fff;
+  border: 1px solid #efb38d;
+  background: #fff;
+  color: #d5532d;
   border-radius: 999px;
   padding: 9px 12px;
   cursor: pointer;
@@ -107,7 +111,7 @@
 .topbar h1 {
   margin: 0;
   font-size: clamp(1.7rem, 3vw, 2.5rem);
-  color: #173f35;
+  color: #d94f26;
 }
 
 .topbar p {
@@ -130,7 +134,7 @@
   display: none;
   border: 0;
   border-radius: 10px;
-  background: #173f35;
+  background: linear-gradient(180deg, #fff7ef 0%, #fff 44%, #fff8ef 100%);
   color: white;
   padding: 10px 12px;
 }
@@ -170,4 +174,43 @@
 
 @media (max-width: 520px) {
   .siteLink { display: none; }
+}
+
+/* ===== Identidad visual WFF Perú ===== */
+.brand {
+  background: #fff;
+  border: 1px solid #f2dfd0;
+  border-radius: 18px;
+  padding: 16px 14px 15px;
+}
+
+.nav button {
+  transition: background .18s ease, color .18s ease, transform .18s ease;
+}
+
+.nav button:hover { transform: translateX(2px); }
+
+.userArea strong { color: #3d342d; }
+
+.topbar {
+  padding-bottom: 18px;
+  border-bottom: 1px solid #f0ded1;
+}
+
+.topbar h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  letter-spacing: -.025em;
+}
+
+.siteLink {
+  color: #d8562d;
+  border-color: #f0b78d;
+  background: linear-gradient(90deg, #fff5ec, #fff9e8);
+}
+@media (max-width: 840px) {
+  .menuButton {
+    background: linear-gradient(90deg, #ef5b2a, #e7a51f);
+    color: #fff;
+    font-weight: 750;
+  }
 }

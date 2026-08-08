@@ -26,11 +26,11 @@ const canvasBlob = (canvas: HTMLCanvasElement, type: string, quality?: number) =
 export async function optimizeImageFile(
   file: File,
   {
-    maxWidth = 1800,
-    maxHeight = 1500,
-    targetBytes = 850 * 1024,
+    maxWidth = 3200,
+    maxHeight = 2800,
+    targetBytes = 3200 * 1024,
     preservePng = false,
-    quality = 0.84,
+    quality = 0.92,
   }: ImageOptimizationOptions = {},
 ): Promise<File> {
   const bitmap = await loadImage(file);
@@ -41,7 +41,7 @@ export async function optimizeImageFile(
     let width = 0;
     let height = 0;
 
-    for (let attempt = 0; attempt < 6; attempt += 1) {
+    for (let attempt = 0; attempt < 5; attempt += 1) {
       width = Math.max(1, Math.round(bitmap.width * scale));
       height = Math.max(1, Math.round(bitmap.height * scale));
 
@@ -57,8 +57,8 @@ export async function optimizeImageFile(
       context.drawImage(bitmap, 0, 0, width, height);
       blob = await canvasBlob(canvas, outputType, preservePng ? undefined : quality);
 
-      if (blob.size <= targetBytes || width <= 560 || height <= 560) break;
-      scale *= 0.82;
+      if (blob.size <= targetBytes || width <= 1000 || height <= 1000) break;
+      scale *= 0.92;
     }
 
     if (!blob) throw new Error("No se pudo optimizar la imagen.");
@@ -76,17 +76,17 @@ export async function optimizeImageFile(
 
 export const optimizePortraitFile = (file: File) =>
   optimizeImageFile(file, {
-    maxWidth: 1100,
-    maxHeight: 1500,
-    targetBytes: 780 * 1024,
+    maxWidth: 1600,
+    maxHeight: 2200,
+    targetBytes: 1500 * 1024,
     preservePng: true,
   });
 
 export const optimizeEditorialImageFile = (file: File) =>
   optimizeImageFile(file, {
-    maxWidth: 1900,
-    maxHeight: 1500,
-    targetBytes: 820 * 1024,
+    maxWidth: 3200,
+    maxHeight: 2800,
+    targetBytes: 3200 * 1024,
     preservePng: false,
-    quality: 0.84,
+    quality: 0.96,
   });

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import type { VolunteerHighlight, VolunteerStory } from "../../types";
 import { apiRequest } from "../../services/api";
 import { GalleryField, TransparentPortraitField } from "./ImageField";
+import { HtmlPreview } from "./HtmlPreview";
 import styles from "./AdminForms.module.css";
 
 type StoryForm = Omit<
@@ -451,6 +452,7 @@ function TextArea({
       <label>{label}</label>
       <textarea rows={rows} value={value} onChange={(event) => onChange(event.target.value)} />
       {help && <small>{help}</small>}
+      <HtmlPreview value={value} compact={rows <= 4} />
     </div>
   );
 }

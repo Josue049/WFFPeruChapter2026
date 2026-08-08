@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Article } from "../../types";
-import { apiRequest } from "../../services/api";
+import { ApiError, apiRequest } from "../../services/api";
+import { HtmlPreview } from "./HtmlPreview";
 import { ImageField } from "./ImageField";
 import styles from "./AdminForms.module.css";
 
@@ -44,19 +45,70 @@ export function ArticlesManager({ token }: { token: string }) {
 
   const select = (item: Article) => {
     setSelectedId(item.id);
-    setForm({ ...item, date: item.date.slice(0, 10) });
+    // No copiamos `id` ni otros campos de respuesta al formulario.
+    // El backend valida los PUT con extra=forbid y rechazaba esos campos.
+    setForm({
+      author_name: item.author_name ?? "",
+      author_lastname: item.author_lastname ?? "",
+      author_photo: item.author_photo ?? "",
+      author_cargo: item.author_cargo ?? "",
+      title: item.title ?? "",
+      subtitle: item.subtitle ?? "",
+      date: item.date.slice(0, 10),
+      body: item.body ?? "",
+    });
     setMessage("");
   };
 
   const save = async () => {
     try {
-      const result = await apiRequest<Article>(
-        selectedId ? `/articles/${selectedId}` : "/articles",
-        { method: selectedId ? "PUT" : "POST", body: JSON.stringify(form) },
-        { token, redirectOnUnauthorized: true },
-      );
-      setSelectedId(result.id);
-      setForm({ ...result, date: result.date.slice(0, 10) });
+      // Construimos explícitamente el payload para evitar enviar propiedades
+      // de solo lectura que puedan venir en la respuesta de la API.
+      const payload: ArticleForm = {
+        author_name: form.author_name,
+        author_lastname: form.author_lastname,
+        author_photo: form.author_photo,
+        author_cargo: form.author_cargo,
+        title: form.title,
+        subtitle: form.subtitle,
+        date: form.date,
+        body: form.body,
+      };
+      let result: Article;
+      try {
+        result = await apiRequest<Article>(
+          selectedId ? `/articles/${selectedId}` : "/articles",
+          { method: selectedId ? "PUT" : "POST", body: JSON.stringify(payload) },
+          { token, redirectOnUnauthorized: true },
+        );
+      } catch (requestError) {
+        // Algunas instalaciones del backend todavía usan el esquema de edición
+        // anterior, que no admite apellido/cargo en PUT (Pydantic extra=forbid).
+        // Reintentamos únicamente en ese caso para que editar una Voz no falle.
+        if (
+          selectedId &&
+          requestError instanceof ApiError &&
+          requestError.status === 422 &&
+          /extra inputs are not permitted/i.test(requestError.message)
+        ) {
+          const legacyPayload = {
+            author_name: payload.author_name,
+            author_photo: payload.author_photo,
+            title: payload.title,
+            subtitle: payload.subtitle,
+            date: payload.date,
+            body: payload.body,
+          };
+          result = await apiRequest<Article>(
+            `/articles/${selectedId}`,
+            { method: "PUT", body: JSON.stringify(legacyPayload) },
+            { token, redirectOnUnauthorized: true },
+          );
+        } else {
+          throw requestError;
+        }
+      }
+      select(result);
       await load();
       setMessage("Artículo guardado correctamente.");
     } catch (error) {
@@ -119,5 +171,5 @@ function Field({ label, value, onChange, type = "text" }: { label: string; value
   return <div className={styles.field}><label>{label}</label><input type={type} value={value} onChange={(e) => onChange(e.target.value)} /></div>;
 }
 function TextArea({ label, value, onChange, rows = 6 }: { label: string; value: string; onChange: (value: string) => void; rows?: number }) {
-  return <div className={styles.field}><label>{label}</label><textarea rows={rows} value={value} onChange={(e) => onChange(e.target.value)} /></div>;
+  return <div className={styles.field}><label>{label}</label><textarea rows={rows} value={value} onChange={(e) => onChange(e.target.value)} /><HtmlPreview value={value} /></div>;
 }

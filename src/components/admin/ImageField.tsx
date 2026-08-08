@@ -57,7 +57,7 @@ export function ImageField({ label, value, token, onChange, help, required }: Im
           type="url"
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          placeholder="https://... o sube un archivo"
+          placeholder="https://... o sube un archivo en alta calidad"
           required={required}
         />
         <button type="button" className={styles.uploadButton} onClick={() => inputRef.current?.click()} disabled={uploading}>

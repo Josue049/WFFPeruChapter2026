@@ -69,7 +69,13 @@ export default function Hitos() {
                       <img src={mediaUrl(item.cover_image)} alt={item.title} loading="lazy" />
                     </Link>
                     <div className={styles.hitoTimelineCopy}>
-                      <span>{item.category}</span>
+                      <div className={styles.hitoMobileMeta}>
+                        <span className={styles.hitoMobileDate}>
+                          <CalendarSmallIcon />
+                          {formatLongDate(item.event_date)}
+                        </span>
+                        <span className={styles.hitoCategory}>{item.category}</span>
+                      </div>
                       <h2>{item.title}</h2>
                       <p>{item.summary}</p>
                       <Link to={`/hitos/${item.slug}`}>Ver historia <b>→</b></Link>
@@ -92,6 +98,15 @@ export default function Hitos() {
   );
 }
 
+function CalendarSmallIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="3.5" y="5.5" width="17" height="15" rx="2.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M7.5 3.5v4M16.5 3.5v4M3.5 9.5h17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function splitDate(value: string) {
   const date = new Date(`${value.slice(0, 10)}T12:00:00`);
   return {
@@ -99,4 +114,12 @@ function splitDate(value: string) {
     month: date.toLocaleDateString("es-PE", { month: "short" }).replace(".", "").toUpperCase(),
     year: date.getFullYear(),
   };
+}
+
+function formatLongDate(value: string): string {
+  return new Date(`${value.slice(0, 10)}T12:00:00`).toLocaleDateString("es-PE", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 }
