@@ -63,7 +63,8 @@ export function VolunteersManager({ token }: { token: string }) {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [editionNumber, setEditionNumber] = useState<number | null>(null);
   const [form, setForm] = useState<StoryForm>(emptyStory());
-  const [highlight, setHighlight] = useState<VolunteerHighlight>(emptyHighlight);
+  const [highlight, setHighlight] =
+    useState<VolunteerHighlight>(emptyHighlight);
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
@@ -107,7 +108,11 @@ export function VolunteersManager({ token }: { token: string }) {
       })
       .catch((error) => {
         if (!cancelled) {
-          setMessage(error instanceof Error ? error.message : "No se pudo cargar el módulo.");
+          setMessage(
+            error instanceof Error
+              ? error.message
+              : "No se pudo cargar el módulo.",
+          );
         }
       });
     return () => {
@@ -144,8 +149,15 @@ export function VolunteersManager({ token }: { token: string }) {
       setMessage("Sube primero el retrato PNG transparente.");
       return;
     }
-    if (!form.name.trim() || !form.headline.trim() || !form.introduction.trim() || !form.content_html.trim()) {
-      setMessage("Completa nombre, titular, introducción e historia editorial.");
+    if (
+      !form.name.trim() ||
+      !form.headline.trim() ||
+      !form.introduction.trim() ||
+      !form.content_html.trim()
+    ) {
+      setMessage(
+        "Completa nombre, titular, introducción e historia editorial.",
+      );
       return;
     }
 
@@ -180,7 +192,9 @@ export function VolunteersManager({ token }: { token: string }) {
       await load();
       setMessage("Historia guardada correctamente.");
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "No se pudo guardar.");
+      setMessage(
+        error instanceof Error ? error.message : "No se pudo guardar.",
+      );
     } finally {
       setSaving(false);
     }
@@ -216,7 +230,9 @@ export function VolunteersManager({ token }: { token: string }) {
       setHighlight(updated);
       setMessage("Configuración de portada actualizada.");
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "No se pudo programar.");
+      setMessage(
+        error instanceof Error ? error.message : "No se pudo programar.",
+      );
     }
   };
 
@@ -225,30 +241,45 @@ export function VolunteersManager({ token }: { token: string }) {
       <section className={styles.settingCard}>
         <h3>Historia principal</h3>
         <p>
-          El retrato se mantiene idéntico en portada y cuadrícula. En portada se muestra a color;
-          la cubierta editorial aplica blanco y negro únicamente mediante CSS.
+          El retrato se mantiene idéntico en portada y cuadrícula. En portada se
+          muestra a color; la cubierta editorial aplica blanco y negro
+          únicamente mediante CSS.
         </p>
         <div className={styles.modeCards}>
-          <label className={`${styles.modeCard} ${highlight.mode === "random" ? styles.modeCardActive : ""}`}>
-            {/* <input
-              type="radio"
-              checked={highlight.mode === "random"}
-              onChange={() =>
-                setHighlight({ ...highlight, mode: "random", story_id: null, starts_at: null, ends_at: null })
-              }
-            /> */}
+          <button
+            type="button"
+            className={`${styles.modeCard} ${
+              highlight.mode === "random" ? styles.modeCardActive : ""
+            }`}
+            onClick={() =>
+              setHighlight({
+                ...highlight,
+                mode: "random",
+                story_id: null,
+                starts_at: null,
+                ends_at: null,
+              })
+            }
+          >
             <strong>Aleatorio</strong>
             <span>Escoge una historia publicada en cada recarga.</span>
-          </label>
-          <label className={`${styles.modeCard} ${highlight.mode === "scheduled" ? styles.modeCardActive : ""}`}>
-            {/* <input
-              type="radio"
-              checked={highlight.mode === "scheduled"}
-              onChange={() => setHighlight({ ...highlight, mode: "scheduled" })}
-            /> */}
+          </button>
+
+          <button
+            type="button"
+            className={`${styles.modeCard} ${
+              highlight.mode === "scheduled" ? styles.modeCardActive : ""
+            }`}
+            onClick={() =>
+              setHighlight({
+                ...highlight,
+                mode: "scheduled",
+              })
+            }
+          >
             <strong>Programado</strong>
             <span>Fija una historia durante una campaña o fecha especial.</span>
-          </label>
+          </button>
         </div>
         {highlight.mode === "scheduled" && (
           <div className={styles.threeColumns} style={{ marginTop: 16 }}>
@@ -257,7 +288,10 @@ export function VolunteersManager({ token }: { token: string }) {
               <select
                 value={highlight.story_id ?? ""}
                 onChange={(event) =>
-                  setHighlight({ ...highlight, story_id: Number(event.target.value) || null })
+                  setHighlight({
+                    ...highlight,
+                    story_id: Number(event.target.value) || null,
+                  })
                 }
               >
                 <option value="">Seleccionar…</option>
@@ -265,7 +299,8 @@ export function VolunteersManager({ token }: { token: string }) {
                   .filter((item) => item.published)
                   .map((item) => (
                     <option value={item.id} key={item.id}>
-                      N.º {String(item.edition_number).padStart(2, "0")} · {item.name}
+                      N.º {String(item.edition_number).padStart(2, "0")} ·{" "}
+                      {item.name}
                     </option>
                   ))}
               </select>
@@ -274,18 +309,24 @@ export function VolunteersManager({ token }: { token: string }) {
               label="Desde"
               type="datetime-local"
               value={toLocalInput(highlight.starts_at)}
-              onChange={(value) => setHighlight({ ...highlight, starts_at: value })}
+              onChange={(value) =>
+                setHighlight({ ...highlight, starts_at: value })
+              }
             />
             <Field
               label="Hasta"
               type="datetime-local"
               value={toLocalInput(highlight.ends_at)}
-              onChange={(value) => setHighlight({ ...highlight, ends_at: value })}
+              onChange={(value) =>
+                setHighlight({ ...highlight, ends_at: value })
+              }
             />
           </div>
         )}
         <div className={styles.actions} style={{ marginTop: 16 }}>
-          <button className={styles.primaryButton} onClick={saveHighlight}>Guardar portada</button>
+          <button className={styles.primaryButton} onClick={saveHighlight}>
+            Guardar portada
+          </button>
         </div>
       </section>
 
@@ -294,7 +335,9 @@ export function VolunteersManager({ token }: { token: string }) {
           <div className={styles.listHeader}>
             <h2>Voluntarios</h2>
             <p>Una persona equivale a una edición editorial completa.</p>
-            <button className={styles.newButton} onClick={createNew}>+ Nueva historia</button>
+            <button className={styles.newButton} onClick={createNew}>
+              + Nueva historia
+            </button>
           </div>
           <input
             className={styles.search}
@@ -309,24 +352,44 @@ export function VolunteersManager({ token }: { token: string }) {
                 className={`${styles.listItem} ${selectedId === item.id ? styles.listItemActive : ""}`}
                 onClick={() => select(item)}
               >
-                <strong>N.º {String(item.edition_number).padStart(2, "0")} · {item.name}</strong>
+                <strong>
+                  N.º {String(item.edition_number).padStart(2, "0")} ·{" "}
+                  {item.name}
+                </strong>
                 <span>{item.headline}</span>
                 <small>{item.published ? "Publicado" : "Borrador"}</small>
               </button>
             ))}
-            {!filtered.length && <div className={styles.empty}>Todavía no hay historias.</div>}
+            {!filtered.length && (
+              <div className={styles.empty}>Todavía no hay historias.</div>
+            )}
           </div>
         </aside>
 
         <section className={styles.editor}>
           <div className={styles.editorHeader}>
             <div>
-              <h2>{selectedId ? `Editar edición N.º ${String(editionNumber).padStart(2, "0")}` : "Nueva historia"}</h2>
-              <p>El contenido narrativo se administra como un solo bloque editorial.</p>
+              <h2>
+                {selectedId
+                  ? `Editar edición N.º ${String(editionNumber).padStart(2, "0")}`
+                  : "Nueva historia"}
+              </h2>
+              <p>
+                El contenido narrativo se administra como un solo bloque
+                editorial.
+              </p>
             </div>
             <div className={styles.actions}>
-              {selectedId && <button className={styles.dangerButton} onClick={remove}>Eliminar</button>}
-              <button className={styles.primaryButton} onClick={save} disabled={saving}>
+              {selectedId && (
+                <button className={styles.dangerButton} onClick={remove}>
+                  Eliminar
+                </button>
+              )}
+              <button
+                className={styles.primaryButton}
+                onClick={save}
+                disabled={saving}
+              >
                 {saving ? "Guardando…" : "Guardar"}
               </button>
             </div>
@@ -339,14 +402,24 @@ export function VolunteersManager({ token }: { token: string }) {
               label="Retrato editorial PNG sin fondo"
               value={form.portrait_image}
               token={token}
-              onChange={(portrait_image) => setForm({ ...form, portrait_image })}
+              onChange={(portrait_image) =>
+                setForm({ ...form, portrait_image })
+              }
               help="PNG con transparencia real, mínimo 1200 × 1500 px. El sistema conserva color y transparencia; el blanco y negro se aplica solo en la cubierta."
               required
             />
 
             <div className={styles.twoColumns}>
-              <Field label="Nombre completo" value={form.name} onChange={(name) => setForm({ ...form, name })} />
-              <Field label="Slug opcional" value={form.slug} onChange={(slug) => setForm({ ...form, slug })} />
+              <Field
+                label="Nombre completo"
+                value={form.name}
+                onChange={(name) => setForm({ ...form, name })}
+              />
+              <Field
+                label="Slug opcional"
+                value={form.slug}
+                onChange={(slug) => setForm({ ...form, slug })}
+              />
             </div>
 
             <Field
@@ -357,17 +430,34 @@ export function VolunteersManager({ token }: { token: string }) {
             />
 
             <TextArea
-              label="Bajada o introducción"
-              value={form.introduction}
-              onChange={(introduction) => setForm({ ...form, introduction })}
-              rows={4}
-            />
+  label="Bajada o introducción"
+  value={form.introduction}
+  onChange={(introduction) => setForm({ ...form, introduction })}
+  rows={4}
+  preview={false}
+/>
 
             <div className={styles.fourColumns}>
-              <Field label="Rol" value={form.role ?? ""} onChange={(role) => setForm({ ...form, role })} />
-              <Field label="Área" value={form.area ?? ""} onChange={(area) => setForm({ ...form, area })} />
-              <Field label="Proyecto o iniciativa" value={form.project ?? ""} onChange={(project) => setForm({ ...form, project })} />
-              <Field label="Ciudad" value={form.city ?? ""} onChange={(city) => setForm({ ...form, city })} />
+              <Field
+                label="Rol"
+                value={form.role ?? ""}
+                onChange={(role) => setForm({ ...form, role })}
+              />
+              <Field
+                label="Área"
+                value={form.area ?? ""}
+                onChange={(area) => setForm({ ...form, area })}
+              />
+              <Field
+                label="Proyecto o iniciativa"
+                value={form.project ?? ""}
+                onChange={(project) => setForm({ ...form, project })}
+              />
+              <Field
+                label="Ciudad"
+                value={form.city ?? ""}
+                onChange={(city) => setForm({ ...form, city })}
+              />
             </div>
 
             <TextArea
@@ -385,19 +475,39 @@ export function VolunteersManager({ token }: { token: string }) {
               rows={3}
             />
 
-            <GalleryField value={form.gallery} token={token} onChange={(gallery) => setForm({ ...form, gallery })} />
+            <GalleryField
+              value={form.gallery}
+              token={token}
+              onChange={(gallery) => setForm({ ...form, gallery })}
+            />
 
             <div className={styles.threeColumns}>
-              <Field label="LinkedIn" value={form.linkedin_url ?? ""} onChange={(linkedin_url) => setForm({ ...form, linkedin_url })} />
-              <Field label="Instagram" value={form.instagram_url ?? ""} onChange={(instagram_url) => setForm({ ...form, instagram_url })} />
-              <Field label="Sitio web" value={form.website_url ?? ""} onChange={(website_url) => setForm({ ...form, website_url })} />
+              <Field
+                label="LinkedIn"
+                value={form.linkedin_url ?? ""}
+                onChange={(linkedin_url) => setForm({ ...form, linkedin_url })}
+              />
+              <Field
+                label="Instagram"
+                value={form.instagram_url ?? ""}
+                onChange={(instagram_url) =>
+                  setForm({ ...form, instagram_url })
+                }
+              />
+              <Field
+                label="Sitio web"
+                value={form.website_url ?? ""}
+                onChange={(website_url) => setForm({ ...form, website_url })}
+              />
             </div>
 
             <label className={styles.checkboxField}>
               <input
                 type="checkbox"
                 checked={form.published}
-                onChange={(event) => setForm({ ...form, published: event.target.checked })}
+                onChange={(event) =>
+                  setForm({ ...form, published: event.target.checked })
+                }
               />
               <span>Publicado</span>
             </label>
@@ -438,21 +548,35 @@ function TextArea({
   label,
   value,
   onChange,
-  rows = 6,
+  rows,
   help,
+  preview = true,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
-  rows?: number;
+  rows: number;
   help?: string;
+  preview?: boolean;
 }) {
   return (
     <div className={styles.field}>
       <label>{label}</label>
-      <textarea rows={rows} value={value} onChange={(event) => onChange(event.target.value)} />
+
+      <textarea
+        rows={rows}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+      />
+
       {help && <small>{help}</small>}
-      <HtmlPreview value={value} compact={rows <= 4} />
+
+      {preview && (
+        <HtmlPreview
+          value={value}
+          compact={rows <= 4}
+        />
+      )}
     </div>
   );
 }
