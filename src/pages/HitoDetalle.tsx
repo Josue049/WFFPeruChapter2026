@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { NavBar } from "../components/Header/NavBar";
 import { TopBar } from "../components/Header/TopBar";
@@ -12,27 +12,110 @@ import styles from "./EditorialPages.module.css";
 export default function HitoDetalle() {
   const { slug } = useParams();
   const [item, setItem] = useState<Milestone | null>(null);
+  const [allItems, setAllItems] = useState<Milestone[]>([]);
+  const [slide, setSlide] = useState(0);
   const [error, setError] = useState("");
 
   useEffect(() => {
     if (!slug) return;
-    apiRequest<Milestone>(`/milestones/published/${encodeURIComponent(slug)}`).then(setItem).catch(() => setError("Este hito no está disponible."));
+    let active = true;
+    void Promise.all([
+      apiRequest<Milestone>(`/milestones/published/${encodeURIComponent(slug)}`),
+      apiRequest<Milestone[]>("/milestones/published"),
+    ])
+      .then(([selected, all]) => {
+        if (!active) return;
+        setItem(selected);
+        setAllItems(all);
+        setSlide(0);
+      })
+      .catch(() => active && setError("Este hito no está disponible."));
+    return () => { active = false; };
   }, [slug]);
 
-  return <><TopBar /><NavBar /><main className={styles.page}>
-    {error && <div className={styles.empty}>{error}</div>}
-    {!item && !error && <div className={styles.empty}>Cargando hito…</div>}
-    {item && <>
-      <header className={styles.detailHero}><div className={styles.detailInner}><Link className={styles.backLink} to="/hitos">← Volver a hitos</Link><h1 className={styles.detailTitle}>{item.title}</h1><p className={styles.detailLead}>{item.summary}</p></div></header>
-      <img className={styles.detailCover} src={mediaUrl(item.cover_image)} alt={item.title} />
-      <div className={`${styles.detailInner} ${styles.articleLayout}`}>
-        <article>
-          <div className={styles.richText} dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.body) }} />
-          {item.gallery.length > 0 && <section className={styles.detailSection}><h2>Galería</h2><div className={styles.gallery}>{item.gallery.map((image, index) => <img key={`${image}-${index}`} src={mediaUrl(image)} alt={`${item.title}, imagen ${index + 1}`} loading="lazy" />)}</div></section>}
-        </article>
-        <aside className={styles.asideFacts}><dl><dt>Fecha</dt><dd>{formatDate(item.event_date)}</dd><dt>Categoría</dt><dd>{item.category}</dd>{item.location && <><dt>Lugar</dt><dd>{item.location}</dd></>}</dl></aside>
-      </div>
-    </>}
-  </main><ScrollTopButton /></>;
+  const slides = useMemo(() => {
+    if (!item) return [];
+    return Array.from(new Set([item.cover_image, ...(item.gallery ?? [])].filter(Boolean)));
+  }, [item]);
+
+  useEffect(() => {
+    if (slides.length < 2) return;
+    const timer = window.setInterval(() => setSlide((current) => (current + 1) % slides.length), 5500);
+    return () => window.clearInterval(timer);
+  }, [slides.length]);
+
+  const related = useMemo(
+    () => allItems.filter((candidate) => candidate.id !== item?.id).slice(0, 3),
+    [allItems, item?.id],
+  );
+
+  const moveSlide = (direction: number) => {
+    if (!slides.length) return;
+    setSlide((current) => (current + direction + slides.length) % slides.length);
+  };
+
+  return (
+    <>
+      <TopBar />
+      <NavBar />
+      <main className={`${styles.page} ${styles.hitoDetailPage}`}>
+        {error && <div className={styles.empty}>{error}</div>}
+        {!item && !error && <div className={styles.empty}>Cargando hito…</div>}
+        {item && (
+          <>
+            <div className={styles.hitoDetailTop}>
+              <div className={styles.hitoDetailIntro}>
+                <Link className={styles.hitoBack} to="/hitos">← Volver a Hitos</Link>
+                <span className={styles.hitoBadge}>Hito</span>
+                <h1>{item.title}</h1>
+                <span className={styles.hitoTitleAccent} />
+                <div className={styles.hitoMetaRow}>
+                  <span>▣ {formatDate(item.event_date)}</span>
+                  {item.location && <span>⌖ {item.location}</span>}
+                </div>
+                <p>{item.summary}</p>
+              </div>
+
+              <div className={styles.hitoSlider}>
+                {slides.map((image, index) => (
+                  <img className={index === slide ? styles.hitoSlideActive : ""} key={image} src={mediaUrl(image)} alt={`${item.title}, imagen ${index + 1}`} />
+                ))}
+                {slides.length > 1 && (
+                  <>
+                    <button type="button" className={`${styles.sliderArrow} ${styles.sliderPrev}`} onClick={() => moveSlide(-1)} aria-label="Imagen anterior">‹</button>
+                    <button type="button" className={`${styles.sliderArrow} ${styles.sliderNext}`} onClick={() => moveSlide(1)} aria-label="Imagen siguiente">›</button>
+                    <div className={styles.sliderDots}>{slides.map((image, index) => <button type="button" key={image} className={index === slide ? styles.sliderDotActive : ""} onClick={() => setSlide(index)} aria-label={`Ver imagen ${index + 1}`} />)}</div>
+                  </>
+                )}
+              </div>
+            </div>
+
+            <div className={styles.hitoDetailBody}>
+              <article className={styles.hitoStory}>
+                <div className={styles.hitoSectionHeading}><span>◉</span><h2>El hito</h2></div>
+                <div className={styles.richText} dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.body) }} />
+              </article>
+
+              <aside className={styles.relatedHitos}>
+                <h2>Hitos relacionados</h2>
+                {related.length === 0 && <p>Pronto habrá más momentos para explorar.</p>}
+                {related.map((candidate) => (
+                  <Link key={candidate.id} to={`/hitos/${candidate.slug}`}>
+                    <img src={mediaUrl(candidate.cover_image)} alt="" loading="lazy" />
+                    <span><strong>{candidate.title}</strong><small>{formatDate(candidate.event_date)}</small></span>
+                  </Link>
+                ))}
+                <Link className={styles.relatedAllLink} to="/hitos">Ver todos los hitos →</Link>
+              </aside>
+            </div>
+          </>
+        )}
+      </main>
+      <ScrollTopButton />
+    </>
+  );
 }
-function formatDate(value: string): string { return new Date(`${value.slice(0, 10)}T12:00:00`).toLocaleDateString("es-PE", { day: "numeric", month: "long", year: "numeric" }); }
+
+function formatDate(value: string): string {
+  return new Date(`${value.slice(0, 10)}T12:00:00`).toLocaleDateString("es-PE", { day: "numeric", month: "long", year: "numeric" });
+}

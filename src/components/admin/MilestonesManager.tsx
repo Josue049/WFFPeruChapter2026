@@ -110,7 +110,7 @@ export function MilestonesManager({ token }: { token: string }) {
         </div>
         <div className={styles.formGrid}>
           {message && <div className={styles.status}>{message}</div>}
-          <ImageField label="Imagen principal" value={form.cover_image} token={token} onChange={(cover_image) => setForm({ ...form, cover_image })} help="Recomendado: formato horizontal, mínimo 1600 × 1000 px." required />
+          <ImageField label="Imagen principal" value={form.cover_image} token={token} onChange={(cover_image) => setForm({ ...form, cover_image })} help="Recomendado: formato horizontal. La imagen se optimiza automáticamente antes de subir." required />
           <div className={styles.twoColumns}>
             <Field label="Título" value={form.title} onChange={(title) => setForm({ ...form, title })} />
             <Field label="Slug opcional" value={form.slug} onChange={(slug) => setForm({ ...form, slug })} placeholder="Se genera automáticamente" />

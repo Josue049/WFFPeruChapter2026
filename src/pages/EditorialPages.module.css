@@ -976,3 +976,130 @@
     height: 90%;
   }
 }
+/* ===== Hitos editorial timeline ===== */
+.hitosPage,
+.hitoDetailPage {
+  --hito-orange: #ef5b2a;
+  --hito-gold: #dfa21d;
+  --hito-paper: #fcfbf8;
+  --hito-ink: #151515;
+  /* background: var(--hito-paper); */
+  color: var(--hito-ink);
+}
+
+.hitosHero {
+  /* width: min(1240px, calc(100% - 40px)); */
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: .84fr 1.16fr;
+  min-height: 390px;
+  overflow: hidden;
+  background: #fff;
+  top: -60px;
+  position: relative;
+}
+.hitosHeroCopy { padding: clamp(42px, 6vw, 80px) clamp(30px, 5vw, 66px); }
+.hitosKicker { color: #dc4d26; font-size: .78rem; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+.hitosHero h1 { margin: 14px 0 18px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(2.7rem, 5vw, 5.1rem); line-height: .92; letter-spacing: -.045em; }
+.hitosHero h1 em { color: #e34e23; font-style: normal; }
+.hitosAccent { display: block; width: 48px; height: 2px; margin: 20px 0; background: linear-gradient(90deg, var(--hito-orange), var(--hito-gold)); }
+.hitosHeroCopy p { max-width: 430px; margin: 0; color: #444; font-size: 1rem; line-height: 1.65; }
+.hitosHeroVisual { position: relative; min-height: 390px; overflow: hidden; }
+.hitosHeroVisual::before { content: ""; position: absolute; z-index: 2; left: -95px; top: -12%; width: 190px; height: 124%; border-radius: 0 52% 52% 0; background: #fff; }
+.hitosHeroVisual::after { content: ""; position: absolute; z-index: 3; right: -65px; bottom: -60px; width: 180px; height: 130px; border-radius: 65% 0 0 0; background: #ef5b2a; }
+.hitosHeroVisual > img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.92) contrast(.97); }
+.hitosHeroPlaceholder { width: 100%; height: 100%; background: linear-gradient(135deg, #f0c47e, #df7c43); }
+.hitosHeroBrand { position: absolute; z-index: 4; top: 50%; left: 54%; transform: translate(-50%, -50%); color: rgba(255,255,255,.88); text-shadow: 0 2px 16px rgba(0,0,0,.2); }
+.hitosHeroBrand strong { display: block; font-family: Arial, sans-serif; font-size: clamp(1.5rem, 3vw, 2.7rem); line-height: .9; font-weight: 500; }
+.hitosHeroBrand small { display: block; margin-top: 10px; font-size: .7rem; letter-spacing: .12em; }
+
+.hitosContent { width: min(1120px, calc(100% - 40px)); margin: 0 auto; padding: 42px 0 90px; }
+.hitosTimeline { position: relative; }
+.hitosTimeline::before { content: ""; position: absolute; top: 30px; bottom: 28px; left: 69px; width: 1px; background: #efb4a1; }
+.hitoTimelineRow { position: relative; display: grid; grid-template-columns: 100px minmax(0, 1.42fr) minmax(260px, .95fr); gap: 28px; align-items: center; min-height: 215px; margin-bottom: 18px; }
+.hitoDate { align-self: start; padding-top: 22px; line-height: 1; }
+.hitoDate strong { display: block; font-family: Georgia, serif; font-size: 2rem; }
+.hitoDate span, .hitoDate small { display: block; margin-top: 6px; font-size: .86rem; }
+.hitoDot { position: absolute; z-index: 2; left: 63px; top: 31px; width: 12px; height: 12px; border-radius: 50%; background: var(--hito-orange); box-shadow: 0 0 0 5px var(--hito-paper); }
+.hitoImageLink { display: block; overflow: hidden; border-radius: 6px; background: #eee7df; text-decoration: none !important; }
+.hitoImageLink img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.hitoTimelineRow:hover .hitoImageLink img { transform: scale(1.025); }
+.hitoTimelineCopy > span { color: var(--hito-orange); font-size: .72rem; font-weight: 850; letter-spacing: .04em; text-transform: uppercase; }
+.hitoTimelineCopy h2 { margin: 8px 0 10px; font-family: Georgia, serif; font-size: clamp(1.45rem, 2.4vw, 2rem); line-height: 1.06; }
+.hitoTimelineCopy p { margin: 0; color: #393939; line-height: 1.55; font-size: .92rem; }
+.hitoTimelineCopy a { display: inline-block; margin-top: 14px; color: #e9582b; font-weight: 750; text-decoration: none !important; }
+.hitoTimelineCopy a b { margin-left: 5px; }
+.moreHitosButton { display: flex; align-items: center; gap: 18px; margin: 16px auto 0; padding: 12px 30px; border: 1px solid #e18b68; border-radius: 6px; background: transparent; color: #d95d32; font-weight: 750; cursor: pointer; }
+
+/* ===== Hito detail ===== */
+.hitoDetailTop { width: min(1180px, calc(100% - 40px)); margin: 0 auto; padding: 34px 0 46px; display: grid; grid-template-columns: minmax(340px, .84fr) minmax(0, 1.16fr); gap: 48px; align-items: center; }
+.hitoBack { display: inline-block; color: #d65e32; font-size: .82rem; font-weight: 750; text-decoration: none !important; margin-bottom: 26px; }
+.hitoBadge { display: block; width: fit-content; padding: 5px 10px; border-radius: 999px; background: #fff2eb; color: #e35a2e; text-transform: uppercase; font-size: .68rem; font-weight: 850; }
+.hitoDetailIntro h1 { margin: 12px 0; font-family: Georgia, serif; font-size: clamp(2.6rem, 5vw, 5rem); line-height: .93; letter-spacing: -.045em; }
+.hitoTitleAccent { display: block; width: 52px; height: 2px; margin: 18px 0; background: linear-gradient(90deg, var(--hito-orange), var(--hito-gold)); }
+.hitoMetaRow { display: flex; flex-wrap: wrap; gap: 16px 28px; color: #4d4d4d; font-size: .82rem; }
+.hitoDetailIntro > p { max-width: 590px; margin: 22px 0 0; color: #3f3f3f; line-height: 1.6; }
+.hitoSlider { position: relative; height: clamp(320px, 38vw, 470px); overflow: hidden; border-radius: 10px; background: #eee8e0; box-shadow: 0 16px 45px rgba(50,38,25,.08); }
+.hitoSlider > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.015); transition: opacity .65s ease, transform 1.2s ease; }
+.hitoSlider > img.hitoSlideActive { opacity: 1; transform: scale(1); }
+.sliderArrow { position: absolute; z-index: 4; top: 50%; transform: translateY(-50%); width: 42px; height: 42px; border: 0; border-radius: 50%; background: rgba(255,255,255,.9); color: #db592e; font-size: 2rem; line-height: 1; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+.sliderPrev { left: 14px; }
+.sliderNext { right: 14px; }
+.sliderDots { position: absolute; z-index: 4; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; gap: 8px; padding: 7px 10px; border-radius: 999px; background: rgba(104, 104, 104, 0.75); }
+.sliderDots button { width: 7px; height: 7px; padding: 0; border: 0; border-radius: 50%; background: #c4bdb4; cursor: pointer; }
+.sliderDots button.sliderDotActive { background: var(--hito-orange); }
+.hitoDetailBody { width: min(1040px, calc(100% - 40px)); margin: 0 auto; padding: 34px 0 90px; display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 70px; border-top: 1px solid #eee5dc; }
+.hitoSectionHeading { display: flex; gap: 14px; align-items: center; margin-bottom: 12px; }
+.hitoSectionHeading span { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid #ef8a66; border-radius: 50%; color: #e95c2e; }
+.hitoSectionHeading h2 { margin: 0; font-family: Georgia, serif; font-size: 1.9rem; }
+.hitoStory .richText { font-size: 1rem; line-height: 1.8; color: #373737; }
+.relatedHitos { align-self: start; padding: 18px; border: 1px solid #eadfd4; border-radius: 12px; background: #fff; }
+.relatedHitos h2 { margin: 0 0 12px; font-family: Georgia, serif; font-size: 1.25rem; }
+.relatedHitos > a:not(.relatedAllLink) { display: grid; grid-template-columns: 74px 1fr; gap: 10px; align-items: center; padding: 9px 0; color: inherit; text-decoration: none !important; border-bottom: 1px solid #eee5dc; }
+.relatedHitos img { width: 74px; height: 50px; object-fit: cover; border-radius: 5px; }
+.relatedHitos strong, .relatedHitos small { display: block; }
+.relatedHitos strong { font-size: .82rem; line-height: 1.2; }
+.relatedHitos small { margin-top: 3px; color: #777; font-size: .67rem; }
+.relatedAllLink { display: inline-block; margin-top: 12px; color: #df5e31; font-size: .78rem; font-weight: 750; text-decoration: none !important; }
+
+@media (max-width: 900px) {
+  .hitosHero { grid-template-columns: 1fr 1fr; min-height: 330px; }
+  .hitosHeroCopy { padding: 40px 30px; }
+  .hitosHero h1 { font-size: clamp(2.35rem, 6vw, 3.8rem); }
+  .hitosHeroVisual { min-height: 330px; }
+  .hitoTimelineRow { grid-template-columns: 82px minmax(0, 1fr); gap: 20px; padding-bottom: 28px; }
+  .hitosTimeline::before { left: 55px; }
+  .hitoDot { left: 49px; }
+  .hitoImageLink { height: 230px; }
+  .hitoTimelineCopy { grid-column: 2; }
+  .hitoDetailTop { grid-template-columns: 1fr; gap: 28px; }
+  .hitoDetailIntro { max-width: 760px; }
+  .hitoDetailBody { grid-template-columns: 1fr; gap: 35px; }
+  .relatedHitos { width: 100%; }
+}
+
+@media (max-width: 620px) {
+  .hitosHero { width: 100%; grid-template-columns: 1fr; }
+  .hitosHeroCopy { padding: 34px 22px 30px; }
+  .hitosHero h1 { font-size: clamp(2.7rem, 13vw, 4.15rem); }
+  .hitosHeroVisual { min-height: 260px; }
+  .hitosHeroVisual::before { display: none; }
+  .hitosHeroBrand { left: 50%; }
+  .hitosContent { width: min(100% - 28px, 1120px); padding-top: 30px; }
+  .hitosTimeline::before { left: 28px; }
+  .hitoTimelineRow { grid-template-columns: 58px 1fr; gap: 12px; margin-bottom: 28px; }
+  .hitoDate strong { font-size: 1.55rem; }
+  .hitoDate span, .hitoDate small { font-size: .7rem; }
+  .hitoDot { left: 22px; top: 29px; width: 10px; height: 10px; }
+  .hitoImageLink { height: 190px; border-radius: 5px; }
+  .hitoTimelineCopy { padding-right: 2px; }
+  .hitoTimelineCopy h2 { font-size: 1.45rem; }
+  .hitoTimelineCopy p { font-size: .88rem; }
+  .hitoDetailTop { width: min(100% - 28px, 1180px); padding-top: 24px; }
+  .hitoDetailIntro h1 { font-size: clamp(2.5rem, 12vw, 4rem); }
+  .hitoMetaRow { display: grid; gap: 8px; }
+  .hitoSlider { height: 270px; border-radius: 7px; }
+  .sliderArrow { width: 36px; height: 36px; font-size: 1.6rem; }
+  .hitoDetailBody { width: min(100% - 28px, 1040px); padding-top: 26px; }
+  .relatedHitos { padding: 14px; }
+}

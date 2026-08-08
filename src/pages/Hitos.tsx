@@ -8,86 +8,82 @@ import type { Milestone } from "../types";
 import { mediaUrl } from "../utils/mediaUrl";
 import styles from "./EditorialPages.module.css";
 
-const ALL = "all";
+const INITIAL_VISIBLE = 5;
 
 export default function Hitos() {
   const [items, setItems] = useState<Milestone[]>([]);
-  const [month, setMonth] = useState(ALL);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [visible, setVisible] = useState(INITIAL_VISIBLE);
 
   useEffect(() => {
     let active = true;
-    apiRequest<Milestone[]>("/milestones/published")
+    void apiRequest<Milestone[]>("/milestones/published")
       .then((data) => active && setItems(data))
       .catch(() => active && setError("No se pudieron cargar los hitos."))
       .finally(() => active && setLoading(false));
     return () => { active = false; };
   }, []);
 
-  const months = useMemo(() => {
-    const values = Array.from(new Set(items.map((item) => item.event_date.slice(0, 7))));
-    return values.sort();
-  }, [items]);
-
-  const filtered = useMemo(() => month === ALL ? items : items.filter((item) => item.event_date.startsWith(month)), [items, month]);
-  const featured = filtered.find((item) => item.featured) ?? filtered[0] ?? null;
-  const cards = featured ? filtered.filter((item) => item.id !== featured.id) : filtered;
+  const ordered = useMemo(
+    () => [...items].sort((a, b) => a.event_date.localeCompare(b.event_date)),
+    [items],
+  );
+  const heroItem = items.find((item) => item.featured) ?? ordered[0] ?? null;
+  const shown = ordered.slice(0, visible);
 
   return (
     <>
       <TopBar />
       <NavBar />
-      <main className={styles.page}>
-        <header className={styles.hero}>
-          <div className={styles.heroInner}>
-            <p className={styles.eyebrow}>Memoria del capítulo</p>
-            <h1>Hitos</h1>
-            <p className={styles.heroLead}>Una galería viva de los encuentros, proyectos y decisiones que están construyendo nuestra historia, mes a mes.</p>
+      <main className={`${styles.page} ${styles.hitosPage}`}>
+        <header className={styles.hitosHero}>
+          <div className={styles.hitosHeroCopy}>
+            <span className={styles.hitosKicker}>Hitos</span>
+            <h1>Cada paso<br />que nos mueve<br />hacia un <em>futuro</em><br />sostenible</h1>
+            <span className={styles.hitosAccent} aria-hidden="true" />
+            <p>Momentos que marcan nuestro camino como Capítulo Nacional de Juventud del World Food Forum en Perú.</p>
+          </div>
+          <div className={styles.hitosHeroVisual}>
+            {heroItem ? <img src={mediaUrl(heroItem.cover_image)} alt="Historia del WFF Perú Chapter" /> : <div className={styles.hitosHeroPlaceholder} />}
+            <div className={styles.hitosHeroBrand} aria-hidden="true"><strong>WORLD<br />FOOD<br />FORUM</strong><small>PERÚ CHAPTER</small></div>
           </div>
         </header>
 
-        <div className={styles.content}>
-          <section className={styles.timeline} aria-label="Línea del tiempo mensual">
-            <div className={styles.timelineHeader}><div><h2>Nuestra historia</h2><p>Selecciona un mes para recorrer los momentos del capítulo.</p></div></div>
-            <div className={styles.monthTrack}>
-              <button className={`${styles.monthButton} ${month === ALL ? styles.monthActive : ""}`} onClick={() => setMonth(ALL)}>Todos</button>
-              {months.map((key) => <button key={key} className={`${styles.monthButton} ${month === key ? styles.monthActive : ""}`} onClick={() => setMonth(key)}>{formatMonthKey(key)}</button>)}
-            </div>
-          </section>
-
+        <div className={styles.hitosContent}>
           {loading && <div className={styles.empty}>Cargando momentos…</div>}
           {error && <div className={styles.empty}>{error}</div>}
-          {!loading && !error && !featured && <div className={styles.empty}>Pronto publicaremos los primeros hitos del capítulo.</div>}
+          {!loading && !error && ordered.length === 0 && <div className={styles.empty}>Pronto publicaremos los primeros hitos del capítulo.</div>}
 
-          {featured && (
-            <Link to={`/hitos/${featured.slug}`} className={styles.featured}>
-              <div className={styles.featuredImage}><img src={mediaUrl(featured.cover_image)} alt={featured.title} /></div>
-              <div className={styles.featuredText}>
-                <span className={styles.featuredMeta}>{formatDate(featured.event_date)} · {featured.category}</span>
-                <h2>{featured.title}</h2>
-                <p>{featured.summary}</p>
-                <span className={styles.readLink}>Ver este momento →</span>
-              </div>
-            </Link>
+          {shown.length > 0 && (
+            <section className={styles.hitosTimeline} aria-label="Hitos del capítulo">
+              {shown.map((item) => {
+                const date = splitDate(item.event_date);
+                return (
+                  <article className={styles.hitoTimelineRow} key={item.id}>
+                    <div className={styles.hitoDate}>
+                      <strong>{date.day}</strong><span>{date.month}</span><small>{date.year}</small>
+                    </div>
+                    <span className={styles.hitoDot} aria-hidden="true" />
+                    <Link className={styles.hitoImageLink} to={`/hitos/${item.slug}`}>
+                      <img src={mediaUrl(item.cover_image)} alt={item.title} loading="lazy" />
+                    </Link>
+                    <div className={styles.hitoTimelineCopy}>
+                      <span>{item.category}</span>
+                      <h2>{item.title}</h2>
+                      <p>{item.summary}</p>
+                      <Link to={`/hitos/${item.slug}`}>Ver historia <b>→</b></Link>
+                    </div>
+                  </article>
+                );
+              })}
+            </section>
           )}
 
-          {cards.length > 0 && (
-            <section>
-              <h2 className={styles.sectionTitle}>{month === ALL ? "Todos los momentos" : formatMonthKey(month)}</h2>
-              <div className={styles.grid}>
-                {cards.map((item) => (
-                  <Link to={`/hitos/${item.slug}`} className={styles.card} key={item.id}>
-                    <div className={styles.cardImage}><img src={mediaUrl(item.cover_image)} alt={item.title} loading="lazy" /></div>
-                    <div className={styles.cardBody}>
-                      <span className={styles.cardMeta}>{formatDate(item.event_date)} · {item.category}</span>
-                      <h3>{item.title}</h3>
-                      <p>{item.summary}</p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </section>
+          {visible < ordered.length && (
+            <button className={styles.moreHitosButton} type="button" onClick={() => setVisible((value) => value + INITIAL_VISIBLE)}>
+              Ver más hitos <span>↓</span>
+            </button>
           )}
         </div>
       </main>
@@ -96,5 +92,11 @@ export default function Hitos() {
   );
 }
 
-function formatMonthKey(key: string): string { const [year, month] = key.split("-").map(Number); return new Date(year, month - 1, 1).toLocaleDateString("es-PE", { month: "long", year: "numeric" }); }
-function formatDate(value: string): string { return new Date(`${value.slice(0, 10)}T12:00:00`).toLocaleDateString("es-PE", { day: "numeric", month: "long", year: "numeric" }); }
+function splitDate(value: string) {
+  const date = new Date(`${value.slice(0, 10)}T12:00:00`);
+  return {
+    day: String(date.getDate()).padStart(2, "0"),
+    month: date.toLocaleDateString("es-PE", { month: "short" }).replace(".", "").toUpperCase(),
+    year: date.getFullYear(),
+  };
+}

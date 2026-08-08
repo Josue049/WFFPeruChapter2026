@@ -65,8 +65,7 @@ export default function VoluntariosDestacados() {
 
       <main className={`${styles.page} ${styles.volunteerLanding}`}>
 
-        {/* HERO FULL WIDTH */}
-        {lead && (
+        {/* {lead && (
           <Link
             className={styles.volunteerBanner}
             to={`/voluntarios-destacados/${lead.slug}`}
@@ -110,7 +109,7 @@ export default function VoluntariosDestacados() {
               </div>
             </div>
           </Link>
-        )}
+        )} */}
 
         {/* CONTENIDO CENTRADO */}
         <div className={styles.content}>
@@ -148,7 +147,7 @@ export default function VoluntariosDestacados() {
               </div>
 
               <div className={styles.magazineCoverGrid}>
-                {orderedStories.map((story) => (
+                {orderedStories.slice().reverse().map((story) => (
                   <Link
                     className={styles.magazineCover}
                     to={`/voluntarios-destacados/${story.slug}`}

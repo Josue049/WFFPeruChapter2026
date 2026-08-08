@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 import { apiRequest } from "../../services/api";
 import { mediaUrl } from "../../utils/mediaUrl";
+import { optimizeEditorialImageFile, optimizePortraitFile } from "../../utils/imageOptimizer";
 import styles from "./AdminForms.module.css";
 
 interface UploadResponse {
@@ -30,9 +31,10 @@ export function ImageField({ label, value, token, onChange, help, required }: Im
     if (!file) return;
     setUploading(true);
     setError("");
-    const body = new FormData();
-    body.append("file", file);
     try {
+      const optimized = await optimizeEditorialImageFile(file);
+      const body = new FormData();
+      body.append("file", optimized);
       const result = await apiRequest<UploadResponse>(
         "/media/images",
         { method: "POST", body },
@@ -90,9 +92,10 @@ export function TransparentPortraitField({ label, value, token, onChange, help, 
     }
     setUploading(true);
     setError("");
-    const body = new FormData();
-    body.append("file", file);
     try {
+      const optimized = await optimizePortraitFile(file);
+      const body = new FormData();
+      body.append("file", optimized);
       const result = await apiRequest<UploadResponse>(
         "/media/portraits",
         { method: "POST", body },
@@ -162,8 +165,9 @@ export function GalleryField({ value, token, onChange }: GalleryFieldProps) {
     try {
       const uploaded: string[] = [];
       for (const file of files) {
+        const optimized = await optimizeEditorialImageFile(file);
         const body = new FormData();
-        body.append("file", file);
+        body.append("file", optimized);
         const result = await apiRequest<UploadResponse>(
           "/media/images",
           { method: "POST", body },
