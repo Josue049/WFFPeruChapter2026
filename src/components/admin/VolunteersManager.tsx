@@ -375,6 +375,7 @@ export function VolunteersManager({ token }: { token: string }) {
               onChange={(content_html) => setForm({ ...form, content_html })}
               rows={24}
               help="Admite HTML editorial seguro: párrafos, subtítulos, listas, citas y enlaces. Aquí va toda la historia, sin dividirla artificialmente en logro e impacto."
+              previewVariant="volunteer"
             />
 
             <TextArea
@@ -382,6 +383,7 @@ export function VolunteersManager({ token }: { token: string }) {
               value={form.quote ?? ""}
               onChange={(quote) => setForm({ ...form, quote })}
               rows={3}
+              preview={false}
             />
 
             <GalleryField value={form.gallery} token={token} onChange={(gallery) => setForm({ ...form, gallery })} />
@@ -440,6 +442,7 @@ function TextArea({
   rows = 6,
   help,
   preview = true,
+  previewVariant = "article",
 }: {
   label: string;
   value: string;
@@ -447,13 +450,20 @@ function TextArea({
   rows?: number;
   help?: string;
   preview?: boolean;
+  previewVariant?: "article" | "volunteer" | "milestone";
 }) {
   return (
     <div className={styles.field}>
       <label>{label}</label>
       <textarea rows={rows} value={value} onChange={(event) => onChange(event.target.value)} />
       {help && <small>{help}</small>}
-      {preview && <HtmlPreview value={value} compact={rows <= 4} />}
+      {preview && (
+        <HtmlPreview
+          value={value}
+          compact={rows <= 4}
+          variant={previewVariant}
+        />
+      )}
     </div>
   );
 }

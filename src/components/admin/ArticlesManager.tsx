@@ -158,7 +158,7 @@ export function ArticlesManager({ token }: { token: string }) {
           </div>
           <Field label="Cargo o entidad" value={form.author_cargo} onChange={(value) => setForm({ ...form, author_cargo: value })} />
           <Field label="Título" value={form.title} onChange={(value) => setForm({ ...form, title: value })} />
-          <Field label="Subtítulo" value={form.subtitle} onChange={(value) => setForm({ ...form, subtitle: value })} />
+          <Field label="Breve descripción" value={form.subtitle} onChange={(value) => setForm({ ...form, subtitle: value })} />
           <Field label="Fecha de publicación" type="date" value={form.date} onChange={(value) => setForm({ ...form, date: value })} />
           <TextArea label="Artículo" value={form.body} onChange={(value) => setForm({ ...form, body: value })} rows={14} />
         </div>

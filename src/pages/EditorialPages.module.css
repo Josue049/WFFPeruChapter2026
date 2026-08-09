@@ -1039,7 +1039,7 @@
 .hitoTitleAccent { display: block; width: 52px; height: 2px; margin: 18px 0; background: linear-gradient(90deg, var(--hito-orange), var(--hito-gold)); }
 .hitoMetaRow { display: flex; flex-wrap: wrap; gap: 16px 28px; color: #4d4d4d; font-size: .82rem; }
 .hitoDetailIntro > p { max-width: 590px; margin: 22px 0 0; color: #3f3f3f; line-height: 1.6; }
-.hitoSlider { position: relative; height: clamp(320px, 38vw, 470px); overflow: hidden; border-radius: 10px; background: #eee8e0; box-shadow: 0 16px 45px rgba(50,38,25,.08); }
+.hitoSlider { position: relative; height: clamp(320px, 38vw, 470px); overflow: hidden; border-radius: 10px }
 .hitoSlider > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.015); transition: opacity .65s ease, transform 1.2s ease; }
 .hitoSlider > img.hitoSlideActive { opacity: 1; transform: scale(1); }
 .sliderArrow { position: absolute; z-index: 4; top: 50%; transform: translateY(-50%); width: 42px; height: 42px; border: 0; border-radius: 50%; background: rgba(255,255,255,.9); color: #db592e; font-size: 2rem; line-height: 1; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
@@ -1720,5 +1720,78 @@
     width: 100%;
     height: auto;
     object-fit: contain;
+  }
+}
+
+/* ===== Voluntarios: interacción editorial acotada ===== */
+/* El brillo dorado vive SOLO en las portadas de /voluntarios-destacados. */
+.volunteerLanding .magazineCover:hover .coverMasthead strong,
+.volunteerLanding .magazineCover:hover .coverMasthead span,
+.volunteerLanding .magazineCover:hover .coverEdition,
+.volunteerLanding .magazineCover:hover .coverVertical {
+  background: linear-gradient(
+    105deg,
+    #c88908 0%,
+    #edb72e 34%,
+    #fff1ad 48%,
+    #d89a08 64%,
+    #a86f00 100%
+  );
+  background-size: 220% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+  animation: volunteerGoldShine .65s ease forwards;
+}
+
+.volunteerLanding .magazineCover:hover {
+  border-color: rgba(216, 154, 8, .58);
+  box-shadow: 0 24px 44px rgba(142, 98, 8, .15);
+}
+
+@keyframes volunteerGoldShine {
+  from { background-position: -120% 0; }
+  to { background-position: 100% 0; }
+}
+
+/* ===== Detalle de voluntario: títulos negros y cita más sobria ===== */
+.volunteerArticlePage .articleHeadlineBlock h1,
+.volunteerArticlePage .richText h1,
+.volunteerArticlePage .richText h2,
+.volunteerArticlePage .richText h3,
+.volunteerArticlePage .richText h4,
+.volunteerArticlePage .articleGallerySection h2,
+.volunteerArticlePage .volunteerArticleAside h2,
+.volunteerArticlePage .relatedVolunteerList strong {
+  color: #111;
+}
+
+.volunteerArticlePage .articleQuote {
+  margin: 42px 0;
+  padding: 26px 34px 26px 76px;
+  border-radius: 18px;
+  font-size: clamp(1.05rem, 1.45vw, 1.35rem);
+  line-height: 1.5;
+}
+
+.volunteerArticlePage .articleQuote > span {
+  left: 22px;
+  top: 8px;
+  font-size: 4.2rem;
+}
+
+@media (max-width: 620px) {
+  .volunteerArticlePage .articleQuote {
+    margin: 34px 0;
+    padding: 54px 22px 22px;
+    font-size: 1.05rem;
+  }
+
+  .volunteerArticlePage .articleQuote > span {
+    left: 20px;
+    top: 4px;
+    font-size: 3.7rem;
   }
 }

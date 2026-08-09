@@ -37,7 +37,7 @@ export default function Hitos() {
       <TopBar />
       <NavBar />
       <main className={`${styles.page} ${styles.hitosPage}`}>
-        <header className={styles.hitosHero}>
+        {/* <header className={styles.hitosHero}>
           <div className={styles.hitosHeroCopy}>
             <span className={styles.hitosKicker}>Hitos</span>
             <h1>Cada paso<br />que nos mueve<br />hacia un <em>futuro</em><br />sostenible</h1>
@@ -48,7 +48,7 @@ export default function Hitos() {
             {heroItem ? <img src={mediaUrl(heroItem.cover_image)} alt="Historia del WFF Perú Chapter" /> : <div className={styles.hitosHeroPlaceholder} />}
             <div className={styles.hitosHeroBrand} aria-hidden="true"><strong>WORLD<br />FOOD<br />FORUM</strong><small>PERÚ CHAPTER</small></div>
           </div>
-        </header>
+        </header> */}
 
         <div className={styles.hitosContent}>
           {loading && <div className={styles.empty}>Cargando momentos…</div>}

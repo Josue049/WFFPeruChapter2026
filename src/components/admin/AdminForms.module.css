@@ -230,19 +230,25 @@
   display: none;
 }
 
+/* =========================
+   PREVIEW PRINCIPAL
+   ========================= */
+
 .imagePreview {
   position: relative;
   width: min(100%, 460px);
-  aspect-ratio: 16 / 9;
+  height: auto;
+  min-height: 180px;
   border-radius: 16px;
   overflow: hidden;
   background: #e9e4dc;
 }
 
 .imagePreview img {
+  display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
 }
 
 .imagePreview button,
@@ -250,6 +256,7 @@
   position: absolute;
   top: 8px;
   right: 8px;
+  z-index: 2;
   border: 0;
   border-radius: 999px;
   background: rgba(27, 29, 27, 0.82);
@@ -258,25 +265,37 @@
   padding: 6px 10px;
 }
 
+/* =========================
+   GALERÍA ADICIONAL
+   ========================= */
+
 .galleryGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   gap: 10px;
+  align-items: start;
 }
 
 .galleryItem {
   position: relative;
-  aspect-ratio: 4 / 3;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 0;
   border-radius: 12px;
   overflow: hidden;
-  background: #e9e4dc;
+  background: #f4eee8;
 }
 
 .galleryItem img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+
+/* =========================
+   ESTADOS
+   ========================= */
 
 .empty {
   padding: 40px 22px;
@@ -295,6 +314,10 @@
   background: #fff0ee;
   color: #9f332c;
 }
+
+/* =========================
+   CONFIGURACIÓN
+   ========================= */
 
 .settingCard {
   padding: 22px;
@@ -322,6 +345,7 @@
   appearance: none;
   -webkit-appearance: none;
   outline: none;
+  background: #fff;
 }
 
 .modeCardActive {
@@ -355,46 +379,19 @@
   color: #9b4740;
 }
 
-@media (max-width: 920px) {
-  .manager {
-    grid-template-columns: 1fr;
-  }
-  .listPanel {
-    position: static;
-  }
-  .itemList {
-    max-height: 300px;
-  }
-}
-
-@media (max-width: 640px) {
-  .editor {
-    padding: 18px;
-    border-radius: 16px;
-  }
-  .editorHeader {
-    display: grid;
-  }
-  .actions {
-    justify-content: flex-start;
-  }
-  .twoColumns,
-  .threeColumns,
-  .modeCards,
-  .permissions {
-    grid-template-columns: 1fr;
-  }
-  .imageRow {
-    align-items: stretch;
-    flex-direction: column;
-  }
-}
+/* =========================
+   CUATRO COLUMNAS
+   ========================= */
 
 .fourColumns {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 17px;
 }
+
+/* =========================
+   PNG TRANSPARENTE
+   ========================= */
 
 .transparentPreview {
   aspect-ratio: 4 / 5;
@@ -406,22 +403,21 @@
     linear-gradient(45deg, transparent 75%, #ece7df 75%),
     linear-gradient(-45deg, transparent 75%, #ece7df 75%);
   background-size: 24px 24px;
-  background-position: 0 0, 0 12px, 12px -12px, -12px 0;
+  background-position:
+    0 0,
+    0 12px,
+    12px -12px,
+    -12px 0;
 }
 
 .transparentPreview img {
   object-fit: contain;
 }
 
-@media (max-width: 1100px) {
-  .fourColumns { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
+/* =========================
+   VISTA PREVIA HTML
+   ========================= */
 
-@media (max-width: 640px) {
-  .fourColumns { grid-template-columns: 1fr; }
-}
-
-/* ===== Vista previa editorial HTML ===== */
 .htmlPreview {
   overflow: hidden;
   border: 1px solid #f0d6c3;
@@ -442,27 +438,36 @@
 
 .htmlPreviewLabel span {
   color: #d95027;
-  font-size: .76rem;
+  font-size: 0.76rem;
   font-weight: 850;
-  letter-spacing: .08em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .htmlPreviewLabel small {
   color: #8b7666;
-  font-size: .72rem;
+  font-size: 0.72rem;
 }
 
 .htmlPreviewContent {
   padding: 18px 20px;
   color: #2d2a27;
-  font-size: .98rem;
+  font-size: 0.98rem;
   line-height: 1.75;
 }
 
-.htmlPreviewCompact .htmlPreviewContent { padding: 14px 17px; }
-.htmlPreviewContent > :first-child { margin-top: 0; }
-.htmlPreviewContent > :last-child { margin-bottom: 0; }
+.htmlPreviewCompact .htmlPreviewContent {
+  padding: 14px 17px;
+}
+
+.htmlPreviewContent > :first-child {
+  margin-top: 0;
+}
+
+.htmlPreviewContent > :last-child {
+  margin-bottom: 0;
+}
+
 .htmlPreviewContent h1,
 .htmlPreviewContent h2,
 .htmlPreviewContent h3,
@@ -471,7 +476,12 @@
   line-height: 1.12;
   color: #181614;
 }
-.htmlPreviewContent a { color: #e65329; font-weight: 700; }
+
+.htmlPreviewContent a {
+  color: #e65329;
+  font-weight: 700;
+}
+
 .htmlPreviewContent blockquote {
   margin: 18px 0;
   padding: 13px 18px;
@@ -479,15 +489,123 @@
   background: #fff4ea;
   font-family: Georgia, "Times New Roman", serif;
 }
-.htmlPreviewContent img { max-width: 100%; height: auto; border-radius: 8px; }
-.htmlPreviewEmpty { padding: 16px 20px; color: #9b928a; font-size: .85rem; }
 
-@media (max-width: 640px) {
-  .htmlPreviewLabel { align-items: flex-start; flex-direction: column; gap: 3px; }
+.htmlPreviewContent img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
 }
 
-/* Las vistas previas del admin respetan la foto completa. */
-.imagePreview { height: auto; aspect-ratio: auto; min-height: 180px; }
-.imagePreview img { display: block; width: 100%; height: auto; object-fit: contain; }
-.galleryItem { aspect-ratio: auto; min-height: 120px; background: #f4eee8; }
-.galleryItem img { display: block; width: 100%; height: auto; object-fit: contain; }
+.htmlPreviewEmpty {
+  padding: 16px 20px;
+  color: #9b928a;
+  font-size: 0.85rem;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 1100px) {
+  .fourColumns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 920px) {
+  .manager {
+    grid-template-columns: 1fr;
+  }
+
+  .listPanel {
+    position: static;
+  }
+
+  .itemList {
+    max-height: 300px;
+  }
+}
+
+@media (max-width: 640px) {
+  .editor {
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .editorHeader {
+    display: grid;
+  }
+
+  .actions {
+    justify-content: flex-start;
+  }
+
+  .twoColumns,
+  .threeColumns,
+  .fourColumns,
+  .modeCards,
+  .permissions {
+    grid-template-columns: 1fr;
+  }
+
+  .imageRow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .galleryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .htmlPreviewLabel {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+  }
+}
+
+@media (max-width: 420px) {
+  .galleryGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Preview usando los estilos reales de las páginas públicas ===== */
+.articlePublicPreview,
+.volunteerPublicPreview,
+.milestonePublicPreview {
+  width: 100%;
+  background: #fff;
+}
+
+.articlePublicPreview :global(.ArticuloCompleto) {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+}
+
+.articlePublicPreview :global(.bgDesktopWhite) {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 28px 32px;
+}
+
+.volunteerPublicPreview,
+.milestonePublicPreview {
+  padding: 28px 32px;
+}
+
+/* No redefinir tipografía aquí: Volunteer/Hito usan EditorialPages.module.css real. */
+.volunteerPublicPreview :global(p):first-child,
+.milestonePublicPreview :global(p):first-child {
+  margin-top: 0;
+}
+
+@media (max-width: 640px) {
+  .articlePublicPreview :global(.bgDesktopWhite),
+  .volunteerPublicPreview,
+  .milestonePublicPreview {
+    padding: 20px 18px;
+  }
+}
