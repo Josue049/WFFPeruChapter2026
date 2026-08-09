@@ -197,32 +197,9 @@ export function VolunteersManager({ token }: { token: string }) {
     await load();
   };
 
-  const saveHighlight = async () => {
-    try {
-      const payload =
-        highlight.mode === "random"
-          ? { mode: "random" }
-          : {
-              mode: "scheduled",
-              story_id: highlight.story_id,
-              starts_at: toIso(highlight.starts_at),
-              ends_at: toIso(highlight.ends_at),
-            };
-      const updated = await apiRequest<VolunteerHighlight>(
-        "/volunteer-highlight",
-        { method: "PUT", body: JSON.stringify(payload) },
-        { token, redirectOnUnauthorized: true },
-      );
-      setHighlight(updated);
-      setMessage("Configuración de portada actualizada.");
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : "No se pudo programar.");
-    }
-  };
-
   return (
     <div>
-      {/* <section className={styles.settingCard}>
+      <section className={styles.settingCard}>
         <h3>Historia principal</h3>
         <p>
           El retrato se mantiene idéntico en portada y cuadrícula. En portada se muestra a color;
@@ -285,7 +262,7 @@ export function VolunteersManager({ token }: { token: string }) {
         <div className={styles.actions} style={{ marginTop: 16 }}>
           <button className={styles.primaryButton} onClick={saveHighlight}>Guardar portada</button>
         </div>
-      </section> */}
+      </section>
 
       <div className={styles.manager}>
         <aside className={styles.listPanel}>
@@ -468,10 +445,3 @@ function TextArea({
   );
 }
 
-function toLocalInput(value: string | null) {
-  return value ? value.slice(0, 16) : "";
-}
-
-function toIso(value: string | null) {
-  return value ? new Date(value).toISOString() : null;
-}

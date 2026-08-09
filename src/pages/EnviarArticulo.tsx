@@ -15,6 +15,7 @@ interface SubmissionForm {
   author_lastname: string;
   author_cargo: string;
   author_email: string;
+  is_chapter_member: boolean | null;
   author_photo: string;
   title: string;
   subtitle: string;
@@ -26,6 +27,7 @@ const emptyForm: SubmissionForm = {
   author_lastname: "",
   author_cargo: "",
   author_email: "",
+  is_chapter_member: null,
   author_photo: "",
   title: "",
   subtitle: "",
@@ -40,11 +42,32 @@ export default function EnviarArticulo() {
   const [error, setError] = useState("");
 
   const canSend = useMemo(
-    () => Object.values(form).every((value) => value.trim().length > 0),
+    () =>
+      form.author_name.trim().length > 0 &&
+      form.author_lastname.trim().length > 0 &&
+      form.author_cargo.trim().length > 0 &&
+      form.author_email.trim().length > 0 &&
+      form.is_chapter_member !== null &&
+      form.author_photo.trim().length > 0 &&
+      form.title.trim().length > 0 &&
+      form.subtitle.trim().length > 0 &&
+      form.body.trim().length > 0,
     [form],
   );
 
   const uploadPhoto = async (file: File) => {
+    setError("");
+
+    const dimensions = await readImageDimensions(file);
+    if (dimensions.width !== dimensions.height) {
+      setError("La fotografía debe ser cuadrada (misma medida de ancho y alto).");
+      return;
+    }
+    if (dimensions.width > 640 || dimensions.height > 640) {
+      setError(`La fotografía no puede superar 640 × 640 px. La seleccionada mide ${dimensions.width} × ${dimensions.height} px.`);
+      return;
+    }
+
     setUploading(true);
     setError("");
     try {
@@ -123,14 +146,24 @@ export default function EnviarArticulo() {
                   <Field label="Correo electrónico" type="email" value={form.author_email} onChange={(author_email) => setForm({ ...form, author_email })} />
                 </div>
 
+                <div className={styles.memberField}>
+                  <span className={styles.memberLabel}>¿Eres miembro registrado del Capítulo Nacional de Juventud del WFF en Perú?</span>
+                  <div className={styles.memberOptions}>
+                    <button type="button" className={form.is_chapter_member === true ? styles.memberOptionActive : ""} onClick={() => setForm({ ...form, is_chapter_member: true })}>Sí, soy miembro</button>
+                    <button type="button" className={form.is_chapter_member === false ? styles.memberOptionActive : ""} onClick={() => setForm({ ...form, is_chapter_member: false })}>No soy miembro</button>
+                  </div>
+                  <small>Esta información será visible únicamente para el equipo revisor.</small>
+                </div>
+
                 <div className={styles.photoField}>
                   <label>Fotografía del autor</label>
+                  <p className={styles.photoHelp}>Usa una foto cuadrada donde tu rostro se vea claramente. Formatos JPG, PNG o WebP, máximo 640 × 640 px.</p>
                   <div className={styles.photoRow}>
                     <label className={styles.uploadButton}>
                       {uploading ? "Subiendo…" : "Seleccionar imagen"}
                       <input type="file" accept="image/jpeg,image/png,image/webp" disabled={uploading} onChange={(event) => { const file = event.target.files?.[0]; if (file) void uploadPhoto(file); }} />
                     </label>
-                    <span>{form.author_photo ? "Imagen lista" : "JPG, PNG o WebP"}</span>
+                    <span>{form.author_photo ? "Imagen lista · validada" : "Cuadrada · rostro visible · máx. 640 × 640 px"}</span>
                   </div>
                   {form.author_photo && <img className={styles.photoPreview} src={mediaUrl(form.author_photo)} alt="Vista previa del autor" />}
                 </div>
@@ -164,4 +197,22 @@ export default function EnviarArticulo() {
 
 function Field({ label, value, onChange, type = "text" }: { label: string; value: string; onChange: (value: string) => void; type?: string }) {
   return <div className={styles.field}><label>{label}</label><input required type={type} value={value} onChange={(event) => onChange(event.target.value)} /></div>;
+}
+
+
+function readImageDimensions(file: File): Promise<{ width: number; height: number }> {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const image = new Image();
+    image.onload = () => {
+      const result = { width: image.naturalWidth, height: image.naturalHeight };
+      URL.revokeObjectURL(url);
+      resolve(result);
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("No se pudo leer la imagen seleccionada."));
+    };
+    image.src = url;
+  });
 }

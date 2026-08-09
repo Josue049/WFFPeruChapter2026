@@ -13,3 +13,6 @@ La sección Voces ahora tiene dos vistas:
 
 ## Administración / Actividad
 Las cuentas con `manage_users=true` ven una sección **Actividad** que consume `GET /audit-logs` y muestra usuario, fecha, acción, módulo y los snapshots antes/después.
+
+- Las postulaciones ahora registran si el autor declara ser miembro del capítulo y validan foto cuadrada de máximo 640 × 640 px.
+- La línea de tiempo de Hitos se ordena por fecha del evento, del más reciente al más antiguo.

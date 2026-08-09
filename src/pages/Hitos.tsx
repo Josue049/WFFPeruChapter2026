@@ -26,7 +26,7 @@ export default function Hitos() {
   }, []);
 
   const ordered = useMemo(
-    () => [...items].sort((a, b) => a.event_date.localeCompare(b.event_date)),
+    () => [...items].sort((a, b) => b.event_date.localeCompare(a.event_date) || b.id - a.id),
     [items],
   );
   const shown = ordered.slice(0, visible);

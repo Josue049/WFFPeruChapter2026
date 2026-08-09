@@ -656,3 +656,15 @@
 .jsonPanel > strong { color: #d6532d; }
 .jsonPanel pre { max-height: 55vh; overflow: auto; white-space: pre-wrap; word-break: break-word; font-size: .75rem; line-height: 1.5; }
 @media (max-width: 720px) { .auditFilters, .diffGrid { grid-template-columns: 1fr; } .auditHeader { flex-direction: column; } }
+
+
+/* Membresía declarada en postulaciones */
+.memberReviewCard { display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 15px 17px; border: 1px solid #eadfd5; border-radius: 14px; background: #fffaf5; }
+.memberReviewCard > div { display: grid; gap: 7px; }
+.memberReviewCard strong { color: #32372f; }
+.memberReviewCard label { display: grid; gap: 6px; min-width: 190px; color: #666; font-size: .78rem; font-weight: 750; }
+.memberReviewCard select { width: 100%; border: 1px solid #dcd5cb; border-radius: 10px; background: #fff; padding: 9px 10px; }
+.memberBadgeYes, .memberBadgeNo { width: fit-content; padding: 5px 10px; border-radius: 999px; font-size: .76rem; font-weight: 850; }
+.memberBadgeYes { background: #e9f6e9; color: #2f6d36; }
+.memberBadgeNo { background: #f4efeb; color: #7c6658; }
+@media (max-width: 640px) { .memberReviewCard { align-items: stretch; flex-direction: column; } .memberReviewCard label { min-width: 0; width: 100%; } }

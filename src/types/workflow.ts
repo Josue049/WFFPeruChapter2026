@@ -7,6 +7,7 @@ export interface ArticleSubmission {
   author_photo: string;
   author_cargo: string;
   author_email: string;
+  is_chapter_member: boolean;
   title: string;
   subtitle: string;
   body: string;

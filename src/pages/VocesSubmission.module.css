@@ -17,6 +17,14 @@
 .field input, .field textarea { width: 100%; border: 1px solid #dcd2c7; border-radius: 12px; background: #fffdfa; padding: 12px 13px; font: inherit; color: #222; }
 .field textarea { resize: vertical; line-height: 1.7; }
 .photoField { display: grid; gap: 10px; }
+.memberField { display: grid; gap: 10px; margin: 4px 0 18px; padding: 16px; border: 1px solid #eadbcf; border-radius: 14px; background: #fffaf5; }
+.memberLabel { color: #333; font-size: .92rem; font-weight: 800; line-height: 1.45; }
+.memberOptions { display: flex; gap: 10px; flex-wrap: wrap; }
+.memberOptions button { border: 1px solid #dfd2c6; border-radius: 999px; padding: 9px 15px; background: #fff; color: #5f554c; font-weight: 750; cursor: pointer; }
+.memberOptions .memberOptionActive { border-color: #ef7d22; background: #fff0df; color: #d95a24; box-shadow: 0 0 0 2px rgba(239,125,34,.08); }
+.memberField small { color: #84766c; }
+.photoHelp { margin: -2px 0 2px; color: #786f68; font-size: .84rem; line-height: 1.45; }
+
 .photoRow { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 .uploadButton { display: inline-flex; padding: 10px 17px; border-radius: 999px; background: #ef7d22; color: white; cursor: pointer; font-weight: 800; }
 .uploadButton input { display: none; }

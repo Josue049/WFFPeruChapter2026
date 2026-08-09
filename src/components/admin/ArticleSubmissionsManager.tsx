@@ -6,7 +6,7 @@ import { ImageField } from "./ImageField";
 import styles from "./AdminForms.module.css";
 
 type EditableSubmission = Pick<ArticleSubmission,
-  "author_name" | "author_lastname" | "author_photo" | "author_cargo" | "author_email" | "title" | "subtitle" | "body"
+  "author_name" | "author_lastname" | "author_photo" | "author_cargo" | "author_email" | "is_chapter_member" | "title" | "subtitle" | "body"
 > & { reviewer_notes: string; status: "pending" | "in_review" | "rejected" };
 
 export function ArticleSubmissionsManager({ token, onPublished }: { token: string; onPublished?: (article: Article) => void }) {
@@ -38,6 +38,7 @@ export function ArticleSubmissionsManager({ token, onPublished }: { token: strin
       author_photo: item.author_photo,
       author_cargo: item.author_cargo,
       author_email: item.author_email,
+      is_chapter_member: item.is_chapter_member,
       title: item.title,
       subtitle: item.subtitle,
       body: item.body,
@@ -107,7 +108,7 @@ export function ArticleSubmissionsManager({ token, onPublished }: { token: strin
             <button key={item.id} className={`${styles.listItem} ${selectedId === item.id ? styles.listItemActive : ""}`} onClick={() => select(item)}>
               <strong>{item.title}</strong>
               <span>{item.author_name} {item.author_lastname}</span>
-              <small>{statusLabel(item.status)} · {formatDate(item.submitted_at)}</small>
+              <small>{item.is_chapter_member ? "Miembro del capítulo" : "No miembro"} · {statusLabel(item.status)} · {formatDate(item.submitted_at)}</small>
             </button>
           ))}
           {!visible.length && <div className={styles.empty}>No hay postulaciones en este filtro.</div>}
@@ -136,6 +137,21 @@ export function ArticleSubmissionsManager({ token, onPublished }: { token: strin
               <div className={styles.twoColumns}>
                 <Field label="Cargo o entidad" value={form.author_cargo} onChange={(author_cargo) => setForm({ ...form, author_cargo })} />
                 <Field label="Correo del postulante" type="email" value={form.author_email} onChange={(author_email) => setForm({ ...form, author_email })} />
+              </div>
+              <div className={styles.memberReviewCard}>
+                <div>
+                  <strong>Membresía declarada</strong>
+                  <span className={form.is_chapter_member ? styles.memberBadgeYes : styles.memberBadgeNo}>
+                    {form.is_chapter_member ? "Miembro registrado del capítulo" : "No es miembro del capítulo"}
+                  </span>
+                </div>
+                <label>
+                  <span>Corregir dato</span>
+                  <select value={form.is_chapter_member ? "yes" : "no"} onChange={(event) => setForm({ ...form, is_chapter_member: event.target.value === "yes" })}>
+                    <option value="yes">Sí, miembro</option>
+                    <option value="no">No miembro</option>
+                  </select>
+                </label>
               </div>
               <Field label="Título" value={form.title} onChange={(title) => setForm({ ...form, title })} />
               <Field label="Breve descripción" value={form.subtitle} onChange={(subtitle) => setForm({ ...form, subtitle })} />
