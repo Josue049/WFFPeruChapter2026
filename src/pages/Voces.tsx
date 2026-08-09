@@ -43,7 +43,11 @@ export default function Voces() {
             alt="Voces del Capítulo"
             className="voces-logo"
           />
-          <Link className="voces-submit-button" to="/voces/enviar">Envía tu artículo →</Link>
+          <div className="voces-submit-wrapper">
+            <Link to="/voces/enviar" className="voces-submit-button">
+              Envíanos tu artículo
+            </Link>
+          </div>{" "}
         </div>
 
         {loading && <p className="page-status">Cargando artículos…</p>}

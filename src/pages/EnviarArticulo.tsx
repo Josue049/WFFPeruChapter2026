@@ -119,7 +119,7 @@ export default function EnviarArticulo() {
           <header className={styles.hero}>
             <span>VOCES DEL CAPÍTULO</span>
             <h1>Envía tu artículo</h1>
-            <p>Comparte una idea, experiencia o iniciativa. El equipo del WFF Perú Chapter revisará el contenido antes de publicarlo.</p>
+            <p>Comparte un artículo de tu experiencia o de divulgación que creas que merezca ser leído por nuestra comunidad. El equipo del WFF Perú Chapter revisará el contenido antes de publicarlo.</p>
           </header>
 
           {message ? (

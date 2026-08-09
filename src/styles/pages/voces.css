@@ -208,20 +208,53 @@
 
 
 
-
+.voces-submit-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+  margin-bottom: 28px;
+}
 
 .voces-submit-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-top: 22px;
-  padding: 12px 22px;
+
+  padding: 12px 26px;
   border-radius: 999px;
-  background: linear-gradient(90deg, #ef5b2a, #eda91e);
-  color: #fff !important;
-  text-decoration: none !important;
-  font-weight: 800;
-  box-shadow: 0 10px 26px rgba(220, 92, 37, .18);
-  transition: transform .2s ease, box-shadow .2s ease;
+
+  background: #fbbd16;
+  color: #ffffff;
+
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+
+  border: 2px solid #fbbd16;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
-.voces-submit-button:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(220, 92, 37, .25); }
+
+.voces-submit-button:hover,
+.voces-submit-button:focus,
+.voces-submit-button:active {
+  background: #e9a900;
+  color: #ffffff;
+  border-color: #e9a900;
+  text-decoration: none;
+  opacity: 1;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px rgba(251, 189, 22, 0.28);
+}
+
+.voces-submit-button:hover {
+  background-color: #e9a900 !important;
+  color: #ffffff !important;
+}

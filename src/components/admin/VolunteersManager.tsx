@@ -290,7 +290,7 @@ export function VolunteersManager({ token }: { token: string }) {
 
   return (
     <div>
-      <section className={styles.settingCard}>
+      {/* <section className={styles.settingCard}>
         <h3>Historia principal</h3>
 
         <p>
@@ -418,7 +418,7 @@ export function VolunteersManager({ token }: { token: string }) {
             Guardar portada
           </button>
         </div>
-      </section>
+      </section> */}
 
       <div className={styles.manager}>
         <aside className={styles.listPanel}>
