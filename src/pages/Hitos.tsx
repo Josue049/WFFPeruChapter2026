@@ -29,7 +29,6 @@ export default function Hitos() {
     () => [...items].sort((a, b) => a.event_date.localeCompare(b.event_date)),
     [items],
   );
-  const heroItem = items.find((item) => item.featured) ?? ordered[0] ?? null;
   const shown = ordered.slice(0, visible);
 
   return (

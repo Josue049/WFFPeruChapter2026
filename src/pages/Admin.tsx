@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { clearAuthToken, getAuthToken } from "../auth/session";
 import { ArticlesManager } from "../components/admin/ArticlesManager";
+import { AuditLogsManager } from "../components/admin/AuditLogsManager";
 import { MilestonesManager } from "../components/admin/MilestonesManager";
 import { UsersManager } from "../components/admin/UsersManager";
 import { VolunteersManager } from "../components/admin/VolunteersManager";
@@ -14,6 +15,7 @@ const sectionInfo: Record<AdminSection, { label: string; title: string; descript
   milestones: { label: "Hitos", title: "Hitos del capítulo", description: "Gestiona la memoria visual y su línea mensual." },
   volunteers: { label: "Voluntarios", title: "Voluntarios destacados", description: "Cuenta historias, logros e impacto de la comunidad." },
   users: { label: "Accesos", title: "Usuarios y permisos", description: "Crea cuentas individuales y limita sus funciones." },
+  audit: { label: "Actividad", title: "Registro de actividad", description: "Revisa quién cambió qué y cuándo dentro del centro de contenidos." },
 };
 
 export default function Admin() {
@@ -36,6 +38,7 @@ export default function Admin() {
     user.manage_milestones && "milestones",
     user.manage_volunteers && "volunteers",
     user.manage_users && "users",
+    user.manage_users && "audit",
   ].filter(Boolean) as AdminSection[] : [], [user]);
 
   const activeSection: AdminSection = sections.includes(section)
@@ -70,6 +73,7 @@ export default function Admin() {
             {activeSection === "milestones" && <MilestonesManager token={token} />}
             {activeSection === "volunteers" && <VolunteersManager token={token} />}
             {activeSection === "users" && <UsersManager token={token} currentUserId={user.id} />}
+            {activeSection === "audit" && <AuditLogsManager token={token} />}
           </>
         )}
       </main>

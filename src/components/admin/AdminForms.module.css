@@ -609,3 +609,50 @@
     padding: 20px 18px;
   }
 }
+
+/* ===== Flujo de postulaciones de Voces ===== */
+.managerTabs {
+  display: inline-flex;
+  gap: 5px;
+  margin-bottom: 18px;
+  padding: 5px;
+  border: 1px solid #eadbce;
+  border-radius: 999px;
+  background: #fff;
+}
+.managerTabs button {
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 18px;
+  background: transparent;
+  color: #6b625b;
+  font-weight: 800;
+  cursor: pointer;
+}
+.managerTabs .managerTabActive { background: linear-gradient(90deg, #ef5b2a, #e9a61f); color: #fff; }
+.submissionFilters { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 16px 14px; }
+.submissionFilters button { border: 1px solid #e1d7cd; border-radius: 999px; padding: 6px 9px; background: #fff; color: #73675d; font-size: .72rem; cursor: pointer; }
+.submissionFilters .filterActive { border-color: #ef8a57; background: #fff2e8; color: #d6532d; font-weight: 800; }
+.emptyEditor { min-height: 430px; display: grid; place-content: center; text-align: center; color: #777; }
+.emptyEditor strong { color: #2c312c; font-family: Georgia, serif; font-size: 1.8rem; }
+.emptyEditor p { max-width: 420px; }
+
+/* ===== Auditoría ===== */
+.auditShell { display: grid; gap: 18px; }
+.auditHeader { display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; }
+.auditFilters { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+.auditTableCard { overflow: hidden; border: 1px solid #e8e0d5; border-radius: 18px; background: #fff; box-shadow: 0 16px 45px rgba(54,43,28,.06); }
+.auditTableWrap { overflow-x: auto; }
+.auditTable { width: 100%; border-collapse: collapse; min-width: 850px; }
+.auditTable th { padding: 13px 15px; background: #fff7ef; color: #8f5f42; text-align: left; font-size: .75rem; text-transform: uppercase; letter-spacing: .07em; }
+.auditTable td { padding: 14px 15px; border-top: 1px solid #eee6de; color: #4b4e49; font-size: .88rem; vertical-align: top; }
+.auditTable tr:hover td { background: #fffaf5; }
+.actionBadge { display: inline-flex; padding: 4px 8px; border-radius: 999px; background: #fff0e6; color: #d85831; font-weight: 800; font-size: .72rem; }
+.logDetailButton { border: 0; background: transparent; color: #df5c32; font-weight: 800; cursor: pointer; white-space: nowrap; }
+.logModalBackdrop { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; padding: 24px; background: rgba(30,25,21,.5); }
+.logModal { width: min(1100px, 100%); max-height: 90vh; overflow: auto; padding: 24px; border-radius: 18px; background: #fff; box-shadow: 0 30px 90px rgba(0,0,0,.24); }
+.diffGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
+.jsonPanel { min-width: 0; padding: 14px; border-radius: 14px; background: #f8f5f1; }
+.jsonPanel > strong { color: #d6532d; }
+.jsonPanel pre { max-height: 55vh; overflow: auto; white-space: pre-wrap; word-break: break-word; font-size: .75rem; line-height: 1.5; }
+@media (max-width: 720px) { .auditFilters, .diffGrid { grid-template-columns: 1fr; } .auditHeader { flex-direction: column; } }

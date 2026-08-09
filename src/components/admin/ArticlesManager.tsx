@@ -3,6 +3,7 @@ import type { Article } from "../../types";
 import { ApiError, apiRequest } from "../../services/api";
 import { HtmlPreview } from "./HtmlPreview";
 import { ImageField } from "./ImageField";
+import { ArticleSubmissionsManager } from "./ArticleSubmissionsManager";
 import styles from "./AdminForms.module.css";
 
 type ArticleForm = Omit<Article, "id">;
@@ -18,7 +19,26 @@ const emptyArticle = (): ArticleForm => ({
   body: "",
 });
 
+
 export function ArticlesManager({ token }: { token: string }) {
+  const [view, setView] = useState<"published" | "submissions">("published");
+
+  return (
+    <div>
+      <div className={styles.managerTabs}>
+        <button className={view === "published" ? styles.managerTabActive : ""} onClick={() => setView("published")}>Artículos</button>
+        <button className={view === "submissions" ? styles.managerTabActive : ""} onClick={() => setView("submissions")}>Postulaciones</button>
+      </div>
+      {view === "published" ? (
+        <PublishedArticlesManager token={token} />
+      ) : (
+        <ArticleSubmissionsManager token={token} onPublished={() => setView("published")} />
+      )}
+    </div>
+  );
+}
+
+function PublishedArticlesManager({ token }: { token: string }) {
   const [items, setItems] = useState<Article[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [form, setForm] = useState<ArticleForm>(emptyArticle());

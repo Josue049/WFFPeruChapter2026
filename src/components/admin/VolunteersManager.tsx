@@ -222,7 +222,7 @@ export function VolunteersManager({ token }: { token: string }) {
 
   return (
     <div>
-      <section className={styles.settingCard}>
+      {/* <section className={styles.settingCard}>
         <h3>Historia principal</h3>
         <p>
           El retrato se mantiene idéntico en portada y cuadrícula. En portada se muestra a color;
@@ -285,7 +285,7 @@ export function VolunteersManager({ token }: { token: string }) {
         <div className={styles.actions} style={{ marginTop: 16 }}>
           <button className={styles.primaryButton} onClick={saveHighlight}>Guardar portada</button>
         </div>
-      </section>
+      </section> */}
 
       <div className={styles.manager}>
         <aside className={styles.listPanel}>

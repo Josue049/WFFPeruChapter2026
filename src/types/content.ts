@@ -67,4 +67,4 @@ export interface AdminUser {
   last_login_at: string | null;
 }
 
-export type AdminSection = "articles" | "milestones" | "volunteers" | "users";
+export type AdminSection = "articles" | "milestones" | "volunteers" | "users" | "audit";

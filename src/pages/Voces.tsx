@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { NavBar } from "../components/Header/NavBar";
 import { TopBar } from "../components/Header/TopBar";
 import { ScrollTopButton } from "../components/ScrollTopButton";
@@ -42,6 +43,7 @@ export default function Voces() {
             alt="Voces del Capítulo"
             className="voces-logo"
           />
+          <Link className="voces-submit-button" to="/voces/enviar">Envía tu artículo →</Link>
         </div>
 
         {loading && <p className="page-status">Cargando artículos…</p>}
