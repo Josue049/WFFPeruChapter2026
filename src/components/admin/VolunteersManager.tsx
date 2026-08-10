@@ -63,8 +63,8 @@ export function VolunteersManager({ token }: { token: string }) {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [editionNumber, setEditionNumber] = useState<number | null>(null);
   const [form, setForm] = useState<StoryForm>(emptyStory());
-  const [highlight, setHighlight] =
-    useState<VolunteerHighlight>(emptyHighlight);
+  const [, setHighlight] =
+  useState<VolunteerHighlight>(emptyHighlight);
 
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
@@ -246,46 +246,6 @@ export function VolunteersManager({ token }: { token: string }) {
 
     createNew();
     await load();
-  };
-
-  const saveHighlight = async () => {
-    try {
-      setMessage("");
-
-      const payload =
-        highlight.mode === "random"
-          ? {
-              mode: "random",
-            }
-          : {
-              mode: "scheduled",
-              story_id: highlight.story_id,
-              starts_at: toIso(highlight.starts_at),
-              ends_at: toIso(highlight.ends_at),
-            };
-
-      const updated = await apiRequest<VolunteerHighlight>(
-        "/volunteer-highlight",
-        {
-          method: "PUT",
-          body: JSON.stringify(payload),
-        },
-        {
-          token,
-          redirectOnUnauthorized: true,
-        }
-      );
-
-      setHighlight(updated);
-
-      setMessage("Configuración de portada actualizada.");
-    } catch (error) {
-      setMessage(
-        error instanceof Error
-          ? error.message
-          : "No se pudo actualizar la portada."
-      );
-    }
   };
 
   return (
@@ -805,18 +765,3 @@ function TextArea({
   );
 }
 
-function toLocalInput(value: string | null) {
-  if (!value) {
-    return "";
-  }
-
-  return value.slice(0, 16);
-}
-
-function toIso(value: string | null) {
-  if (!value) {
-    return null;
-  }
-
-  return new Date(value).toISOString();
-}

@@ -1,25 +1,28 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+
+import { NavBar } from "../components/Header/NavBar";
+import { TopBar } from "../components/Header/TopBar";
 import { ScrollTopButton } from "../components/ScrollTopButton";
+
 import { apiRequest } from "../services/api";
-import type {
-  FeaturedVolunteer,
-  VolunteerStory,
-} from "../types";
+
+import type { VolunteerStory } from "../types";
+
 import { mediaUrl } from "../utils/mediaUrl";
+
 import styles from "./EditorialPages.module.css";
+
 
 const ITEMS_PER_PAGE = 8;
 
 const edition = (value: number) =>
   String(value).padStart(2, "0");
 
+
 export default function VoluntariosDestacados() {
   const [stories, setStories] =
     useState<VolunteerStory[]>([]);
-
-  const [featured, setFeatured] =
-    useState<FeaturedVolunteer | null>(null);
 
   const [loading, setLoading] =
     useState(true);
@@ -30,56 +33,41 @@ export default function VoluntariosDestacados() {
   const [page, setPage] =
     useState(1);
 
+
   useEffect(() => {
-    let active = true;
+  let active = true;
 
-    void Promise.all([
-      apiRequest<VolunteerStory[]>(
-        "/volunteer-stories/published"
-      ),
+  void apiRequest<VolunteerStory[]>(
+    "/volunteer-stories/published"
+  )
+    .then((all) => {
+      if (!active) return;
 
-      apiRequest<FeaturedVolunteer>(
-        "/volunteer-stories/featured",
-        {
-          cache: "no-store",
-        }
-      ),
-    ])
-      .then(([all, selected]) => {
-        if (!active) {
-          return;
-        }
+      setStories(all);
+    })
+    .catch(() => {
+      if (active) {
+        setError(
+          "No se pudieron cargar las historias."
+        );
+      }
+    })
+    .finally(() => {
+      if (active) {
+        setLoading(false);
+      }
+    });
 
-        setStories(all);
-        setFeatured(selected);
-      })
-      .catch(() => {
-        if (active) {
-          setError(
-            "No se pudieron cargar las historias."
-          );
-        }
-      })
-      .finally(() => {
-        if (active) {
-          setLoading(false);
-        }
-      });
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  const lead =
-    featured?.story ?? null;
+  return () => {
+    active = false;
+  };
+}, []);
 
   /*
    * Orden:
+   * más reciente primero.
    *
-   * edición más nueva -> edición más antigua
-   *
-   * 20, 19, 18, 17...
+   * 20, 19, 18...
    */
   const orderedStories =
     useMemo(
@@ -92,12 +80,9 @@ export default function VoluntariosDestacados() {
       [stories]
     );
 
+
   /*
-   * Número total de páginas.
-   *
-   * 8 historias -> 1
-   * 9 historias -> 2
-   * 20 historias -> 3
+   * 8 portadas por página.
    */
   const totalPages =
     Math.max(
@@ -108,9 +93,7 @@ export default function VoluntariosDestacados() {
       )
     );
 
-  /*
-   * Historias visibles en la página actual.
-   */
+
   const visibleStories =
     useMemo(() => {
       const start =
@@ -126,10 +109,11 @@ export default function VoluntariosDestacados() {
       page,
     ]);
 
+
   /*
-   * Si por algún motivo se eliminan historias
-   * mientras estamos en una página que ya no existe,
-   * regresamos automáticamente a la última válida.
+   * Si desaparecen registros y la página
+   * actual deja de existir, volvemos
+   * automáticamente a la última.
    */
   useEffect(() => {
     if (page > totalPages) {
@@ -140,6 +124,7 @@ export default function VoluntariosDestacados() {
     totalPages,
   ]);
 
+
   const goToPreviousPage = () => {
     setPage((current) =>
       Math.max(
@@ -147,7 +132,13 @@ export default function VoluntariosDestacados() {
         current - 1
       )
     );
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
+
 
   const goToNextPage = () => {
     setPage((current) =>
@@ -156,44 +147,109 @@ export default function VoluntariosDestacados() {
         current + 1
       )
     );
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
+
 
   return (
     <>
+      {/* =========================
+          HEADER
+         ========================= */}
+
+      <TopBar />
+
+      <NavBar />
+
+
+      {/* =========================
+          CONTENIDO
+         ========================= */}
+
       <main
         className={`${styles.page} ${styles.volunteerLanding}`}
       >
         {/*
+        HERO DE VOLUNTARIO DESTACADO
+        Actualmente desactivado.
+
         {lead && (
           <Link
             className={styles.volunteerBanner}
             to={`/voluntarios-destacados/${lead.slug}`}
           >
-            ...
+            <div className={styles.volunteerBannerInner}>
+              <div className={styles.volunteerBannerCopy}>
+                <span className={styles.bannerEyebrow}>
+                  {featured?.selection_mode === "scheduled"
+                    ? "Edición especial"
+                    : "Voluntario destacado"}
+                </span>
+
+                <h1>{lead.name}</h1>
+
+                <p className={styles.bannerRole}>
+                  {lead.role ||
+                    lead.area ||
+                    lead.headline}
+                </p>
+
+                <p className={styles.bannerHeadline}>
+                  {lead.headline}
+                </p>
+
+                <span className={styles.bannerButton}>
+                  Leer su historia →
+                </span>
+              </div>
+
+              <div className={styles.volunteerBannerVisual}>
+                <div
+                  className={styles.bannerBackdrop}
+                  aria-hidden="true"
+                >
+                  <span>WFF</span>
+                  <small>
+                    PERÚ CHAPTER
+                  </small>
+                </div>
+
+                <img
+                  src={mediaUrl(
+                    lead.portrait_image
+                  )}
+                  alt={lead.name}
+                />
+              </div>
+            </div>
           </Link>
         )}
         */}
 
+
         <div className={styles.content}>
           {loading && (
-            <div
-              className={styles.empty}
-            >
+            <div className={styles.empty}>
               Preparando la edición…
             </div>
           )}
 
+
           {error && (
-            <div
-              className={styles.empty}
-            >
+            <div className={styles.empty}>
               {error}
             </div>
           )}
 
+
           {!loading &&
             !error &&
-            !lead && (
+            orderedStories.length ===
+              0 && (
               <div
                 className={styles.empty}
               >
@@ -202,6 +258,7 @@ export default function VoluntariosDestacados() {
                 destacadas.
               </div>
             )}
+
 
           {!loading &&
             !error &&
@@ -219,26 +276,28 @@ export default function VoluntariosDestacados() {
                 >
                   <div>
                     <span>
-                      Ediciones del
-                      capítulo
+                      Ediciones del capítulo
                     </span>
 
                     <h2>
-                      Historias que
-                      inspiran
+                      Historias que inspiran
                     </h2>
                   </div>
 
                   <p>
-                    Cada cubierta abre
-                    una historia sobre
-                    una idea, una acción
-                    o un proyecto que
-                    aporta a sistemas
+                    Cada cubierta abre una
+                    historia sobre una idea,
+                    una acción o un proyecto
+                    que aporta a sistemas
                     agroalimentarios más
                     sostenibles.
                   </p>
                 </div>
+
+
+                {/* =========================
+                    PORTADAS
+                   ========================= */}
 
                 <div
                   className={
@@ -269,6 +328,7 @@ export default function VoluntariosDestacados() {
                           </span>
                         </div>
 
+
                         <span
                           className={
                             styles.coverEdition
@@ -280,14 +340,15 @@ export default function VoluntariosDestacados() {
                           )}
                         </span>
 
+
                         <span
                           className={
                             styles.coverVertical
                           }
                         >
-                          VOLUNTARIO
-                          DESTACADO
+                          VOLUNTARIO DESTACADO
                         </span>
+
 
                         <div
                           className={
@@ -304,6 +365,7 @@ export default function VoluntariosDestacados() {
                             loading="lazy"
                           />
                         </div>
+
 
                         <div
                           className={
@@ -325,6 +387,11 @@ export default function VoluntariosDestacados() {
                   )}
                 </div>
 
+
+                {/* =========================
+                    PAGINACIÓN
+                   ========================= */}
+
                 {totalPages > 1 && (
                   <nav
                     className={
@@ -345,10 +412,12 @@ export default function VoluntariosDestacados() {
                       ←
                     </button>
 
+
                     <span>
                       {page} /{" "}
                       {totalPages}
                     </span>
+
 
                     <button
                       type="button"
@@ -369,6 +438,7 @@ export default function VoluntariosDestacados() {
             )}
         </div>
       </main>
+
 
       <ScrollTopButton />
     </>
