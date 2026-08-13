@@ -1,7 +1,7 @@
 // src/components/LoQueHacemos.tsx
-import React from "react";
+import type { FC } from "react";
 
-const LoQueHacemos: React.FC = () => {
+const LoQueHacemos: FC = () => {
   return (
     <div className="container-fluid">
       <div className="container">

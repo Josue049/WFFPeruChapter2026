@@ -1,12 +1,11 @@
-import React from "react";
+import type { FC } from "react";
 import { Header } from "../components/Header";
-import Footer from "../components/Footer";
 import { ScrollTopButton } from "../components/ScrollTopButton";
 import { PlanAccionSection } from "../components/PlanAccionSection";
 import NuestroCompromiso from "../components/NuestroCompromiso";
 import VisibilidadHitos from "../components/VisibilidadHitos";
 
-export const empoderamientoFemenino: React.FC = () => {
+export const empoderamientoFemenino: FC = () => {
   return (
     <>
       <Header
@@ -46,7 +45,6 @@ export const empoderamientoFemenino: React.FC = () => {
 
       <VisibilidadHitos />
 
-      {/* <Footer /> */}
 
       <ScrollTopButton />
     </>

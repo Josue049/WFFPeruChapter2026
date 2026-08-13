@@ -1,4 +1,4 @@
-import React from "react";
+import type { FC } from "react";
 import styles from "./SplitHeroSection.module.css";
 
 type Props = {
@@ -7,7 +7,7 @@ type Props = {
   imageAlt?: string;
 };
 
-const SplitHeroSection: React.FC<Props> = ({
+const SplitHeroSection: FC<Props> = ({
   title = "Modelo de Estructura del Comité de Coordinación Nacional",
   imageSrc = "/img/Estructura.webp",
   imageAlt = "Panel de jóvenes participando en evento ICARRD+20",

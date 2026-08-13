@@ -1,7 +1,7 @@
 // src/components/Informacion.tsx
-import React from "react";
+import type { FC } from "react";
 
-const Informacion: React.FC = () => {
+const Informacion: FC = () => {
   return (
     <div className="container-fluid py-5">
       <div className="container py-5">

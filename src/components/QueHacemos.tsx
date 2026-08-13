@@ -1,5 +1,5 @@
 // src/components/QueHacemos.tsx
-import React from "react";
+import type { FC } from "react";
 
 interface Bloque {
   texto: string;
@@ -14,7 +14,7 @@ interface PoliticasProps {
   bloques: Bloque[];
 }
 
-export const QueHacemos: React.FC<PoliticasProps> = ({
+export const QueHacemos: FC<PoliticasProps> = ({
   titulo,
   linkText,
   descripcion,

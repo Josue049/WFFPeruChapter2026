@@ -1,0 +1,260 @@
+/* Fondo general */
+.voces-section {
+  /* background-color: #f3f3f3; */
+  padding: 100px 40px;
+  min-height: 100vh;
+}
+
+/* Header */
+.voces-header {
+  text-align: center;
+  margin-bottom: 40px;
+  margin-top: 20px;
+}
+
+.voces-header h1 {
+  font-size: 64px;
+  font-weight: 900;
+  color: #f4b400;
+  margin: 0;
+}
+
+.voces-header p {
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: #777;
+  margin-top: 10px;
+}
+
+.divider {
+  width: 160px;
+  height: 2px;
+  background-color: #ccc;
+  margin: 30px auto 0 auto;
+}
+
+/* GRID REAL */
+.voces-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  padding: 0 20px;
+  align-items: stretch;
+  /* fuerza misma altura */
+}
+
+.voces-grid a {
+  display: flex;
+  /* hace que el link ocupe todo */
+}
+
+.blog-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* distribuye contenido */
+  width: 100%;
+  height: 100%;
+}
+
+.blog-card {
+  position: relative;
+  padding: 35px;
+  background: white;
+  border: 3px solid transparent;
+  background-clip: padding-box, border-box;
+  overflow: hidden;
+  border-radius: 18px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.perfil-grid {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-direction: row;
+}
+
+.perfilDatos-grid {
+  align-items: center;
+  margin-bottom: 0px;
+
+  p {
+    margin-bottom: 0px;
+  }
+}
+
+/* Variable animable */
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.blog-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  padding: 3px;
+  background: conic-gradient(from var(--angle),
+      #f7ae26,
+      #e75733,
+      #f7ae26);
+
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  /* suaviza aparición */
+
+}
+
+.blog-card:hover::before {
+  opacity: 1;
+  animation: spin 4s linear infinite;
+}
+
+.blog-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+}
+
+.blog-card>* {
+  position: relative;
+  z-index: 1;
+}
+
+.author-photo {
+  filter: grayscale(100%);
+  transition: filter 0.4s ease;
+}
+
+.blog-card:hover .author-photo {
+  filter: grayscale(0%);
+}
+
+@keyframes spin {
+  to {
+    --angle: 360deg;
+  }
+}
+
+.blog-date {
+  font-size: 13px;
+  color: #888;
+  display: block;
+  margin-bottom: 15px;
+}
+
+.blog-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #222;
+}
+
+.blog-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 25px;
+  font-size: 14px;
+  color: #444;
+}
+
+.blog-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #ccc;
+}
+
+.blog-excerpt {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .voces-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .voces-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+.hero-carousel {
+  margin-top: -65px;
+}
+
+@media (max-width: 981px) {
+  .hero-carousel {
+    margin-top: 0px;
+  }
+}
+
+
+
+.voces-submit-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+  margin-bottom: 28px;
+}
+
+.voces-submit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 12px 26px;
+  border-radius: 999px;
+
+  background: #fbbd16;
+  color: #ffffff;
+
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+
+  border: 2px solid #fbbd16;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.voces-submit-button:hover,
+.voces-submit-button:focus,
+.voces-submit-button:active {
+  background: #e9a900;
+  color: #ffffff;
+  border-color: #e9a900;
+  text-decoration: none;
+  opacity: 1;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px rgba(251, 189, 22, 0.28);
+}
+
+.voces-submit-button:hover {
+  background-color: #e9a900 !important;
+  color: #ffffff !important;
+}

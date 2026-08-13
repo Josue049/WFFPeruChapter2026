@@ -1,5 +1,5 @@
 // src/components/Proyectos.tsx
-import React from "react";
+import type { FC } from "react";
 
 interface Proyecto {
   img: string;
@@ -25,7 +25,7 @@ const proyectos: Proyecto[] = [
   },
 ];
 
-export const Proyectos: React.FC = () => {
+export const Proyectos: FC = () => {
   return (
     <div className="container-fluid py-5">
       <div className="container pt-5 pb-3">

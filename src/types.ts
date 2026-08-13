@@ -1,13 +1,11 @@
-export interface Article {
-  id: number;
-  author_name: string;
-  author_lastname: string;
-  author_photo: string;
-  author_cargo: string;
-  title: string;
-  subtitle: string;
-  date: string;
-  body: string;
-}
+export type { Article } from "./types/article";
+export type {
+  AdminSection,
+  AdminUser,
+  FeaturedVolunteer,
+  Milestone,
+  VolunteerHighlight,
+  VolunteerStory,
+} from "./types/content";
 
-export type TabType = 'editor' | 'preview';
+export type { ArticleSubmission, ArticleSubmissionPublicResponse, AuditLog, SubmissionStatus } from "./types/workflow";

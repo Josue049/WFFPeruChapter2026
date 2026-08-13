@@ -1,6 +1,6 @@
-import React from "react";
+import type { FC } from "react";
 
-const VisibilidadHitos: React.FC = () => {
+const VisibilidadHitos: FC = () => {
   return (
     <div className="container-fluid py-5">
       <div className="container pt-5 pb-3">

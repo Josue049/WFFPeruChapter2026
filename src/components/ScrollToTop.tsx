@@ -12,7 +12,7 @@ export function ScrollToTop() {
       // algunos navegadores no animan scrollTo en elementos; usar scrollTop directo
       try {
         container.scrollTo({ top: 0, left: 0 });
-      } catch (e) {
+      } catch {
         container.scrollTop = 0;
       }
       // además asegurar que el documento también quede en 0 por si acaso
