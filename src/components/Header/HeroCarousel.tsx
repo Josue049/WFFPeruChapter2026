@@ -18,7 +18,7 @@ const slides = [
     subtitle: "Jóvenes peruanos por los sistemas agroalimentarios",
     title: "Únete al Capítulo Nacional",
     btnText: "UNIRME",
-    img: "img/Inauguración.webp",
+    img: "img/Inauguracion.webp",
     link: "https://forms.office.com/pages/responsepage.aspx?id=aMQ6Frir0ESB_dnbFeOvlnq8OrflyhZOrnoT41c-u6BUMFpMWjk3WlFJUVVIN0k2OVpHNEpBN0FUMC4u&route=shorturl",
   },
 ];
