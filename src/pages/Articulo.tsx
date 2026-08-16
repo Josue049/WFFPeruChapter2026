@@ -1,29 +1,40 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Navigate } from "react-router-dom";
-import Footer from "../components/Footer";
-import { TopBar } from "../components/Header/TopBar";
+import { useEffect, useMemo, useState } from "react";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { NavBar } from "../components/Header/NavBar";
+import { TopBar } from "../components/Header/TopBar";
 import { ScrollTopButton } from "../components/ScrollTopButton";
-import { slugify } from "../utils/slugify";
+import { apiRequest } from "../services/api";
 import type { Article } from "../types/article";
+import { sanitizeHtml } from "../utils/sanitizeHtml";
+import { mediaUrl } from "../utils/mediaUrl";
+import { slugify } from "../utils/slugify";
 
-export const Articulo: React.FC = () => {
+export default function Articulo() {
   const { slug } = useParams();
   const [post, setPost] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const API = "https://api.wffperuchapter.page";
-
   useEffect(() => {
-    fetch(`${API}/articles/published`)
-      .then((r) => r.json())
-      .then((data: Article[]) => {
-        const found = data.find((a) => slugify(a.title) === slug);
-        setPost(found || null);
-        setLoading(false);
+    let active = true;
+
+    apiRequest<Article[]>("/articles/published")
+      .then((data) => {
+        if (!active) return;
+        setPost(data.find((article) => slugify(article.title) === slug) ?? null);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        if (active) setPost(null);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
   }, [slug]);
+
+  const safeBody = useMemo(() => sanitizeHtml(post?.body ?? ""), [post?.body]);
 
   if (!loading && !post) {
     return <Navigate to="/404" replace />;
@@ -31,7 +42,6 @@ export const Articulo: React.FC = () => {
 
   const formatDate = (dateStr: string) => {
     const [year, month, day] = dateStr.split("-").map(Number);
-
     return new Date(year, month - 1, day).toLocaleDateString("es-PE", {
       day: "numeric",
       month: "long",
@@ -44,25 +54,22 @@ export const Articulo: React.FC = () => {
       <TopBar />
       <NavBar />
 
-      {loading && <p style={{ textAlign: "center" }}>Cargando...</p>}
+      {loading && <p className="page-status">Cargando artículo…</p>}
 
       {!loading && post && (
         <>
           <section className="articulo-header">
             <p className="articulo-categoria">
-              <a className="voz1" href="/voces-del-capitulo">
+              <Link className="voz1" to="/voces">
                 VOCES DEL CAPÍTULO
-              </a>
-              <a className="voz2" href="/articulo">
-                {" "}
-                / ARTÍCULO
-              </a>
+              </Link>
+              <span className="voz2"> / ARTÍCULO</span>
             </p>
 
             <div className="Persona">
               {post.author_photo && (
                 <img
-                  src={post.author_photo}
+                  src={mediaUrl(post.author_photo)}
                   alt={`${post.author_name} ${post.author_lastname}`}
                   className="articulo-avatar"
                 />
@@ -71,14 +78,12 @@ export const Articulo: React.FC = () => {
               <p className="articulo-autor">
                 {post.author_name} {post.author_lastname}
               </p>
-
               <p className="voz1">{post.author_cargo}</p>
             </div>
 
             <h1 className="articulo-titulo">{post.title}</h1>
-
             <p className="articulo-subtitulo">
-              <i>"{post.subtitle}"</i>
+              <i>“{post.subtitle}”</i>
             </p>
           </section>
 
@@ -86,25 +91,20 @@ export const Articulo: React.FC = () => {
             <div className="ArticuloCompleto">
               <div className="bgDesktopWhite">
                 <h6 className="FechaArticulo">
-                  Publicado el {post.date && formatDate(post.date)}
+                  Publicado el {formatDate(post.date)}
                 </h6>
-
-                <div className="lineaWidth"></div>
-
+                <div className="lineaWidth" />
                 <div
                   className="ArticuloParrafos"
-                  dangerouslySetInnerHTML={{ __html: post.body }}
-                ></div>
+                  dangerouslySetInnerHTML={{ __html: safeBody }}
+                />
               </div>
             </div>
           </div>
         </>
       )}
 
-      {/* <Footer /> */}
       <ScrollTopButton />
     </>
   );
-};
-
-export default Articulo;
+}

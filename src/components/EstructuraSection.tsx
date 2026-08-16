@@ -1,10 +1,4 @@
-type EstructuraSectionProps = {
-  imageSrc?: string;
-};
-
-export function EstructuraSection({
-  imageSrc = "/img/Estructura.webp",
-}: EstructuraSectionProps) {
+export function EstructuraSection() {
   return (
     <div className="container-fluid ">
       <div className="container">

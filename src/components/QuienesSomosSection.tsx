@@ -1,7 +1,7 @@
-import React from "react";
+import type { FC } from "react";
 import styles from "./QuienesSomosSection.module.css";
 
-const QuienesSomosSection: React.FC = () => {
+const QuienesSomosSection: FC = () => {
   return (
     <section className={styles.section} aria-labelledby="quienes-somos-title">
       <div className={styles.container}>

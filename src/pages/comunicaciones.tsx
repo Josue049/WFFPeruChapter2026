@@ -1,11 +1,10 @@
-import React from "react";
+import type { FC } from "react";
 import { Header } from "../components/Header";
-import Footer from "../components/Footer";
 import { ScrollTopButton } from "../components/ScrollTopButton";
 import Informacion from "../components/Informacion";
 import LoQueHacemos from "../components/LoQueHacemosComu";
 
-export const Inicio: React.FC = () => {
+export const Inicio: FC = () => {
   return (
     <>
       <Header
@@ -21,7 +20,6 @@ export const Inicio: React.FC = () => {
       <Informacion />
       <LoQueHacemos />
 
-      {/* <Footer /> */}
 
       <ScrollTopButton />
     </>

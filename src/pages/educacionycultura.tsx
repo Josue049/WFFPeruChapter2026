@@ -1,12 +1,11 @@
-import React from "react";
+import type { FC } from "react";
 import { Header } from "../components/Header";
-import Footer from "../components/Footer";
 import { ScrollTopButton } from "../components/ScrollTopButton";
 import { Cultura } from "../components/Cultura";
 import { Educacion } from "../components/Educacion";
 import { Proyectos } from "../components/Proyectos";
 
-export const Inicio: React.FC = () => {
+export const Inicio: FC = () => {
   return (
     <>
       <Header
@@ -22,7 +21,6 @@ export const Inicio: React.FC = () => {
       <Educacion />
       <Proyectos />
 
-      {/* <Footer /> */}
 
       <ScrollTopButton />
     </>

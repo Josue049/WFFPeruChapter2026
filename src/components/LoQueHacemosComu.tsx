@@ -1,7 +1,7 @@
 // src/components/LoQueHacemos.tsx
-import React from "react";
+import type { FC } from "react";
 
-const LoQueHacemos: React.FC = () => {
+const LoQueHacemos: FC = () => {
   return (
     <div className="container-fluid">
       <div className="container">
@@ -10,7 +10,7 @@ const LoQueHacemos: React.FC = () => {
             <div className="cuadro-flotante shadow bg-white">
               <div className="cuadro">
                 <div className="imagen">
-                  <img src="img/comu.webp" className="img-fluid decor-img-comu" alt="" />
+                  <img src="img/comu1.webp" className="img-fluid decor-img-comu" alt="" />
                 </div>
                 <div className="cuadro-text">
                   <h2 className="">Lo que hacemos:</h2>
@@ -18,7 +18,6 @@ const LoQueHacemos: React.FC = () => {
                   <h4>1. Estrategia de contenido</h4>
                   <ul>
                     <li>Narrativa clara</li>
-                    <li>Plan editorial</li>
                     <li>Plan editorial</li>
                   </ul>
 

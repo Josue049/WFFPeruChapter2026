@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import type { ChangeEvent, FC } from "react";
 import { Link } from "react-router-dom";
 import type { Article } from "../types/article";
 import { slugify } from "../utils/slugify";
+import { mediaUrl } from "../utils/mediaUrl";
 
 interface Props {
   posts: Article[];
@@ -15,7 +17,7 @@ const getDriveImage = (url: string) => {
       return `https://drive.google.com/uc?export=view&id=${match[1]}`;
     }
   }
-  return url;
+  return mediaUrl(url);
 };
 
 const formatDate = (dateStr: string) => {
@@ -25,7 +27,7 @@ const formatDate = (dateStr: string) => {
 
 const PAGE_SIZE = 9;
 
-export const VocesSection: React.FC<Props> = ({ posts }) => {
+export const VocesSection: FC<Props> = ({ posts }) => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
 
@@ -44,7 +46,7 @@ export const VocesSection: React.FC<Props> = ({ posts }) => {
   const start = (page - 1) * PAGE_SIZE;
   const paginated = filtered.slice(start, start + PAGE_SIZE);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
     setPage(1);
   };

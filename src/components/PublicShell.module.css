@@ -1,0 +1,15 @@
+.fixedNavigation {
+  position: fixed;
+  z-index: 9999;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
