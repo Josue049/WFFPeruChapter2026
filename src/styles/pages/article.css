@@ -1,7 +1,19 @@
+/* ===== Página pública de artículo / Voces ===== */
+
+.article-page {
+  width: 100%;
+  padding: 0;
+}
+
+/* =========================================================
+   CABECERA
+   Foto / autor conservan el aspecto original.
+   Título / subtítulo usan el diseño nuevo.
+   ========================================================= */
+
 .articulo-header {
   text-align: center;
   padding: 20px;
-  /* background: #f5f5f5; */
   font-family: "Poppins", sans-serif;
 }
 
@@ -12,19 +24,40 @@
   margin-bottom: 30px;
 }
 
+.Persona {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.articulo-author-block {
+  margin: 0 auto;
+}
+
 .articulo-avatar {
   width: 110px;
   height: 110px;
   object-fit: cover;
   margin-bottom: 5px;
-  /* filter: grayscale(100%); */
 }
 
 .articulo-autor {
   font-size: 22px;
   font-weight: 100;
   color: #000;
-  margin-bottom: 0px;
+  margin-bottom: 0;
+}
+
+.articulo-cargo {
+  margin: 0;
+  color: #666;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.45;
+  text-align: center;
 }
 
 .articulo-autor-titulo {
@@ -33,55 +66,419 @@
   margin-bottom: 40px;
 }
 
+/* Título nuevo */
 .articulo-titulo {
-  font-size: 35px;
-  font-weight: 700;
-  color: #000;
-  margin-top: 45px;
-  margin-bottom: 15px;
-  font-family: Arial, 'Playfair Display', serif;
-
+  max-width: 980px;
+  margin: 45px auto 14px;
+  color: #1e1e1e;
+  font-family: "Poppins", sans-serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
 }
 
+/* Subtítulo nuevo */
 .articulo-subtitulo {
-  font-size: 18px;
-  font-weight: 100;
-  color: #555;
+  max-width: 720px;
+  margin: 0 auto;
+  color: #626262;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+/* =========================================================
+   ARTÍCULO + RECOMENDADOS
+   ========================================================= */
+
+.article-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 310px;
+  gap: 30px;
+  width: min(1180px, calc(100% - 48px));
+  margin: 35px auto 0;
+  align-items: start;
+}
+
+.article-page .ArticuloCompleto {
+  min-width: 0;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.8;
+  white-space: normal;
+}
+
+.article-page .bgDesktopWhite {
+  overflow: hidden;
+  padding: 0;
+  background: #fff;
+  border: 1px solid rgba(43, 32, 24, 0.07);
+  border-radius: 18px;
+  box-shadow: 0 12px 36px rgba(43, 32, 24, 0.07);
+}
+
+/* =========================================================
+   META / FECHA
+   ========================================================= */
+
+.article-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px 42px 0;
+}
+
+.article-meta-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.article-views {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 5px 10px;
+  border: 1px solid #ead8c8;
+  border-radius: 999px;
+  background: #fff8f1;
+  color: #865b3f;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.article-views-loading {
+  color: #9a8b80;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.article-meta-label {
+  color: #9a6d45;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.article-page .FechaArticulo {
+  margin: 0;
+  padding: 0;
+  color: #e75733;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .lineaWidth {
-  width: 100%;
+  width: auto;
   height: 2px;
+  margin: 22px 42px 0;
   background: linear-gradient(to right, #e75733, #f7ae26);
-  margin: 30px auto 0 auto;
-  margin-bottom: 30px;
 }
 
-.FechaArticulo {
-  color: #e75733;
-  padding: 0px 30px;
+/* =========================================================
+   CONTENIDO DEL ARTÍCULO
+   ========================================================= */
+
+.article-page .ArticuloParrafos {
+  padding: 34px 56px 50px;
+  background: transparent;
+  color: #303030;
+  font-size: 16px;
+  line-height: 1.82;
+  text-align: left;
+  overflow-wrap: anywhere;
 }
 
-.nav-bar {
-  background: linear-gradient(to bottom, #fff 50%, transparent 50%);
-  padding: 20px 40px;
-  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+.article-page .ArticuloParrafos > :first-child,
+.article-page .ArticuloParrafos article > :first-child,
+.article-page .ArticuloParrafos section > :first-child {
+  margin-top: 0;
 }
 
-.ArticuloCompleto {
-  white-space: pre-wrap;
-  max-width: 80%;
-  margin: 40px auto;
+.article-page .ArticuloParrafos > :last-child,
+.article-page .ArticuloParrafos article > :last-child,
+.article-page .ArticuloParrafos section > :last-child {
+  margin-bottom: 0;
+}
+
+.article-page .ArticuloParrafos p {
+  margin: 0 0 1.25em;
+}
+
+.article-page .ArticuloParrafos section {
+  margin: 0 0 2.6rem;
+}
+
+.article-page .ArticuloParrafos header {
+  margin-bottom: 1.7rem;
+}
+
+/* =========================================================
+   TÍTULOS INTERNOS
+   ========================================================= */
+
+.article-page .ArticuloParrafos h1,
+.article-page .ArticuloParrafos h2,
+.article-page .ArticuloParrafos h3,
+.article-page .ArticuloParrafos h4 {
+  color: #232323;
+  font-family: "Poppins", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.article-page .ArticuloParrafos h1,
+.article-page .ArticuloParrafos h2 {
+  margin: 2.35rem 0 1rem;
+  font-size: clamp(1.45rem, 2.3vw, 1.85rem);
+}
+
+.article-page .ArticuloParrafos h3 {
+  margin: 1.8rem 0 0.8rem;
+  font-size: 1.18rem;
+}
+
+.article-page .ArticuloParrafos h4 {
+  margin: 1.6rem 0 0.7rem;
+  font-size: 1rem;
+}
+
+/* =========================================================
+   LISTAS / ÉNFASIS
+   ========================================================= */
+
+.article-page .ArticuloParrafos ul,
+.article-page .ArticuloParrafos ol {
+  margin: 1rem 0 1.6rem;
+  padding-left: 1.5rem;
+}
+
+.article-page .ArticuloParrafos li {
+  margin-bottom: 0.7rem;
+  padding-left: 0.25rem;
+}
+
+.article-page .ArticuloParrafos strong {
+  color: #232323;
+  font-weight: 700;
+}
+
+.article-page .ArticuloParrafos blockquote {
+  margin: 1.8rem 0;
+  padding: 14px 20px;
+  border-left: 4px solid #f39a35;
+  background: #fff8f1;
+  color: #57504a;
+}
+
+.article-page .ArticuloParrafos a {
+  color: #d9512c;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgba(217, 81, 44, 0.35);
+  text-underline-offset: 3px;
+}
+
+.article-page .ArticuloParrafos span[data-size="small"] {
+  font-size: 0.82em;
+}
+
+.article-page .ArticuloParrafos span[data-size="normal"] {
+  font-size: 1em;
+}
+
+.article-page .ArticuloParrafos span[data-size="large"] {
+  font-size: 1.25em;
+}
+
+.article-page .ArticuloParrafos span[data-size="xlarge"] {
+  font-size: 1.55em;
+}
+
+/* =========================================================
+   IMÁGENES / FIGURAS
+   Estas mismas reglas se usan en la vista pública y preview admin.
+   ========================================================= */
+
+.article-page .ArticuloParrafos img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 28px 0;
+  border-radius: 12px;
+  object-fit: contain;
+}
+
+.article-page .ArticuloParrafos figure {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 32px 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.article-page .ArticuloParrafos figure img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+  border-radius: 12px;
+  object-fit: contain;
+}
+
+.article-page .ArticuloParrafos figcaption {
+  max-width: 90%;
+  margin: 10px auto 0;
+  color: #777;
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.article-page .ArticuloParrafos hr {
+  height: 1px;
+  margin: 2.3rem 0;
+  border: 0;
+  background: #eee7e1;
+}
+
+/* =========================================================
+   SIDEBAR / RECOMENDADOS
+   ========================================================= */
+
+.article-sidebar {
+  min-width: 0;
+}
+
+.article-sidebar-inner {
+  position: sticky;
+  top: 94px;
+  padding: 26px 22px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(43, 32, 24, 0.08);
+  border-radius: 18px;
+  box-shadow: 0 12px 36px rgba(43, 32, 24, 0.06);
+  backdrop-filter: blur(8px);
+}
+
+.article-sidebar-heading {
+  padding-bottom: 17px;
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(to right, #e75733, #f7ae26) 1;
+}
+
+.article-sidebar-heading span {
+  display: block;
+  margin-bottom: 5px;
+  color: #d95a34;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.article-sidebar-heading h2 {
+  margin: 0;
+  color: #232323;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.recommended-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.recommended-card {
+  display: block;
+  padding: 19px 0;
+  border-bottom: 1px solid #eee7e1;
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.recommended-card:hover {
+  color: inherit;
+  text-decoration: none;
+  transform: translateX(3px);
+}
+
+.recommended-card time {
+  display: block;
+  margin-bottom: 7px;
+  color: #9b9189;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.recommended-card h3 {
+  margin: 0 0 8px;
+  color: #2a2a2a;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.35;
+  transition: color 0.2s ease;
+}
+
+.recommended-card:hover h3 {
+  color: #dd5933;
+}
+
+.recommended-card p {
+  display: -webkit-box;
+  margin: 0 0 9px;
+  overflow: hidden;
+  color: #67615d;
+  font-size: 12px;
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.recommended-author {
+  color: #7c6f65;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.recommended-empty {
+  margin: 18px 0;
+  color: #746d68;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.article-back-link {
+  display: inline-block;
   margin-top: 20px;
-  line-height: 1.8;
-  font-size: 18px;
-
-  img {
-    width: 100%;
-    height: auto;
-    margin: 20px 0;
-  }
+  color: #d95731;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
 }
+
+.article-back-link:hover {
+  color: #b54122;
+  text-decoration: none;
+}
+
+/* =========================================================
+   GENERAL / REGLAS HEREDADAS
+   ========================================================= */
 
 body {
   margin: 0;
@@ -90,30 +487,132 @@ body {
   background-attachment: scroll;
 }
 
-
-
 html,
 body {
   max-width: 100%;
   overflow-x: hidden;
 }
 
+.nav-bar {
+  background: linear-gradient(to bottom, #fff 50%, transparent 50%);
+  padding: 20px 40px;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 980px) {
+  .article-layout {
+    grid-template-columns: 1fr;
+    width: min(780px, calc(100% - 36px));
+  }
+
+  .article-sidebar-inner {
+    position: static;
+  }
+
+  .recommended-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+  }
+
+  .recommended-card {
+    padding: 16px;
+    border: 1px solid #eee7e1;
+    border-radius: 12px;
+    background: #fff;
+  }
+}
+
+/* =========================================================
+   MÓVIL
+   ========================================================= */
+
+@media (max-width: 768px) {
+  .articulo-header {
+    padding: 20px;
+  }
+
+  /* El autor conserva el tamaño original también en móvil. */
+  .articulo-avatar {
+    width: 110px;
+    height: 110px;
+  }
+
+  .articulo-autor {
+    font-size: 22px;
+  }
+
+  .articulo-titulo {
+    margin-top: 38px;
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
+  }
+
+  .article-layout {
+    width: calc(100% - 28px);
+    margin-top: 25px;
+  }
+
+  .article-page .bgDesktopWhite,
+  .article-sidebar-inner {
+    border-radius: 14px;
+  }
+
+  .article-meta-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+    padding: 21px 22px 0;
+  }
+
+  .article-meta-right {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .lineaWidth {
+    margin: 18px 22px 0;
+  }
+
+  .article-page .ArticuloParrafos {
+    padding: 28px 22px 34px;
+    font-size: 15.5px;
+    line-height: 1.78;
+  }
+
+  .recommended-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .articulo-subtitulo {
+    font-size: 0.98rem;
+  }
+
+  .article-page .ArticuloParrafos {
+    padding: 24px 18px 30px;
+  }
+
+  .article-sidebar-inner {
+    padding: 22px 18px;
+  }
+}
+
 @media (max-width: 415px) {
   body {
-    margin: 0;
-    background-image: url('/img/matrizfondo.webp');
+    background-image: url("/img/matrizfondo.webp");
     background-repeat: repeat;
     background-size: 300px !important;
     background-attachment: scroll;
-
-
   }
 
-  .voces-header {
-    img {
-      width: 80vw !important;
-      height: auto;
-    }
+  .voces-header img {
+    width: 80vw !important;
+    height: auto;
   }
 
   .FechaArticulo {
@@ -121,44 +620,36 @@ body {
   }
 }
 
-/* .navbar-nav{
-  background-color: #FAFAFA;
-} */
-
 @media (max-width: 397px) {
-  /* .voces-grid {
-    padding: 0px;
-  } */
-
   .blog-card {
     padding: 30px 20px;
   }
 }
 
+/* =========================================================
+   CLASES COMPARTIDAS
+   ========================================================= */
+
 .hero-title {
+  margin: 0 0 10px;
   font-size: clamp(1.8rem, 6vw, 4.5rem);
-  margin: 0 0 10px 0;
   line-height: 1.1;
 }
 
-/* Ajuste extra para pantallas muy pequeñas */
-@media (max-width: 480px) {
-  .hero-title {
-    font-size: 1.6rem;
-  }
-}
-
 .hero-subtitle {
+  margin-bottom: 30px;
   font-size: clamp(0.9rem, 2.5vw, 1.5rem);
   font-weight: 300;
-  margin-bottom: 30px;
   letter-spacing: 1px;
 }
 
 @media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.6rem;
+  }
+
   .hero-subtitle {
-    font-size: 0.85rem;
     margin-bottom: 20px;
+    font-size: 0.85rem;
   }
 }
-

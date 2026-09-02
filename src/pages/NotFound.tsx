@@ -1,6 +1,17 @@
 import { Link } from "react-router-dom";
+import type { Language } from "../i18n/translations";
+import { useLanguage } from "../i18n/LanguageContext";
+
+const BACK_HOME: Record<Language, string> = {
+  es: "Volver al inicio",
+  en: "Back to home",
+  it: "Torna alla home",
+  pt: "Voltar ao início",
+};
 
 export default function NotFound() {
+  const { language } = useLanguage();
+
   return (
     <div
       style={{
@@ -12,23 +23,13 @@ export default function NotFound() {
         background: "linear-gradient(to bottom, #fff, #f4f4f4)",
       }}
     >
-      <div
-        style={{
-          textAlign: "center",
-          maxWidth: "1100px",
-          width: "100%",
-        }}
-      >
+      <div style={{ textAlign: "center", maxWidth: "1100px", width: "100%" }}>
         <picture style={{ display: "flex", flexDirection: "column", alignContent: "center", alignItems: "center" }}>
           <source media="(max-width: 968px)" srcSet="/img/404mobile.png" />
           <img
             src="/img/404desktop.png"
             alt="404 WFF Perú"
-            style={{
-              width: "80%",
-              height: "auto",
-              marginBottom: "1.5rem",
-            }}
+            style={{ width: "80%", height: "auto", marginBottom: "1.5rem" }}
           />
         </picture>
 
@@ -46,7 +47,7 @@ export default function NotFound() {
             boxShadow: "0 10px 25px rgba(255,127,23,0.35)",
           }}
         >
-          Volver al inicio
+          {BACK_HOME[language]}
         </Link>
       </div>
     </div>

@@ -40,3 +40,16 @@
 .success p { color: #555; }
 .success a { color: #d6532c; font-weight: 800; }
 @media (max-width: 680px) { .page { padding-top: 28px; } .twoColumns { grid-template-columns: 1fr; gap: 0; } .submitRow { align-items: stretch; flex-direction: column; } .submitRow button { width: 100%; } }
+
+.editorHelp {
+  display: block;
+  margin-top: 4px;
+  color: #84766c;
+  font-size: .82rem;
+  line-height: 1.5;
+}
+
+.uploadButton:has(input:disabled) {
+  opacity: .55;
+  cursor: not-allowed;
+}

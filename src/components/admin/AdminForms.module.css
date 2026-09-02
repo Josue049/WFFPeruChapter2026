@@ -575,20 +575,60 @@
 .volunteerPublicPreview,
 .milestonePublicPreview {
   width: 100%;
+  max-width: 100%;
   background: #fff;
+}
+
+/* El preview de artículos replica la jerarquía real de Articulo.tsx. */
+.articlePublicPreview :global(.article-page) {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
 }
 
 .articlePublicPreview :global(.ArticuloCompleto) {
   width: 100%;
   max-width: 100%;
+  min-width: 0;
   margin: 0;
+  padding: 0;
+  white-space: normal;
 }
 
+/* La tarjeta exterior ya existe en el administrador; evitamos una segunda tarjeta. */
 .articlePublicPreview :global(.bgDesktopWhite) {
   width: 100%;
   max-width: 100%;
   margin: 0;
-  padding: 28px 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: #fff;
+}
+
+/* Tipografía, títulos, listas e imágenes vienen directamente de article.css. */
+.articlePublicPreview :global(.ArticuloParrafos) {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Protección extra para imágenes y figuras dentro del panel admin. */
+.articlePublicPreview :global(.ArticuloParrafos img) {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.articlePublicPreview :global(.ArticuloParrafos figure) {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.articlePublicPreview :global(.ArticuloParrafos figcaption) {
+  max-width: 90%;
 }
 
 .volunteerPublicPreview,
@@ -603,7 +643,6 @@
 }
 
 @media (max-width: 640px) {
-  .articlePublicPreview :global(.bgDesktopWhite),
   .volunteerPublicPreview,
   .milestonePublicPreview {
     padding: 20px 18px;
@@ -655,6 +694,13 @@
 .jsonPanel { min-width: 0; padding: 14px; border-radius: 14px; background: #f8f5f1; }
 .jsonPanel > strong { color: #d6532d; }
 .jsonPanel pre { max-height: 55vh; overflow: auto; white-space: pre-wrap; word-break: break-word; font-size: .75rem; line-height: 1.5; }
+.diffHint { margin: 18px 0 0; padding: 10px 13px; border-left: 3px solid #d94232; border-radius: 8px; background: #fff5f3; color: #7f342c; font-size: .82rem; }
+.diffPre { margin: 10px 0 0; tab-size: 2; }
+.diffJsonLine { display: inline; }
+.diffChanged { margin: 0; padding: 1px 2px; border-radius: 4px; background: #ffdeda; color: #a9251b; font: inherit; font-weight: 750; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.diffRemoved { text-decoration: line-through; text-decoration-thickness: 1px; }
+.diffAdded { text-decoration: none; border-bottom: 1px solid #d13a2e; }
+.diffMissing { padding: 1px 4px; border-radius: 4px; background: #ffe5e1; color: #ad2d22; font-style: italic; }
 @media (max-width: 720px) { .auditFilters, .diffGrid { grid-template-columns: 1fr; } .auditHeader { flex-direction: column; } }
 
 

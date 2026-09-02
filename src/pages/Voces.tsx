@@ -6,8 +6,10 @@ import { ScrollTopButton } from "../components/ScrollTopButton";
 import { VocesSection } from "../components/VocesSection";
 import { apiRequest } from "../services/api";
 import type { Article } from "../types/article";
+import { useLanguage } from "../i18n/LanguageContext";
 
 export default function Voces() {
+  const { t } = useLanguage();
   const [posts, setPosts] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -20,7 +22,7 @@ export default function Voces() {
         if (active) setPosts(data);
       })
       .catch(() => {
-        if (active) setError("No se pudieron cargar los artículos.");
+        if (active) setError(t("voices.error"));
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -29,7 +31,7 @@ export default function Voces() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [t]);
 
   return (
     <>
@@ -45,12 +47,12 @@ export default function Voces() {
           />
           <div className="voces-submit-wrapper">
             <Link to="/voces/enviar" className="voces-submit-button">
-              Envíanos tu artículo
+              {t("voices.send")}
             </Link>
           </div>{" "}
         </div>
 
-        {loading && <p className="page-status">Cargando artículos…</p>}
+        {loading && <p className="page-status">{t("voices.loading")}</p>}
         {error && <p className="page-status page-status-error">{error}</p>}
         {!loading && !error && <VocesSection posts={posts} />}
       </section>

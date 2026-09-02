@@ -8,8 +8,10 @@ import type { Milestone } from "../types";
 import { mediaUrl } from "../utils/mediaUrl";
 import { sanitizeHtml } from "../utils/sanitizeHtml";
 import styles from "./EditorialPages.module.css";
+import { useLanguage } from "../i18n/LanguageContext";
 
 export default function HitoDetalle() {
+  const { t, locale } = useLanguage();
   const { slug } = useParams();
   const [item, setItem] = useState<Milestone | null>(null);
   const [allItems, setAllItems] = useState<Milestone[]>([]);
@@ -29,9 +31,9 @@ export default function HitoDetalle() {
         setAllItems(all);
         setSlide(0);
       })
-      .catch(() => active && setError("Este hito no está disponible."));
+      .catch(() => active && setError(t("milestone.unavailable")));
     return () => { active = false; };
-  }, [slug]);
+  }, [slug, t]);
 
   const slides = useMemo(() => {
     if (!item) return [];
@@ -60,19 +62,19 @@ export default function HitoDetalle() {
       <NavBar />
       <main className={`${styles.page} ${styles.hitoDetailPage}`}>
         {error && <div className={styles.empty}>{error}</div>}
-        {!item && !error && <div className={styles.empty}>Cargando hito…</div>}
+        {!item && !error && <div className={styles.empty}>{t("milestone.loading")}</div>}
         {item && (
           <>
             <div className={styles.hitoDetailTop}>
               <div className={styles.hitoDetailIntro}>
-                <Link className={styles.hitoBack} to="/hitos">← Volver a Hitos</Link>
-                <span className={styles.hitoBadge}>Hito</span>
+                <Link className={styles.hitoBack} to="/hitos">← {t("subnav.milestones")}</Link>
+                <span className={styles.hitoBadge}>{t("milestone.badge")}</span>
                 <h1>{item.title}</h1>
                 <span className={styles.hitoTitleAccent} />
                 <div className={styles.hitoMetaRow}>
                   <span className={styles.hitoMetaItem}>
                     <CalendarIcon />
-                    <span>{formatDate(item.event_date)}</span>
+                    <span>{formatDate(item.event_date, locale)}</span>
                   </span>
                   {item.location && (
                     <span className={styles.hitoMetaItem}>
@@ -90,8 +92,8 @@ export default function HitoDetalle() {
                 ))}
                 {slides.length > 1 && (
                   <>
-                    <button type="button" className={`${styles.sliderArrow} ${styles.sliderPrev}`} onClick={() => moveSlide(-1)} aria-label="Imagen anterior">‹</button>
-                    <button type="button" className={`${styles.sliderArrow} ${styles.sliderNext}`} onClick={() => moveSlide(1)} aria-label="Imagen siguiente">›</button>
+                    <button type="button" className={`${styles.sliderArrow} ${styles.sliderPrev}`} onClick={() => moveSlide(-1)} aria-label={t("milestone.previousImage")}>‹</button>
+                    <button type="button" className={`${styles.sliderArrow} ${styles.sliderNext}`} onClick={() => moveSlide(1)} aria-label={t("milestone.nextImage")}>›</button>
                     <div className={styles.sliderDots}>{slides.map((image, index) => <button type="button" key={image} className={index === slide ? styles.sliderDotActive : ""} onClick={() => setSlide(index)} aria-label={`Ver imagen ${index + 1}`} />)}</div>
                   </>
                 )}
@@ -100,20 +102,20 @@ export default function HitoDetalle() {
 
             <div className={styles.hitoDetailBody}>
               <article className={styles.hitoStory}>
-                <div className={styles.hitoSectionHeading}><span>◉</span><h2>El hito</h2></div>
+                <div className={styles.hitoSectionHeading}><span>◉</span><h2>{t("milestone.theMilestone")}</h2></div>
                 <div className={styles.richText} dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.body) }} />
               </article>
 
               <aside className={styles.relatedHitos}>
-                <h2>Hitos relacionados</h2>
-                {related.length === 0 && <p>Pronto habrá más momentos para explorar.</p>}
+                <h2>{t("milestone.related")}</h2>
+                {related.length === 0 && <p>{t("milestone.moreSoon")}</p>}
                 {related.map((candidate) => (
                   <Link key={candidate.id} to={`/hitos/${candidate.slug}`}>
                     <img src={mediaUrl(candidate.cover_image)} alt="" loading="lazy" />
-                    <span><strong>{candidate.title}</strong><small>{formatDate(candidate.event_date)}</small></span>
+                    <span><strong>{candidate.title}</strong><small>{formatDate(candidate.event_date, locale)}</small></span>
                   </Link>
                 ))}
-                <Link className={styles.relatedAllLink} to="/hitos">Ver todos los hitos →</Link>
+                <Link className={styles.relatedAllLink} to="/hitos">{t("milestone.viewAll")}</Link>
               </aside>
             </div>
           </>
@@ -124,8 +126,8 @@ export default function HitoDetalle() {
   );
 }
 
-function formatDate(value: string): string {
-  return new Date(`${value.slice(0, 10)}T12:00:00`).toLocaleDateString("es-PE", { day: "numeric", month: "long", year: "numeric" });
+function formatDate(value: string, locale: string): string {
+  return new Date(`${value.slice(0, 10)}T12:00:00`).toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric" });
 }
 
 

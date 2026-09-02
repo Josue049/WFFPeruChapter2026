@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { SubNav } from "./SubNav";
+// import { LanguageSwitcher } from "./LanguageSwitcher";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 export function NavBar() {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [areasOpen, setAreasOpen] = useState(false);
   const location = useLocation();
@@ -86,7 +89,7 @@ export function NavBar() {
                   `nav-item nav-link ${isActive ? "active" : ""}`
                 }
               >
-                Inicio
+                {t("nav.home")}
               </NavLink>
 
               <NavLink
@@ -96,7 +99,7 @@ export function NavBar() {
                   `nav-item nav-link ${isActive ? "active" : ""}`
                 }
               >
-                Nosotros
+                {t("nav.about")}
               </NavLink>
 
               <div className="nav-item dropdown" ref={areasMenuRef}>
@@ -108,11 +111,11 @@ export function NavBar() {
                   type="button"
                   onClick={toggleAreas}
                 >
-                  Áreas
+                  {t("nav.areas")}
                 </button>
 
                 <div
-                  className={`dropdown-menu border-0 rounded-0 m-0 ${
+                  className={`dropdown-menu areas-dropdown-menu border-0 rounded-0 m-0 ${
                     areasOpen ? "show" : ""
                   }`}
                 >
@@ -121,7 +124,7 @@ export function NavBar() {
                     className="dropdown-item"
                     onClick={closeMenu}
                   >
-                    Educación y Cultura
+                    {t("nav.education")}
                   </NavLink>
 
                   <NavLink
@@ -129,7 +132,7 @@ export function NavBar() {
                     className="dropdown-item"
                     onClick={closeMenu}
                   >
-                    Ciencia e Innovación
+                    {t("nav.science")}
                   </NavLink>
 
                   <NavLink
@@ -137,7 +140,7 @@ export function NavBar() {
                     className="dropdown-item"
                     onClick={closeMenu}
                   >
-                    Políticas y Gobernanza
+                    {t("nav.policies")}
                   </NavLink>
 
                   <NavLink
@@ -145,9 +148,7 @@ export function NavBar() {
                     className="dropdown-item"
                     onClick={closeMenu}
                   >
-                    Gestión de las
-                    <br />
-                    Comunicaciones
+                    {t("nav.communications")}
                   </NavLink>
 
                   <NavLink
@@ -155,8 +156,7 @@ export function NavBar() {
                     className="dropdown-item"
                     onClick={closeMenu}
                   >
-                    Relacionamiento y<br />
-                    Gestión de Recursos
+                    {t("nav.relations")}
                   </NavLink>
 
                   {/* <NavLink
@@ -170,13 +170,17 @@ export function NavBar() {
                 </div>
               </div>
 
-              <div className="flex-start vertical-align col-lg-6">
+              {/* <div className="nav-language-slot">
+                <LanguageSwitcher />
+              </div> */}
+
+              <div className="flex-start vertical-align nav-join-slot">
                 <a
                   className="btn btn-unirse join"
                   href="https://forms.office.com/pages/responsepage.aspx?id=aMQ6Frir0ESB_dnbFeOvlnq8OrflyhZOrnoT41c-u6BUMFpMWjk3WlFJUVVIN0k2OVpHNEpBN0FUMC4u&route=shorturl"
-                  aria-label="Formulario para unirse al capítulo"
+                  aria-label={t("nav.joinAria")}
                 >
-                  Únete al Capítulo
+                  {t("nav.join")}
                 </a>
               </div>
 

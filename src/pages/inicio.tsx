@@ -6,53 +6,50 @@ import type { AccordionItem } from "../components/AccordionCards";
 import AreasGrid from "../components/AreasGrid";
 import CommiteSection from "../components/ComiteSection";
 import { ScrollTopButton } from "../components/ScrollTopButton";
-
-const wffItems: AccordionItem[] = [
-  {
-    id: 1,
-    title: "¿Qué es el WFF?",
-    color: "#FFC107",
-    content:
-      "El Foro Mundial de la Alimentación (WFF) es una plataforma global cuya misión es impulsar la transformación de los sistemas agroalimentarios a través del liderazgo juvenil.",
-  },
-  {
-    id: 2,
-    title: "Visión",
-    color: "#5A9BD5",
-    content:
-      "Ser una red juvenil nacional líder capaz de transformar los sistemas agroalimentarios mediante innovación, cooperación y participación inclusiva, conectando a jóvenes de todas las regiones.",
-  },
-  {
-    id: 3,
-    title: "Misión",
-    color: "#FF8A8A",
-    content:
-      "Fortalecer al Capítulo Nacional de Juventudes como una red interdisciplinaria y descentralizada, promoviendo alianzas estratégicas y acciones con impacto tangible.",
-  },
-];
+import { useLanguage } from "../i18n/LanguageContext";
 
 export const Inicio: FC = () => {
+  const { t } = useLanguage();
+
+  const wffItems: AccordionItem[] = [
+    {
+      id: 1,
+      title: t("home.whatWff"),
+      color: "#FFC107",
+      content: t("home.whatWffText"),
+    },
+    {
+      id: 2,
+      title: t("home.vision"),
+      color: "#5A9BD5",
+      content: t("home.visionText"),
+    },
+    {
+      id: 3,
+      title: t("home.mission"),
+      color: "#FF8A8A",
+      content: t("home.missionText"),
+    },
+  ];
+
   return (
     <>
       <Header />
 
       <ImageCardsBlock
-        eyebrow="CONÓCENOS"
-        title="¿Qué es un Capítulo Nacional?"
-        description="Es una plataforma independiente liderada por juventudes y organizaciones civiles. Su función es movilizar acción local alineada al WFF y en coordinación con FAO."        
+        eyebrow={t("home.knowUs")}
+        title={t("home.whatChapter")}
+        description={t("home.chapterDescription")}
         mainImage="/img/BloquesONU.webp"
         cards={[
-          { image: "/img/tarjetas1.webp", alt: "Actividad WFF 1" },
-          { image: "/img/tarjetas2.webp", alt: "Actividad WFF 2" },
+          { image: "/img/tarjetas1.webp", alt: "WFF activity 1" },
+          { image: "/img/tarjetas2.webp", alt: "WFF activity 2" },
         ]}
       />
 
       <AccordionCards items={wffItems} />
-
       <AreasGrid />
-
       <CommiteSection />
-
       <ScrollTopButton />
     </>
   );

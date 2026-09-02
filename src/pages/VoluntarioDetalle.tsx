@@ -8,10 +8,12 @@ import type { VolunteerStory } from "../types";
 import { mediaUrl } from "../utils/mediaUrl";
 import { sanitizeHtml } from "../utils/sanitizeHtml";
 import styles from "./EditorialPages.module.css";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const edition = (value: number) => String(value).padStart(2, "0");
 
 export default function VoluntarioDetalle() {
+  const { t } = useLanguage();
   const { slug } = useParams();
   const [item, setItem] = useState<VolunteerStory | null>(null);
   const [allStories, setAllStories] = useState<VolunteerStory[]>([]);
@@ -30,11 +32,11 @@ export default function VoluntarioDetalle() {
           setAllStories(stories);
         }
       })
-      .catch(() => active && setError("Esta historia no está disponible."));
+      .catch(() => active && setError(t("volunteer.unavailable")));
     return () => {
       active = false;
     };
-  }, [slug]);
+  }, [slug, t]);
 
   const related = useMemo(
     () => allStories.filter((story) => story.id !== item?.id).slice(0, 3),
@@ -47,11 +49,11 @@ export default function VoluntarioDetalle() {
       <NavBar />
       <main className={`${styles.page} ${styles.volunteerArticlePage}`}>
         {error && <div className={styles.empty}>{error}</div>}
-        {!item && !error && <div className={styles.empty}>Cargando historia…</div>}
+        {!item && !error && <div className={styles.empty}>{t("volunteer.loading")}</div>}
         {item && (
           <div className={styles.volunteerArticleShell}>
             <Link className={styles.backLink} to="/voluntarios-destacados">
-              ← Volver a voluntarios destacados
+              {t("volunteer.back")}
             </Link>
 
             <header className={styles.volunteerArticleHero}>
@@ -61,7 +63,7 @@ export default function VoluntarioDetalle() {
                   <span>PERÚ CHAPTER</span>
                 </div>
                 <span className={styles.coverEdition}>N.º {edition(item.edition_number)}</span>
-                <span className={styles.coverVertical}>VOLUNTARIO DESTACADO</span>
+                <span className={styles.coverVertical}>{t("volunteer.chapterPride")}</span>
                 <div className={styles.coverPortrait}>
                   <img src={mediaUrl(item.portrait_image)} alt={item.name} />
                 </div>
@@ -101,7 +103,7 @@ export default function VoluntarioDetalle() {
 
                 {item.gallery.length > 0 && (
                   <section className={styles.articleGallerySection}>
-                    <h2>En acción</h2>
+                    <h2>{t("volunteer.action")}</h2>
                     <div className={styles.editorialGallery}>
                       {item.gallery.map((image, index) => (
                         <img
@@ -118,18 +120,18 @@ export default function VoluntarioDetalle() {
 
               <aside className={styles.volunteerArticleAside}>
                 <section>
-                  <h2>Sobre la historia</h2>
+                  <h2>{t("volunteer.aboutStory")}</h2>
                   <dl>
-                    {item.area && <><dt>Área</dt><dd>{item.area}</dd></>}
-                    {item.role && <><dt>Rol</dt><dd>{item.role}</dd></>}
-                    {item.project && <><dt>Proyecto</dt><dd>{item.project}</dd></>}
-                    {item.city && <><dt>Ciudad</dt><dd>{item.city}</dd></>}
+                    {item.area && <><dt>{t("volunteer.area")}</dt><dd>{item.area}</dd></>}
+                    {item.role && <><dt>{t("volunteer.role")}</dt><dd>{item.role}</dd></>}
+                    {item.project && <><dt>{t("volunteer.project")}</dt><dd>{item.project}</dd></>}
+                    {item.city && <><dt>{t("volunteer.city")}</dt><dd>{item.city}</dd></>}
                   </dl>
                 </section>
 
                 {related.length > 0 && (
                   <section>
-                    <h2>Más voces que inspiran</h2>
+                    <h2>{t("volunteer.moreVoices")}</h2>
                     <div className={styles.relatedVolunteerList}>
                       {related.map((story) => (
                         <Link to={`/voluntarios-destacados/${story.slug}`} key={story.id}>
@@ -149,10 +151,10 @@ export default function VoluntarioDetalle() {
                 )}
 
                 <section className={styles.articleSocials}>
-                  <h2>Enlaces</h2>
+                  <h2>{t("volunteer.links")}</h2>
                   {item.linkedin_url && <a href={item.linkedin_url} target="_blank" rel="noreferrer">LinkedIn ↗</a>}
                   {item.instagram_url && <a href={item.instagram_url} target="_blank" rel="noreferrer">Instagram ↗</a>}
-                  {item.website_url && <a href={item.website_url} target="_blank" rel="noreferrer">Sitio web ↗</a>}
+                  {item.website_url && <a href={item.website_url} target="_blank" rel="noreferrer">{t("volunteer.website")}</a>}
                 </section>
               </aside>
             </div>

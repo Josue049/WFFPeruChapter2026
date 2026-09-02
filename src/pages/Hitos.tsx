@@ -7,10 +7,12 @@ import { apiRequest } from "../services/api";
 import type { Milestone } from "../types";
 import { mediaUrl } from "../utils/mediaUrl";
 import styles from "./EditorialPages.module.css";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const INITIAL_VISIBLE = 5;
 
 export default function Hitos() {
+  const { t, locale } = useLanguage();
   const [items, setItems] = useState<Milestone[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -20,10 +22,10 @@ export default function Hitos() {
     let active = true;
     void apiRequest<Milestone[]>("/milestones/published")
       .then((data) => active && setItems(data))
-      .catch(() => active && setError("No se pudieron cargar los hitos."))
+      .catch(() => active && setError(t("milestones.error")))
       .finally(() => active && setLoading(false));
     return () => { active = false; };
-  }, []);
+  }, [t]);
 
   const ordered = useMemo(
     () => [...items].sort((a, b) => b.event_date.localeCompare(a.event_date) || b.id - a.id),
@@ -50,14 +52,14 @@ export default function Hitos() {
         </header> */}
 
         <div className={styles.hitosContent}>
-          {loading && <div className={styles.empty}>Cargando momentos…</div>}
+          {loading && <div className={styles.empty}>{t("milestones.loading")}</div>}
           {error && <div className={styles.empty}>{error}</div>}
-          {!loading && !error && ordered.length === 0 && <div className={styles.empty}>Pronto publicaremos los primeros hitos del capítulo.</div>}
+          {!loading && !error && ordered.length === 0 && <div className={styles.empty}>{t("milestones.empty")}</div>}
 
           {shown.length > 0 && (
-            <section className={styles.hitosTimeline} aria-label="Hitos del capítulo">
+            <section className={styles.hitosTimeline} aria-label={t("milestones.aria")}>
               {shown.map((item) => {
-                const date = splitDate(item.event_date);
+                const date = splitDate(item.event_date, locale);
                 return (
                   <article className={styles.hitoTimelineRow} key={item.id}>
                     <div className={styles.hitoDate}>
@@ -71,13 +73,13 @@ export default function Hitos() {
                       <div className={styles.hitoMobileMeta}>
                         <span className={styles.hitoMobileDate}>
                           <CalendarSmallIcon />
-                          {formatLongDate(item.event_date)}
+                          {formatLongDate(item.event_date, locale)}
                         </span>
                         <span className={styles.hitoCategory}>{item.category}</span>
                       </div>
                       <h2>{item.title}</h2>
                       <p>{item.summary}</p>
-                      <Link to={`/hitos/${item.slug}`}>Ver historia <b>→</b></Link>
+                      <Link to={`/hitos/${item.slug}`}>{t("milestones.story")} <b>→</b></Link>
                     </div>
                   </article>
                 );
@@ -87,7 +89,7 @@ export default function Hitos() {
 
           {visible < ordered.length && (
             <button className={styles.moreHitosButton} type="button" onClick={() => setVisible((value) => value + INITIAL_VISIBLE)}>
-              Ver más hitos <span>↓</span>
+              {t("milestones.more")} <span>↓</span>
             </button>
           )}
         </div>
@@ -106,17 +108,17 @@ function CalendarSmallIcon() {
   );
 }
 
-function splitDate(value: string) {
+function splitDate(value: string, locale: string) {
   const date = new Date(`${value.slice(0, 10)}T12:00:00`);
   return {
     day: String(date.getDate()).padStart(2, "0"),
-    month: date.toLocaleDateString("es-PE", { month: "short" }).replace(".", "").toUpperCase(),
+    month: date.toLocaleDateString(locale, { month: "short" }).replace(".", "").toUpperCase(),
     year: date.getFullYear(),
   };
 }
 
-function formatLongDate(value: string): string {
-  return new Date(`${value.slice(0, 10)}T12:00:00`).toLocaleDateString("es-PE", {
+function formatLongDate(value: string, locale: string): string {
+  return new Date(`${value.slice(0, 10)}T12:00:00`).toLocaleDateString(locale, {
     day: "numeric",
     month: "long",
     year: "numeric",

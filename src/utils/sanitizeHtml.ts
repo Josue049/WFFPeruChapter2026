@@ -37,7 +37,8 @@ const DROP_WITH_CONTENT = new Set([
 
 const ALLOWED_ATTRIBUTES: Record<string, Set<string>> = {
   a: new Set(["href", "title"]),
-  img: new Set(["src", "alt", "title", "width", "height", "loading"]),
+  img: new Set(["src", "alt", "title", "width", "height", "loading", "data-pending-image-id"]),
+  span: new Set(["data-size"]),
 };
 
 function isSafeUrl(value: string, attribute: "href" | "src"): boolean {
@@ -48,7 +49,7 @@ function isSafeUrl(value: string, attribute: "href" | "src"): boolean {
   const allowedProtocols =
     attribute === "href"
       ? ["https:", "http:", "mailto:", "tel:"]
-      : ["https:", "http:"];
+      : ["https:", "http:", "blob:"];
 
   try {
     const parsed = new URL(value, window.location.origin);

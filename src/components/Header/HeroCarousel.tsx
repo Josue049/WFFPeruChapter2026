@@ -1,5 +1,6 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -7,23 +8,25 @@ import "swiper/css/navigation";
 const slides = [
   {
     id: 1,
-    subtitle: "Capítulo nacional del WFF",
-    title: "Comite de coordinación 2026",
-    btnText: "Ver Info",
+    subtitleKey: "home.slide1.subtitle" as const,
+    titleKey: "home.slide1.title" as const,
+    buttonKey: "home.slide1.button" as const,
     img: "img/comite.webp",
     link: "https://www.fao.org/peru/noticias/detail-events/en/c/1742822/",
   },
   {
     id: 2,
-    subtitle: "Jóvenes peruanos por los sistemas agroalimentarios",
-    title: "Únete al Capítulo Nacional",
-    btnText: "UNIRME",
+    subtitleKey: "home.slide2.subtitle" as const,
+    titleKey: "home.slide2.title" as const,
+    buttonKey: "home.slide2.button" as const,
     img: "img/Inauguracion.webp",
     link: "https://forms.office.com/pages/responsepage.aspx?id=aMQ6Frir0ESB_dnbFeOvlnq8OrflyhZOrnoT41c-u6BUMFpMWjk3WlFJUVVIN0k2OVpHNEpBN0FUMC4u&route=shorturl",
   },
 ];
 
 const HeroCarousel = () => {
+  const { t } = useLanguage();
+
   return (
     <div className="hero-carousel" style={{ width: "100%" }}>
       <Swiper
@@ -52,7 +55,7 @@ const HeroCarousel = () => {
             >
               <img
                 src={slide.img}
-                alt={slide.title}
+                alt={t(slide.titleKey)}
                 style={{
                   width: "100%",
                   height: "auto",
@@ -82,16 +85,10 @@ const HeroCarousel = () => {
                   textAlign: "center",
                 }}
               >
-                <h3 className="hero-subtitle">
-                  {slide.subtitle.toUpperCase()}
-                </h3>
-
-                <h1 className="hero-title">{slide.title}</h1>
-
+                <h3 className="hero-subtitle">{t(slide.subtitleKey).toUpperCase()}</h3>
+                <h1 className="hero-title">{t(slide.titleKey)}</h1>
                 <a href={slide.link}>
-                  <button className="slider-btn">
-                    {slide.btnText.toUpperCase()}
-                  </button>
+                  <button className="slider-btn">{t(slide.buttonKey).toUpperCase()}</button>
                 </a>
               </div>
             </div>

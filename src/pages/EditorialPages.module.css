@@ -1747,7 +1747,7 @@
 }
 
 .volunteerLanding .magazineCover:hover {
-  border-color: rgba(216, 154, 8, .58);
+  /* border-color: rgba(216, 154, 8, .58); */
   box-shadow: 0 24px 44px rgba(142, 98, 8, .15);
 }
 

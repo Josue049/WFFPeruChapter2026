@@ -12,6 +12,7 @@ import type { VolunteerStory } from "../types";
 import { mediaUrl } from "../utils/mediaUrl";
 
 import styles from "./EditorialPages.module.css";
+import { useLanguage } from "../i18n/LanguageContext";
 
 
 const ITEMS_PER_PAGE = 8;
@@ -21,6 +22,7 @@ const edition = (value: number) =>
 
 
 export default function VoluntariosDestacados() {
+  const { t } = useLanguage();
   const [stories, setStories] =
     useState<VolunteerStory[]>([]);
 
@@ -47,9 +49,7 @@ export default function VoluntariosDestacados() {
     })
     .catch(() => {
       if (active) {
-        setError(
-          "No se pudieron cargar las historias."
-        );
+        setError(t("volunteers.error"));
       }
     })
     .finally(() => {
@@ -61,7 +61,7 @@ export default function VoluntariosDestacados() {
   return () => {
     active = false;
   };
-}, []);
+}, [t]);
 
   /*
    * Orden:
@@ -234,7 +234,7 @@ export default function VoluntariosDestacados() {
         <div className={styles.content}>
           {loading && (
             <div className={styles.empty}>
-              Preparando la edición…
+              {t("volunteers.loading")}
             </div>
           )}
 
@@ -253,9 +253,7 @@ export default function VoluntariosDestacados() {
               <div
                 className={styles.empty}
               >
-                Pronto conocerás las
-                primeras historias
-                destacadas.
+                {t("volunteers.empty")}
               </div>
             )}
 
@@ -276,21 +274,16 @@ export default function VoluntariosDestacados() {
                 >
                   <div>
                     <span>
-                      Ediciones del capítulo
+                      {t("volunteers.editions")}
                     </span>
 
                     <h2>
-                      Historias que inspiran
+                      {t("volunteers.inspiring")}
                     </h2>
                   </div>
 
                   <p>
-                    Cada cubierta abre una
-                    historia sobre una idea,
-                    una acción o un proyecto
-                    que aporta a sistemas
-                    agroalimentarios más
-                    sostenibles.
+                    {t("volunteers.description")}
                   </p>
                 </div>
 
@@ -346,7 +339,7 @@ export default function VoluntariosDestacados() {
                             styles.coverVertical
                           }
                         >
-                          VOLUNTARIO DESTACADO
+                          {t("volunteer.chapterPride")}
                         </span>
 
 

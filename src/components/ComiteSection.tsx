@@ -1,16 +1,20 @@
+import { useLanguage } from "../i18n/LanguageContext";
+import type { TranslationKey } from "../i18n/translations";
+
 type Member = {
   name: string;
-  role: string;
+  roleKey: TranslationKey;
   image: string;
   instagram?: string;
   linkedin?: string;
 };
 
 export default function CommiteSection() {
+  const { t } = useLanguage();
   const members: Member[] = [
     {
       name: "Ana Paula Guillén",
-      role: "Educación y Cultura",
+      roleKey: "nav.education",
       image: "img/AnaPaula.webp",
       instagram: "https://www.instagram.com/anapaulaguillen_/",
       linkedin:
@@ -18,63 +22,63 @@ export default function CommiteSection() {
     },
     {
       name: "Ronal Guevara",
-      role: "Educación y Cultura",
+      roleKey: "nav.education",
       image: "img/Ronal.webp",
       instagram: "https://www.instagram.com/ronalguevarag/",
       linkedin: "https://www.linkedin.com/in/ronal-guevara-guevara-9045172a1/",
     },
     {
       name: "Isabella Chancahuana",
-      role: "Ciencia e Innovación",
+      roleKey: "nav.science",
       image: "img/Isabella.webp",
       instagram: "https://www.instagram.com/isabllanicole/",
       linkedin: "https://www.linkedin.com/in/isabella-chancahuana-castillo/",
     },
     {
       name: "Josué Gutiérrez Cuéllar",
-      role: "Ciencia e Innovación",
+      roleKey: "nav.science",
       image: "img/Josue.webp",
       instagram: "https://www.instagram.com/josue_gcuellar/",
       linkedin: "https://www.linkedin.com/in/josuegutierrezcuellar/",
     },
     {
       name: "Lizet Mejía",
-      role: "Políticas y Gobernanza",
+      roleKey: "nav.policies",
       image: "img/Lizet.webp",
       instagram: "https://www.instagram.com/lizmejiape/",
       linkedin: "https://www.linkedin.com/in/lizet-mejia-penadillo-2a654b142/",
     },
     {
       name: "Kristel Leiva",
-      role: "Políticas y Gobernanza",
+      roleKey: "nav.policies",
       image: "img/Kristel.webp",
       instagram: "https://www.instagram.com/kleiva.12/",
       linkedin: "https://www.linkedin.com/in/kristelleivamoreano/",
     },
     {
       name: "Olga Lopez",
-      role: "Gestión de\nlas Comunicaciones",
+      roleKey: "nav.communications",
       image: "img/Olga.webp",
       instagram: "https://www.instagram.com/olgalopez0202/",
       linkedin: "https://www.linkedin.com/in/olga-lopez-c/",
     },
     {
       name: "María Paz Ferrand",
-      role: "Gestión de\nlas Comunicaciones",
+      roleKey: "nav.communications",
       image: "img/MariaPaz.webp",
       instagram: "https://www.instagram.com/pzferr/",
       linkedin: "https://www.linkedin.com/in/maria-paz-ferrand-gordillo/",
     },
     {
       name: "Piero Contreras",
-      role: "Relacionamiento y\nGestión de Recursos",
+      roleKey: "nav.relations",
       image: "img/Piero.webp",
       instagram: "https://www.instagram.com/pierojcr/",
       linkedin: "https://www.linkedin.com/in/piero-contreras-ruiz/",
     },
     {
       name: "GianMarco Quintanilla",
-      role: "Relacionamiento y\nGestión de Recursos",
+      roleKey: "nav.relations",
       image: "img/GianMarco.webp",
       instagram: "https://www.instagram.com/meninugian/",
       linkedin: "https://www.linkedin.com/in/gianmarcoq/",
@@ -85,7 +89,7 @@ export default function CommiteSection() {
     <div className="container-fluid py-5">
       <div className="container pt-5 pb-3">
         <div className="text-center mb-3 pb-3">
-          <h1>Integrantes del Comité</h1>
+          <h1>{t("committee.title")}</h1>
         </div>
 
         <div className="row">
@@ -130,14 +134,8 @@ export default function CommiteSection() {
 
                 <div className="text-center py-4">
                   <h5 className="text-truncate">{member.name}</h5>
-                  <p className="m-0">
-                    {member.role.split("\n").map((line, i) => (
-                      <span key={i}>
-                        {line}
-                        <br />
-                      </span>
-                    ))}
-                  </p>
+
+                  <p className="m-0 perfil-cargo">{t(member.roleKey)}</p>
                 </div>
               </div>
             </div>

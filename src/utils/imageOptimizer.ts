@@ -41,7 +41,7 @@ export async function optimizeImageFile(
     let width = 0;
     let height = 0;
 
-    for (let attempt = 0; attempt < 5; attempt += 1) {
+    for (let attempt = 0; attempt < 7; attempt += 1) {
       width = Math.max(1, Math.round(bitmap.width * scale));
       height = Math.max(1, Math.round(bitmap.height * scale));
 
@@ -57,8 +57,8 @@ export async function optimizeImageFile(
       context.drawImage(bitmap, 0, 0, width, height);
       blob = await canvasBlob(canvas, outputType, preservePng ? undefined : quality);
 
-      if (blob.size <= targetBytes || width <= 1000 || height <= 1000) break;
-      scale *= 0.92;
+      if (blob.size <= targetBytes || width <= 720 || height <= 720) break;
+      scale *= 0.88;
     }
 
     if (!blob) throw new Error("No se pudo optimizar la imagen.");
@@ -89,4 +89,25 @@ export const optimizeEditorialImageFile = (file: File) =>
     targetBytes: 3200 * 1024,
     preservePng: false,
     quality: 0.96,
+  });
+
+
+// Voces: las imágenes permanecen locales durante la edición y se optimizan
+// únicamente al enviar el artículo.
+export const optimizeAuthorSubmissionPhotoFile = (file: File) =>
+  optimizeImageFile(file, {
+    maxWidth: 640,
+    maxHeight: 640,
+    targetBytes: 250 * 1024,
+    preservePng: false,
+    quality: 0.84,
+  });
+
+export const optimizeArticleSubmissionImageFile = (file: File) =>
+  optimizeImageFile(file, {
+    maxWidth: 1600,
+    maxHeight: 1600,
+    targetBytes: 600 * 1024,
+    preservePng: false,
+    quality: 0.82,
   });

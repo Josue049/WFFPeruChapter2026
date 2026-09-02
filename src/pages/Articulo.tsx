@@ -8,11 +8,57 @@ import type { Article } from "../types/article";
 import { sanitizeHtml } from "../utils/sanitizeHtml";
 import { mediaUrl } from "../utils/mediaUrl";
 import { slugify } from "../utils/slugify";
+import { useLanguage } from "../i18n/LanguageContext";
+
+interface ArticleViewsResponse {
+  article_id: number;
+  views: number;
+  counted: boolean;
+}
+
+const VISITOR_STORAGE_KEY = "wff_article_visitor_id";
+
+function getVisitorKey() {
+  try {
+    const saved = window.localStorage.getItem(VISITOR_STORAGE_KEY);
+    if (saved) return saved;
+
+    const created =
+      typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
+
+    window.localStorage.setItem(VISITOR_STORAGE_KEY, created);
+    return created;
+  } catch {
+    return `${Date.now()}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
+  }
+}
+
+const formatDate = (dateStr: string, locale: string) => {
+  const normalized = dateStr.split("T")[0];
+  const [year, month, day] = normalized.split("-").map(Number);
+
+  if (!year || !month || !day) return dateStr;
+
+  return new Date(year, month - 1, day).toLocaleDateString(locale, {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+};
 
 export default function Articulo() {
+  const { t, locale } = useLanguage();
   const { slug } = useParams();
   const [post, setPost] = useState<Article | null>(null);
+  const [posts, setPosts] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
+  // const [viewState, setViewState] = useState<{ articleId: number; views: number } | null>(null);
+  const [, setViewState] = useState<{
+    articleId: number;
+    views: number;
+  } | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -20,10 +66,16 @@ export default function Articulo() {
     apiRequest<Article[]>("/articles/published")
       .then((data) => {
         if (!active) return;
-        setPost(data.find((article) => slugify(article.title) === slug) ?? null);
+
+        setPosts(data);
+        setPost(
+          data.find((article) => slugify(article.title) === slug) ?? null,
+        );
       })
       .catch(() => {
-        if (active) setPost(null);
+        if (!active) return;
+        setPosts([]);
+        setPost(null);
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -34,39 +86,60 @@ export default function Articulo() {
     };
   }, [slug]);
 
+  useEffect(() => {
+    if (!post?.id) return;
+
+    let active = true;
+    const visitorKey = getVisitorKey();
+
+    apiRequest<ArticleViewsResponse>(
+      `/articles/${post.id}/view?visitor_key=${encodeURIComponent(visitorKey)}`,
+      { method: "POST" },
+    )
+      .then((data) => {
+        if (active)
+          setViewState({ articleId: data.article_id, views: data.views });
+      })
+      .catch(() => undefined);
+
+    return () => {
+      active = false;
+    };
+  }, [post?.id]);
+
   const safeBody = useMemo(() => sanitizeHtml(post?.body ?? ""), [post?.body]);
+
+  const recommendedPosts = useMemo(() => {
+    if (!post) return [];
+
+    return posts
+      .filter((article) => article.id !== post.id)
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 3);
+  }, [post, posts]);
 
   if (!loading && !post) {
     return <Navigate to="/404" replace />;
   }
-
-  const formatDate = (dateStr: string) => {
-    const [year, month, day] = dateStr.split("-").map(Number);
-    return new Date(year, month - 1, day).toLocaleDateString("es-PE", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-  };
 
   return (
     <>
       <TopBar />
       <NavBar />
 
-      {loading && <p className="page-status">Cargando artículo…</p>}
+      {loading && <p className="page-status">{t("article.loading")}</p>}
 
       {!loading && post && (
-        <>
-          <section className="articulo-header">
+        <main className="article-page">
+          <header className="articulo-header">
             <p className="articulo-categoria">
               <Link className="voz1" to="/voces">
-                VOCES DEL CAPÍTULO
+                {t("article.category")}
               </Link>
-              <span className="voz2"> / ARTÍCULO</span>
+              <span className="voz2"> / {t("article.article")}</span>
             </p>
 
-            <div className="Persona">
+            <div className="Persona articulo-author-block">
               {post.author_photo && (
                 <img
                   src={mediaUrl(post.author_photo)}
@@ -78,30 +151,103 @@ export default function Articulo() {
               <p className="articulo-autor">
                 {post.author_name} {post.author_lastname}
               </p>
-              <p className="voz1">{post.author_cargo}</p>
+              {post.author_cargo && (
+                <p className="articulo-cargo voz1">{post.author_cargo}</p>
+              )}
             </div>
 
             <h1 className="articulo-titulo">{post.title}</h1>
-            <p className="articulo-subtitulo">
-              <i>“{post.subtitle}”</i>
-            </p>
-          </section>
+            {post.subtitle && (
+              <p className="articulo-subtitulo">
+                <i>“{post.subtitle}”</i>
+              </p>
+            )}
+          </header>
 
-          <div className="space-white">
-            <div className="ArticuloCompleto">
+          <div className="article-layout">
+            <article className="ArticuloCompleto">
               <div className="bgDesktopWhite">
-                <h6 className="FechaArticulo">
-                  Publicado el {formatDate(post.date)}
-                </h6>
+                <div className="article-meta-row">
+                  <span className="article-meta-label">
+                    {t("article.meta")}
+                  </span>
+                  <div className="article-meta-right">
+                    <time className="FechaArticulo" dateTime={post.date}>
+                      {t("article.published", {
+                        date: formatDate(post.date, locale),
+                      })}
+                    </time>
+                    {/* <span
+                      className={`article-views ${
+                        viewState?.articleId === post.id ? "" : "article-views-loading"
+                      }`}
+                      aria-live="polite"
+                      aria-label={
+                        viewState?.articleId === post.id
+                          ? `${viewState.views} ${viewState.views === 1 ? t("article.reading") : t("article.readings")}`
+                          : t("article.loadingReadingsAria")
+                      }
+                    >
+                      {viewState?.articleId === post.id
+                        ? `${viewState.views.toLocaleString(locale)} ${
+                            viewState.views === 1 ? t("article.reading") : t("article.readings")
+                          }`
+                        : t("article.loadingReadings")}
+                    </span> */}
+                  </div>
+                </div>
+
                 <div className="lineaWidth" />
+
                 <div
                   className="ArticuloParrafos"
                   dangerouslySetInnerHTML={{ __html: safeBody }}
                 />
               </div>
-            </div>
+            </article>
+
+            <aside
+              className="article-sidebar"
+              aria-label={t("article.recommendedAria")}
+            >
+              <div className="article-sidebar-inner">
+                <div className="article-sidebar-heading">
+                  <span>{t("article.alsoRead")}</span>
+                  <h2>{t("article.recommended")}</h2>
+                </div>
+
+                {recommendedPosts.length > 0 ? (
+                  <div className="recommended-list">
+                    {recommendedPosts.map((article) => (
+                      <Link
+                        key={article.id}
+                        to={`/voces/${slugify(article.title)}`}
+                        className="recommended-card"
+                      >
+                        <time dateTime={article.date}>
+                          {formatDate(article.date, locale)}
+                        </time>
+                        <h3>{article.title}</h3>
+                        {article.subtitle && <p>{article.subtitle}</p>}
+                        <span className="recommended-author">
+                          {article.author_name} {article.author_lastname}
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="recommended-empty">
+                    {t("article.recommendedEmpty")}
+                  </p>
+                )}
+
+                <Link to="/voces" className="article-back-link">
+                  {t("article.viewAll")}
+                </Link>
+              </div>
+            </aside>
           </div>
-        </>
+        </main>
       )}
 
       <ScrollTopButton />

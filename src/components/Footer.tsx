@@ -1,4 +1,7 @@
+import { useLanguage } from "../i18n/LanguageContext";
+
 export function Footer() {
+  const { t } = useLanguage();
   return (
     <div
       className="footer-max container-fluid text-white-50 py-5 px-sm-3 px-lg-5"
@@ -19,7 +22,7 @@ export function Footer() {
           {/* Redes */}
           <div className="redes">
             <h6 className="text-dark text-uppercase" style={{ letterSpacing: "5px" }}>
-              Síguenos
+              {t("footer.follow")}
             </h6>
             <div className="d-flex justify-content-start">
               <a

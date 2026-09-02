@@ -653,3 +653,231 @@ p.m-0.text-uppercase {
   text-decoration-thickness: 2px;
   text-underline-offset: 3px;
 }
+
+
+/* =========================
+   DROPDOWN DE ÁREAS
+========================= */
+
+.areas-dropdown-menu {
+  width: 290px;
+  min-width: 290px;
+  max-width: 290px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.areas-dropdown-menu .dropdown-item {
+  width: 100%;
+  padding: 8px 28px;
+  box-sizing: border-box;
+  white-space: normal;
+  line-height: 1.35;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+/* =========================
+   LANGUAGE SWITCHER
+========================= */
+
+.nav-language-slot {
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.nav-join-slot {
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  white-space: nowrap;
+}
+
+.language-switcher {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Botón principal: fondo degradado + icono y texto blancos */
+.language-switcher-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 88px;
+  height: 50px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ff7a72 0%, #ffb400 100%);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 5px 16px rgba(236, 120, 54, 0.16);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.language-switcher-button strong {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.language-switcher-icon {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  background: none !important;
+  font-size: 22px !important;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.language-switcher-button:hover,
+.language-switcher-button:focus-visible {
+  color: #fff;
+  outline: none;
+  transform: translateY(-1px);
+  box-shadow: 0 7px 20px rgba(236, 120, 54, 0.22);
+  filter: brightness(1.02);
+}
+
+.language-switcher-button:active {
+  transform: scale(0.98);
+}
+
+/* Menú: rectangular, con abreviatura + nombre del idioma */
+.language-switcher-menu {
+  position: absolute;
+  z-index: 1300;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  min-width: 210px;
+  padding: 6px 0;
+  background: #fff;
+  /* border: 1px solid rgba(40, 40, 40, 0.08); */
+  border-radius: 0;
+  /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); */
+}
+
+.language-switcher-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 18px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #292929;
+  font-family: "Poppins", sans-serif;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.language-switcher-code {
+  min-width: 28px;
+  color: #555;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+}
+
+.language-switcher-name {
+  color: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.language-switcher-option:hover {
+  background: #fff6ef;
+}
+
+.language-switcher-option.active {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 122, 114, 0.11),
+    rgba(255, 180, 0, 0.11)
+  );
+  color: #dd5a32;
+}
+
+.language-switcher-option.active .language-switcher-code {
+  color: #dd5a32;
+}
+
+@media (max-width: 1199px) and (min-width: 992px) {
+  .navbar-light .navbar-nav .nav-link {
+    padding-left: 9px;
+    padding-right: 9px;
+    font-size: 13px;
+  }
+
+  .btn-unirse {
+    padding-left: 14px;
+    padding-right: 14px;
+    font-size: 13px;
+  }
+
+  .language-switcher-button {
+    min-width: 76px;
+    height: 44px;
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .areas-dropdown-menu {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .areas-dropdown-menu .dropdown-item {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .nav-language-slot,
+  .nav-join-slot {
+    width: 100%;
+    padding: 7px 15px;
+  }
+
+  .language-switcher {
+    width: auto;
+  }
+
+  .language-switcher-button {
+    min-width: 76px;
+    width: auto;
+    height: 44px;
+    padding: 0 15px;
+    justify-content: center;
+  }
+
+  .language-switcher-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    width: auto;
+    min-width: 190px;
+    margin-top: 0;
+    transform: translateX(-50%);
+    box-shadow: 0 8px 24px rgba(40, 31, 23, 0.1);
+  }
+
+  .language-switcher-option {
+    padding: 10px 15px;
+  }
+}
+
+

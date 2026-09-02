@@ -66,13 +66,15 @@ export function HtmlPreview({
 
     return (
       <div className={styles.articlePublicPreview}>
-        <div className="ArticuloCompleto">
-          <div className="bgDesktopWhite">
-            <div
-              className="ArticuloParrafos"
-              dangerouslySetInnerHTML={{ __html: html }}
-            />
-          </div>
+        <div className="article-page">
+          <article className="ArticuloCompleto">
+            <div className="bgDesktopWhite">
+              <div
+                className="ArticuloParrafos"
+                dangerouslySetInnerHTML={{ __html: html }}
+              />
+            </div>
+          </article>
         </div>
       </div>
     );

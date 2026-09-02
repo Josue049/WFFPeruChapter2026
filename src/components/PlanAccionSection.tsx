@@ -1,3 +1,5 @@
+import { useLanguage } from "../i18n/LanguageContext";
+
 type PlanAccionItem = {
   title?: string; // ahora opcional
   items: string[];
@@ -11,6 +13,8 @@ type PlanAccionSectionProps = {
 };
 
 export function PlanAccionSection({ title, blocks }: PlanAccionSectionProps) {
+  const { language } = useLanguage();
+  const alliesLabel = language === "es" ? "Aliados" : language === "it" ? "Partner" : language === "pt" ? "Parceiros" : "Partners";
   return (
     <>
       {title && (
@@ -63,7 +67,7 @@ export function PlanAccionSection({ title, blocks }: PlanAccionSectionProps) {
                           })}
                         </ul>
 
-                        {block.allies && <b>Aliados: {block.allies}</b>}
+                        {block.allies && <b>{alliesLabel}: {block.allies}</b>}
                       </div>
 
                       <div>

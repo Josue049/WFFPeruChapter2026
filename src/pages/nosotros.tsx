@@ -4,27 +4,24 @@ import QuienesSomosSection from "../components/QuienesSomosSection";
 import SplitHeroSection from "../components/SplitHeroSection";
 import { ScrollTopButton } from "../components/ScrollTopButton";
 import { EstructuraSection } from "../components/EstructuraSection";
+import { useLanguage } from "../i18n/LanguageContext";
 
 export const Inicio: FC = () => {
+  const { t } = useLanguage();
+
   return (
     <>
       <Header
         variant="static"
-        title="CONOCE AL CAPÍTULO NACIONAL 2026"
-        subtitle="Nosotros y nuestra estructura interna"
+        title={t("about.heroTitle")}
+        subtitle={t("about.heroSubtitle")}
         backgroundImage="/img/mesacomite.webp"
         backgroundAlign="center"
       />
-
       <QuienesSomosSection />
-
       <hr />
-
-      <SplitHeroSection />
-
+      <SplitHeroSection title={t("about.structureModel")} />
       <EstructuraSection />
-
-
       <ScrollTopButton />
     </>
   );

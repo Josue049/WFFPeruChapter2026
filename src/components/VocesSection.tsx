@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import type { Article } from "../types/article";
 import { slugify } from "../utils/slugify";
 import { mediaUrl } from "../utils/mediaUrl";
+import { useLanguage } from "../i18n/LanguageContext";
 
 interface Props {
   posts: Article[];
@@ -13,26 +14,25 @@ const getDriveImage = (url: string) => {
   if (!url) return "";
   if (url.includes("drive.google.com")) {
     const match = url.match(/id=([^&]+)/);
-    if (match?.[1]) {
-      return `https://drive.google.com/uc?export=view&id=${match[1]}`;
-    }
+    if (match?.[1]) return `https://drive.google.com/uc?export=view&id=${match[1]}`;
   }
   return mediaUrl(url);
-};
-
-const formatDate = (dateStr: string) => {
-  const [year, month, day] = dateStr.split("-").map(Number);
-  return new Date(year, month - 1, day).toLocaleDateString();
 };
 
 const PAGE_SIZE = 9;
 
 export const VocesSection: FC<Props> = ({ posts }) => {
+  const { t, locale } = useLanguage();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
 
+  const formatDate = (dateStr: string) => {
+    const [year, month, day] = dateStr.split("-").map(Number);
+    return new Date(year, month - 1, day).toLocaleDateString(locale);
+  };
+
   const sorted = [...posts].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
 
   const filtered = sorted.filter((post) => {
@@ -53,7 +53,6 @@ export const VocesSection: FC<Props> = ({ posts }) => {
 
   return (
     <div>
-      {/* Barra de búsqueda */}
       <div style={{
         display: "flex",
         justifyContent: "center",
@@ -66,7 +65,7 @@ export const VocesSection: FC<Props> = ({ posts }) => {
           type="text"
           value={search}
           onChange={handleSearch}
-          placeholder="Buscar por título o autor..."
+          placeholder={t("voices.search")}
           style={{
             width: "100%",
             padding: "10px 36px 10px 14px",
@@ -81,6 +80,8 @@ export const VocesSection: FC<Props> = ({ posts }) => {
         />
         {search && (
           <button
+            type="button"
+            aria-label="Clear search"
             onClick={() => { setSearch(""); setPage(1); }}
             style={{
               position: "absolute",
@@ -101,10 +102,9 @@ export const VocesSection: FC<Props> = ({ posts }) => {
         )}
       </div>
 
-      {/* Resultados */}
       {filtered.length === 0 ? (
         <p style={{ textAlign: "center", opacity: 0.5, margin: "40px 0" }}>
-          No se encontraron artículos para "{search}".
+          {t("voices.noResults", { search })}
         </p>
       ) : (
         <div className="voces-grid">
@@ -115,14 +115,10 @@ export const VocesSection: FC<Props> = ({ posts }) => {
               style={{ textDecoration: "none", color: "inherit" }}
             >
               <div className="blog-card">
-                <p style={{ fontSize: "13px", opacity: 0.6 }}>
-                  {formatDate(post.date)}
-                </p>
+                <p style={{ fontSize: "13px", opacity: 0.6 }}>{formatDate(post.date)}</p>
                 <h3>{post.title}</h3>
-
                 <p style={{ fontStyle: "italic" }}>{post.subtitle}</p>
-
-                <p style={{ fontSize: "13px", opacity: 0.6 }}>Escrito por:</p>
+                <p style={{ fontSize: "13px", opacity: 0.6 }}>{t("voices.writtenBy")}</p>
 
                 <div className="perfil-grid">
                   {post.author_photo && (
@@ -133,14 +129,9 @@ export const VocesSection: FC<Props> = ({ posts }) => {
                       style={{ width: "40px" }}
                     />
                   )}
-
                   <div className="perfilDatos-grid">
-                    <strong>
-                      {post.author_name} {post.author_lastname}
-                    </strong>
-                    <p style={{ fontSize: "14px", opacity: 0.7 }}>
-                      {post.author_cargo}
-                    </p>
+                    <strong>{post.author_name} {post.author_lastname}</strong>
+                    <p style={{ fontSize: "14px", opacity: 0.7 }}>{post.author_cargo}</p>
                   </div>
                 </div>
               </div>
@@ -149,7 +140,6 @@ export const VocesSection: FC<Props> = ({ posts }) => {
         </div>
       )}
 
-      {/* Paginación */}
       {totalPages > 1 && (
         <div style={{
           display: "flex",
@@ -159,6 +149,7 @@ export const VocesSection: FC<Props> = ({ posts }) => {
           margin: "32px 0",
         }}>
           <button
+            type="button"
             onClick={() => {
               setPage((p) => p - 1);
               window.scrollTo({ top: 0, behavior: "smooth" });
@@ -173,15 +164,10 @@ export const VocesSection: FC<Props> = ({ posts }) => {
               opacity: page === 1 ? 0.3 : 1,
               fontSize: "18px",
             }}
-          >
-            ←
-          </button>
-
-          <span style={{ fontSize: "14px", opacity: 0.7 }}>
-            {page} / {totalPages}
-          </span>
-
+          >←</button>
+          <span style={{ fontSize: "14px", opacity: 0.7 }}>{page} / {totalPages}</span>
           <button
+            type="button"
             onClick={() => {
               setPage((p) => p + 1);
               window.scrollTo({ top: 0, behavior: "smooth" });
@@ -196,9 +182,7 @@ export const VocesSection: FC<Props> = ({ posts }) => {
               opacity: page === totalPages ? 0.3 : 1,
               fontSize: "18px",
             }}
-          >
-            →
-          </button>
+          >→</button>
         </div>
       )}
     </div>
