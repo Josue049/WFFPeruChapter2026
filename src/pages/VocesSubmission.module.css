@@ -53,3 +53,109 @@
   opacity: .55;
   cursor: not-allowed;
 }
+
+
+.sendingOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(28, 20, 14, .48);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.sendingCard {
+  width: min(460px, 100%);
+  padding: 34px 30px 30px;
+  border: 1px solid rgba(239, 125, 34, .28);
+  border-radius: 24px;
+  background: #fffdf9;
+  box-shadow: 0 28px 80px rgba(38, 22, 12, .24);
+  text-align: center;
+}
+
+.sendingCard h2 {
+  margin: 20px 0 10px;
+  color: #25211e;
+  font-family: Georgia, serif;
+  font-size: clamp(1.55rem, 4vw, 2rem);
+}
+
+.sendingCard p {
+  margin: 0 auto;
+  max-width: 390px;
+  color: #665d56;
+  line-height: 1.65;
+}
+
+.sendingCard small {
+  display: block;
+  margin-top: 12px;
+  color: #8a7e75;
+  line-height: 1.5;
+}
+
+.sendingSpinner {
+  position: relative;
+  width: 68px;
+  height: 68px;
+  margin: 0 auto;
+  border: 6px solid #f8e4d7;
+  border-top-color: #ef6729;
+  border-right-color: #eea41b;
+  border-radius: 50%;
+  animation: submissionSpin .85s linear infinite;
+}
+
+.sendingSpinner span {
+  position: absolute;
+  inset: 14px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fff1e5, #fff8d9);
+}
+
+.sendingProgress {
+  position: relative;
+  height: 7px;
+  margin: 24px 0 18px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #f2e8df;
+}
+
+.sendingProgress span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 42%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ef5b2a, #ef9d1c, #f2c94c);
+  animation: submissionProgress 1.35s ease-in-out infinite;
+}
+
+.sendingWarning {
+  display: block;
+  color: #c84e27;
+  font-size: .96rem;
+  line-height: 1.45;
+}
+
+@keyframes submissionSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes submissionProgress {
+  0% { left: -44%; }
+  55% { left: 58%; }
+  100% { left: 105%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sendingSpinner,
+  .sendingProgress span {
+    animation-duration: 2.4s;
+  }
+}

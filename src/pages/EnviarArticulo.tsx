@@ -305,6 +305,24 @@ export default function EnviarArticulo() {
     [],
   );
 
+  useEffect(() => {
+    if (!sending) return;
+
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [sending]);
+
   const canSend = useMemo(
     () =>
       form.author_name.trim().length > 0 &&
@@ -963,6 +981,41 @@ export default function EnviarArticulo() {
           )}
         </div>
       </main>
+
+      {sending && (
+        <div
+          className={styles.sendingOverlay}
+          role="status"
+          aria-live="assertive"
+          aria-busy="true"
+        >
+          <div className={styles.sendingCard}>
+            <div
+              className={styles.sendingSpinner}
+              aria-hidden="true"
+            >
+              <span />
+            </div>
+
+            <h2>{t("submission.processingTitle")}</h2>
+
+            <p>{t("submission.processingMessage")}</p>
+
+            <div
+              className={styles.sendingProgress}
+              aria-hidden="true"
+            >
+              <span />
+            </div>
+
+            <strong className={styles.sendingWarning}>
+              {t("submission.processingWarning")}
+            </strong>
+
+            <small>{t("submission.processingDetail")}</small>
+          </div>
+        </div>
+      )}
 
       <ScrollTopButton />
     </>
