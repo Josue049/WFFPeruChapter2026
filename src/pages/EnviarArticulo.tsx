@@ -164,6 +164,9 @@ const SUBMISSION_ERRORS: Record<
     acceptRules: string;
     completeFields: string;
     missingImage: string;
+    titleLength: string;
+    summaryLength: string;
+    articleLength: string;
   }
 > = {
   es: {
@@ -177,6 +180,9 @@ const SUBMISSION_ERRORS: Record<
     completeFields: "Completa todos los campos antes de enviar tu artículo.",
     missingImage:
       "Hay una imagen del artículo que ya no está disponible. Elimínala y vuelve a insertarla.",
+    titleLength: "El título debe tener entre 10 y 100 caracteres.",
+    summaryLength: "El resumen debe tener entre 40 y 300 caracteres.",
+    articleLength: "El contenido debe tener entre 300 y 2,500 palabras.",
   },
 
   en: {
@@ -190,6 +196,9 @@ const SUBMISSION_ERRORS: Record<
     completeFields: "Complete all fields before submitting your article.",
     missingImage:
       "An article image is no longer available. Remove it and insert it again.",
+    titleLength: "The title must be between 10 and 100 characters.",
+    summaryLength: "The summary must be between 40 and 300 characters.",
+    articleLength: "The content must be between 300 and 2,500 words.",
   },
 
   it: {
@@ -203,6 +212,9 @@ const SUBMISSION_ERRORS: Record<
     completeFields: "Completa tutti i campi prima di inviare l'articolo.",
     missingImage:
       "Un'immagine dell'articolo non è più disponibile. Rimuovila e inseriscila nuovamente.",
+    titleLength: "Il titolo deve contenere tra 10 e 100 caratteri.",
+    summaryLength: "Il riepilogo deve contenere tra 40 e 300 caratteri.",
+    articleLength: "Il contenuto deve contenere tra 300 e 2.500 parole.",
   },
 
   pt: {
@@ -216,10 +228,84 @@ const SUBMISSION_ERRORS: Record<
     completeFields: "Preencha todos os campos antes de enviar seu artigo.",
     missingImage:
       "Uma imagem do artigo não está mais disponível. Remova-a e insira-a novamente.",
+    titleLength: "O título deve ter entre 10 e 100 caracteres.",
+    summaryLength: "O resumo deve ter entre 40 e 300 caracteres.",
+    articleLength: "O conteúdo deve ter entre 300 e 2.500 palavras.",
   },
 };
 
 const MAX_LOCAL_IMAGE_BYTES = 15 * 1024 * 1024;
+
+const TITLE_MIN_CHARS = 10;
+const TITLE_MAX_CHARS = 100;
+const SUMMARY_MIN_CHARS = 40;
+const SUMMARY_MAX_CHARS = 300;
+const ARTICLE_MIN_WORDS = 300;
+const ARTICLE_MAX_WORDS = 2500;
+
+const COUNT_LABELS: Record<
+  Language,
+  {
+    characters: string;
+    words: string;
+    minimum: string;
+  }
+> = {
+  es: {
+    characters: "caracteres",
+    words: "palabras",
+    minimum: "mínimo",
+  },
+  en: {
+    characters: "characters",
+    words: "words",
+    minimum: "minimum",
+  },
+  it: {
+    characters: "caratteri",
+    words: "parole",
+    minimum: "minimo",
+  },
+  pt: {
+    characters: "caracteres",
+    words: "palavras",
+    minimum: "mínimo",
+  },
+};
+
+function htmlToPlainText(html: string): string {
+  if (!html) return "";
+
+  if (typeof DOMParser === "undefined") {
+    return html
+      .replace(/<[^>]*>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  const documentFragment = new DOMParser().parseFromString(
+    html,
+    "text/html",
+  );
+
+  documentFragment
+    .querySelectorAll("script, style, noscript, template")
+    .forEach((element) => element.remove());
+
+  return (documentFragment.body.textContent ?? "")
+    .replace(/\u00a0/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function countPlainCharacters(value: string): number {
+  return Array.from(value.trim()).length;
+}
+
+function countVisibleWords(html: string): number {
+  const text = htmlToPlainText(html);
+  return text ? text.split(/\s+/).filter(Boolean).length : 0;
+}
 
 function createPendingImageId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -323,6 +409,15 @@ export default function EnviarArticulo() {
     };
   }, [sending]);
 
+  const countLabels = COUNT_LABELS[language];
+
+  const titleLength = countPlainCharacters(form.title);
+  const summaryLength = countPlainCharacters(form.subtitle);
+  const articleWordCount = useMemo(
+    () => countVisibleWords(form.body),
+    [form.body],
+  );
+
   const canSend = useMemo(
     () =>
       form.author_name.trim().length > 0 &&
@@ -331,11 +426,25 @@ export default function EnviarArticulo() {
       form.author_email.trim().length > 0 &&
       form.is_chapter_member !== null &&
       authorPhotoFile !== null &&
-      form.title.trim().length > 0 &&
-      form.subtitle.trim().length > 0 &&
-      form.body.trim().length > 0 &&
+      titleLength >= TITLE_MIN_CHARS &&
+      titleLength <= TITLE_MAX_CHARS &&
+      summaryLength >= SUMMARY_MIN_CHARS &&
+      summaryLength <= SUMMARY_MAX_CHARS &&
+      articleWordCount >= ARTICLE_MIN_WORDS &&
+      articleWordCount <= ARTICLE_MAX_WORDS &&
       acceptedRules,
-    [form, authorPhotoFile, acceptedRules],
+    [
+      form.author_name,
+      form.author_lastname,
+      form.author_cargo,
+      form.author_email,
+      form.is_chapter_member,
+      authorPhotoFile,
+      titleLength,
+      summaryLength,
+      articleWordCount,
+      acceptedRules,
+    ],
   );
 
   const selectAuthorPhoto = async (file: File) => {
@@ -418,6 +527,30 @@ export default function EnviarArticulo() {
 
     if (!acceptedRules) {
       setError(submissionErrors.acceptRules);
+      return;
+    }
+
+    if (
+      titleLength < TITLE_MIN_CHARS ||
+      titleLength > TITLE_MAX_CHARS
+    ) {
+      setError(submissionErrors.titleLength);
+      return;
+    }
+
+    if (
+      summaryLength < SUMMARY_MIN_CHARS ||
+      summaryLength > SUMMARY_MAX_CHARS
+    ) {
+      setError(submissionErrors.summaryLength);
+      return;
+    }
+
+    if (
+      articleWordCount < ARTICLE_MIN_WORDS ||
+      articleWordCount > ARTICLE_MAX_WORDS
+    ) {
+      setError(submissionErrors.articleLength);
       return;
     }
 
@@ -867,6 +1000,8 @@ export default function EnviarArticulo() {
                     "submission.articleTitle",
                   )}
                   value={form.title}
+                  maxLength={TITLE_MAX_CHARS}
+                  helper={`${titleLength} / ${TITLE_MAX_CHARS} ${countLabels.characters} · ${countLabels.minimum} ${TITLE_MIN_CHARS}`}
                   onChange={(title) =>
                     setForm({
                       ...form,
@@ -880,6 +1015,8 @@ export default function EnviarArticulo() {
                     "submission.subtitle",
                   )}
                   value={form.subtitle}
+                  maxLength={SUMMARY_MAX_CHARS}
+                  helper={`${summaryLength} / ${SUMMARY_MAX_CHARS} ${countLabels.characters} · ${countLabels.minimum} ${SUMMARY_MIN_CHARS}`}
                   onChange={(subtitle) =>
                     setForm({
                       ...form,
@@ -910,6 +1047,17 @@ export default function EnviarArticulo() {
                       "submission.placeholder",
                     )}
                   />
+
+                  <small
+                    className={
+                      styles.editorHelp
+                    }
+                  >
+                    {articleWordCount.toLocaleString()} /{" "}
+                    {ARTICLE_MAX_WORDS.toLocaleString()} {countLabels.words}
+                    {" · "}
+                    {countLabels.minimum} {ARTICLE_MIN_WORDS.toLocaleString()}
+                  </small>
 
                   <small
                     className={
@@ -1027,11 +1175,15 @@ function Field({
   value,
   onChange,
   type = "text",
+  maxLength,
+  helper,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   type?: string;
+  maxLength?: number;
+  helper?: string;
 }) {
   return (
     <div className={styles.field}>
@@ -1041,10 +1193,17 @@ function Field({
         required
         type={type}
         value={value}
+        maxLength={maxLength}
         onChange={(event) =>
           onChange(event.target.value)
         }
       />
+
+      {helper && (
+        <small className={styles.editorHelp}>
+          {helper}
+        </small>
+      )}
     </div>
   );
 }
