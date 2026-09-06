@@ -213,19 +213,25 @@
   gap: 6px;
 }
 
-:global(.material-symbols-outlined) {
-  font-size: 20px;
-  line-height: 1;
-}
-
 /* =========================================================
    ICONO MATERIAL
    ========================================================= */
 
 :global(.material-symbols-outlined) {
+  display: inline-block;
+  font-family: "Material Symbols Outlined";
   font-size: 20px;
-  line-height: 1;
+  font-style: normal;
   font-weight: 400;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: "liga";
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
 }
 
 

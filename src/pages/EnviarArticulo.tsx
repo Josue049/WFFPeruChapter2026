@@ -11,7 +11,10 @@ import {
 } from "../components/editor/RichTextEditor";
 import { apiRequest } from "../services/api";
 import type { ArticleSubmissionPublicResponse } from "../types";
-import { optimizeAuthorSubmissionPhotoFile } from "../utils/imageOptimizer";
+import {
+  optimizeArticleSubmissionImageFile,
+  optimizeAuthorSubmissionPhotoFile,
+} from "../utils/imageOptimizer";
 import styles from "./VocesSubmission.module.css";
 import { useLanguage } from "../i18n/LanguageContext";
 import type { Language } from "../i18n/translations";
@@ -25,13 +28,6 @@ interface SubmissionForm {
   title: string;
   subtitle: string;
   body: string;
-}
-
-interface ImageUploadResponse {
-  url: string;
-  width: number;
-  height: number;
-  size_bytes: number;
 }
 
 const emptyForm: SubmissionForm = {
@@ -167,7 +163,7 @@ const SUBMISSION_ERRORS: Record<
     photoRead: string;
     acceptRules: string;
     completeFields: string;
-    articleImagesNotSupported: string;
+    missingImage: string;
   }
 > = {
   es: {
@@ -179,8 +175,8 @@ const SUBMISSION_ERRORS: Record<
     acceptRules:
       "Debes leer y aceptar las reglas de publicación antes de enviar tu artículo.",
     completeFields: "Completa todos los campos antes de enviar tu artículo.",
-    articleImagesNotSupported:
-      "Por el momento no se pueden enviar imágenes insertadas dentro del contenido. Elimínalas del artículo e inténtalo nuevamente.",
+    missingImage:
+      "Hay una imagen del artículo que ya no está disponible. Elimínala y vuelve a insertarla.",
   },
 
   en: {
@@ -192,8 +188,8 @@ const SUBMISSION_ERRORS: Record<
     acceptRules:
       "You must read and accept the publishing rules before submitting your article.",
     completeFields: "Complete all fields before submitting your article.",
-    articleImagesNotSupported:
-      "Images inserted inside the article cannot currently be submitted. Remove them and try again.",
+    missingImage:
+      "An article image is no longer available. Remove it and insert it again.",
   },
 
   it: {
@@ -205,8 +201,8 @@ const SUBMISSION_ERRORS: Record<
     acceptRules:
       "Devi leggere e accettare le regole di pubblicazione prima di inviare l'articolo.",
     completeFields: "Completa tutti i campi prima di inviare l'articolo.",
-    articleImagesNotSupported:
-      "Al momento non è possibile inviare immagini inserite nel contenuto. Rimuovile e riprova.",
+    missingImage:
+      "Un'immagine dell'articolo non è più disponibile. Rimuovila e inseriscila nuovamente.",
   },
 
   pt: {
@@ -218,8 +214,8 @@ const SUBMISSION_ERRORS: Record<
     acceptRules:
       "Você deve ler e aceitar as regras de publicação antes de enviar seu artigo.",
     completeFields: "Preencha todos os campos antes de enviar seu artigo.",
-    articleImagesNotSupported:
-      "No momento não é possível enviar imagens inseridas no conteúdo. Remova-as e tente novamente.",
+    missingImage:
+      "Uma imagem do artigo não está mais disponível. Remova-a e insira-a novamente.",
   },
 };
 
@@ -418,95 +414,70 @@ export default function EnviarArticulo() {
 
     try {
       /*
-       * El endpoint /article-submissions recibe JSON.
-       *
-       * Las imágenes insertadas dentro del artículo todavía
-       * no cuentan con un endpoint público independiente,
-       * así que no deben enviarse dentro del multipart.
-       */
-      const usedImageIds =
-        extractUsedPendingImageIds(form.body);
-
-      if (usedImageIds.length > 0) {
-        throw new Error(
-          submissionErrors.articleImagesNotSupported,
-        );
-      }
-
-      /*
-       * 1. Optimizar fotografía del autor.
+       * Las imágenes permanecen locales mientras el usuario edita.
+       * Al enviar, se optimizan y viajan junto con la metadata en un
+       * único multipart que el backend convierte a URLs persistentes.
        */
       const optimizedAuthor =
         await optimizeAuthorSubmissionPhotoFile(
           authorPhotoFile,
         );
 
-      /*
-       * 2. Subir fotografía mediante el endpoint
-       *    multipart preparado exclusivamente para archivos.
-       */
-      const photoPayload = new FormData();
+      const usedIds = new Set(
+        extractUsedPendingImageIds(form.body),
+      );
 
-      photoPayload.append(
-        "file",
+      const usedImages = articleImages.filter(
+        (image) => usedIds.has(image.id),
+      );
+
+      if (usedIds.size !== usedImages.length) {
+        throw new Error(
+          submissionErrors.missingImage,
+        );
+      }
+
+      const optimizedArticleImages =
+        await Promise.all(
+          usedImages.map(async (image) => ({
+            id: image.id,
+            file: await optimizeArticleSubmissionImageFile(
+              image.file,
+            ),
+          })),
+        );
+
+      const payload = new FormData();
+
+      payload.append(
+        "metadata",
+        JSON.stringify(form),
+      );
+
+      payload.append(
+        "author_photo",
         optimizedAuthor,
         optimizedAuthor.name,
       );
 
-      const uploadedPhoto =
-        await apiRequest<ImageUploadResponse>(
-          "/article-submissions/media",
-          {
-            method: "POST",
-            body: photoPayload,
-          },
+      for (const image of optimizedArticleImages) {
+        payload.append(
+          "article_image_ids",
+          image.id,
         );
-
-      if (!uploadedPhoto.url) {
-        throw new Error(
-          "No se pudo obtener la URL de la fotografía.",
+        payload.append(
+          "article_images",
+          image.file,
+          image.file.name,
         );
       }
 
-      /*
-       * 3. Crear el payload JSON esperado por FastAPI.
-       */
-      const submissionPayload = {
-        author_name: form.author_name.trim(),
-        author_lastname:
-          form.author_lastname.trim(),
-
-        author_photo: uploadedPhoto.url,
-
-        author_cargo: form.author_cargo.trim(),
-        author_email: form.author_email.trim(),
-
-        is_chapter_member:
-          form.is_chapter_member === true,
-
-        title: form.title.trim(),
-        subtitle: form.subtitle.trim(),
-        body: form.body,
-      };
-
-      /*
-       * 4. Crear la postulación.
-       *
-       * apiRequest debe detectar que body es un objeto
-       * JSON o, si exige body serializado, lo mandamos
-       * explícitamente con JSON.stringify.
-       */
       const response =
         await apiRequest<ArticleSubmissionPublicResponse>(
           "/article-submissions",
           {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(
-              submissionPayload,
-            ),
+            body: payload,
           },
         );
 

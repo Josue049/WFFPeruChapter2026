@@ -3,8 +3,9 @@
 ## Público
 - `/voces` incluye el botón **Envía tu artículo**.
 - `/voces/enviar` permite cargar fotografía, datos del autor y el artículo.
-- La foto se envía a `POST /article-submissions/media`.
-- La postulación se envía a `POST /article-submissions` y queda pendiente de revisión.
+- La postulación completa se envía a `POST /article-submissions` como `multipart/form-data`.
+- La fotografía del autor y las imágenes insertadas en el editor se optimizan en el navegador y se envían junto con la metadata en una sola operación.
+- La postulación queda en estado `pending` hasta la revisión editorial.
 
 ## Administración / Voces
 La sección Voces ahora tiene dos vistas:

@@ -683,8 +683,8 @@ export function RichTextEditor({
             }
           >
             <span className="material-symbols-outlined">
-link_2
-</span>
+              link
+            </span>
           </ToolbarButton>
 
           {/* IMAGEN */}
@@ -845,7 +845,7 @@ link_2
                   }
                 >
                   <span className="material-symbols-outlined">
-                  link_2
+                  link
                   </span>
                 </span>
 
