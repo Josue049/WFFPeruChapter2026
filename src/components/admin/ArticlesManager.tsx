@@ -20,7 +20,7 @@ const emptyArticle = (): ArticleForm => ({
 });
 
 
-export function ArticlesManager({ token }: { token: string }) {
+export function ArticlesManager({ token, currentUsername }: { token: string; currentUsername: string }) {
   const [view, setView] = useState<"published" | "submissions">("published");
 
   return (
@@ -32,7 +32,7 @@ export function ArticlesManager({ token }: { token: string }) {
       {view === "published" ? (
         <PublishedArticlesManager token={token} />
       ) : (
-        <ArticleSubmissionsManager token={token} onPublished={() => setView("published")} />
+        <ArticleSubmissionsManager token={token} currentUsername={currentUsername} onPublished={() => setView("published")} />
       )}
     </div>
   );

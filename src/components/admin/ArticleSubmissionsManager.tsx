@@ -9,7 +9,15 @@ type EditableSubmission = Pick<ArticleSubmission,
   "author_name" | "author_lastname" | "author_photo" | "author_cargo" | "author_email" | "is_chapter_member" | "title" | "subtitle" | "body"
 > & { reviewer_notes: string; status: "pending" | "in_review" | "rejected" };
 
-export function ArticleSubmissionsManager({ token, onPublished }: { token: string; onPublished?: (article: Article) => void }) {
+export function ArticleSubmissionsManager({
+  token,
+  currentUsername,
+  onPublished,
+}: {
+  token: string;
+  currentUsername: string;
+  onPublished?: (article: Article) => void;
+}) {
   const [items, setItems] = useState<ArticleSubmission[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [form, setForm] = useState<EditableSubmission | null>(null);
@@ -17,6 +25,7 @@ export function ArticleSubmissionsManager({ token, onPublished }: { token: strin
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const canDelete = currentUsername === "WFFAdmin";
 
   const load = useCallback(async () => {
     setItems(await apiRequest<ArticleSubmission[]>("/article-submissions", {}, { token, redirectOnUnauthorized: true }));
@@ -62,6 +71,33 @@ export function ArticleSubmissionsManager({ token, onPublished }: { token: strin
       setMessage("Postulación actualizada.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "No se pudo guardar la revisión.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const removeSubmission = async () => {
+    if (!selectedId || !canDelete) return;
+    const selected = items.find((item) => item.id === selectedId);
+    const warning = selected?.status === "published"
+      ? "¿Eliminar esta postulación? El artículo ya publicado NO se eliminará."
+      : "¿Eliminar definitivamente esta postulación?";
+    if (!window.confirm(warning)) return;
+
+    setBusy(true);
+    setMessage("");
+    try {
+      const result = await apiRequest<{ message: string }>(
+        `/article-submissions/${selectedId}`,
+        { method: "DELETE" },
+        { token, redirectOnUnauthorized: true },
+      );
+      await load();
+      setSelectedId(null);
+      setForm(null);
+      setMessage(result.message);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "No se pudo eliminar la postulación.");
     } finally {
       setBusy(false);
     }
@@ -117,12 +153,16 @@ export function ArticleSubmissionsManager({ token, onPublished }: { token: strin
 
       <section className={styles.editor}>
         {!form ? (
-          <div className={styles.emptyEditor}><strong>Selecciona una postulación</strong><p>Podrás corregirla, dejar notas, rechazarla o publicarla.</p></div>
+          <div className={styles.emptyEditor}>
+            {message && <div className={styles.status}>{message}</div>}
+            <strong>Selecciona una postulación</strong><p>Podrás corregirla, dejar notas, rechazarla o publicarla.</p>
+          </div>
         ) : (
           <>
             <div className={styles.editorHeader}>
               <div><h2>Revisar postulación</h2><p>Enviada el {formatDate(items.find((item) => item.id === selectedId)?.submitted_at ?? "")}</p></div>
               <div className={styles.actions}>
+                {canDelete && <button className={styles.dangerButton} disabled={busy} onClick={removeSubmission}>Eliminar postulación</button>}
                 <button className={styles.secondaryButton} disabled={busy} onClick={saveReview}>Guardar revisión</button>
                 <button className={styles.primaryButton} disabled={busy || form.status === "rejected"} onClick={publish}>{busy ? "Procesando…" : "Aprobar y publicar"}</button>
               </div>

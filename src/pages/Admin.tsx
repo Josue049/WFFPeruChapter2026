@@ -69,7 +69,7 @@ export default function Admin() {
         </header>
         {!sections.length ? <div className={styles.noPermissions}>Tu cuenta no tiene módulos asignados. Contacta a un gestor de accesos.</div> : (
           <>
-            {activeSection === "articles" && <ArticlesManager token={token} />}
+            {activeSection === "articles" && <ArticlesManager token={token} currentUsername={user.username} />}
             {activeSection === "milestones" && <MilestonesManager token={token} />}
             {activeSection === "volunteers" && <VolunteersManager token={token} />}
             {activeSection === "users" && <UsersManager token={token} currentUserId={user.id} />}

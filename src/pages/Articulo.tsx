@@ -54,11 +54,11 @@ export default function Articulo() {
   const [post, setPost] = useState<Article | null>(null);
   const [posts, setPosts] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
-  // const [viewState, setViewState] = useState<{ articleId: number; views: number } | null>(null);
-  const [, setViewState] = useState<{
+  const [viewState, setViewState] = useState<{
     articleId: number;
     views: number;
   } | null>(null);
+  const [viewLoading, setViewLoading] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -91,16 +91,23 @@ export default function Articulo() {
 
     let active = true;
     const visitorKey = getVisitorKey();
+    setViewState(null);
+    setViewLoading(true);
 
     apiRequest<ArticleViewsResponse>(
       `/articles/${post.id}/view?visitor_key=${encodeURIComponent(visitorKey)}`,
       { method: "POST" },
     )
       .then((data) => {
-        if (active)
-          setViewState({ articleId: data.article_id, views: data.views });
+        if (!active) return;
+        setViewState({ articleId: data.article_id, views: data.views });
       })
-      .catch(() => undefined);
+      .catch(() => {
+        if (active) setViewState(null);
+      })
+      .finally(() => {
+        if (active) setViewLoading(false);
+      });
 
     return () => {
       active = false;
@@ -177,23 +184,25 @@ export default function Articulo() {
                         date: formatDate(post.date, locale),
                       })}
                     </time>
-                    {/* <span
-                      className={`article-views ${
-                        viewState?.articleId === post.id ? "" : "article-views-loading"
-                      }`}
-                      aria-live="polite"
-                      aria-label={
-                        viewState?.articleId === post.id
-                          ? `${viewState.views} ${viewState.views === 1 ? t("article.reading") : t("article.readings")}`
-                          : t("article.loadingReadingsAria")
-                      }
-                    >
-                      {viewState?.articleId === post.id
-                        ? `${viewState.views.toLocaleString(locale)} ${
-                            viewState.views === 1 ? t("article.reading") : t("article.readings")
-                          }`
-                        : t("article.loadingReadings")}
-                    </span> */}
+                    {(viewLoading || viewState?.articleId === post.id) && (
+                      <span
+                        className={`article-views ${
+                          viewState?.articleId === post.id ? "" : "article-views-loading"
+                        }`}
+                        aria-live="polite"
+                        aria-label={
+                          viewState?.articleId === post.id
+                            ? `${viewState.views} ${viewState.views === 1 ? t("article.reading") : t("article.readings")}`
+                            : t("article.loadingReadingsAria")
+                        }
+                      >
+                        {viewState?.articleId === post.id
+                          ? `${viewState.views.toLocaleString(locale)} ${
+                              viewState.views === 1 ? t("article.reading") : t("article.readings")
+                            }`
+                          : t("article.loadingReadings")}
+                      </span>
+                    )}
                   </div>
                 </div>
 
