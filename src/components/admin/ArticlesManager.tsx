@@ -8,6 +8,12 @@ import styles from "./AdminForms.module.css";
 
 type ArticleForm = Omit<Article, "id">;
 
+interface ArticleViewsResponse {
+  article_id: number;
+  views: number;
+  counted: boolean;
+}
+
 const emptyArticle = (): ArticleForm => ({
   author_name: "",
   author_lastname: "",
@@ -18,7 +24,6 @@ const emptyArticle = (): ArticleForm => ({
   date: new Date().toISOString().slice(0, 10),
   body: "",
 });
-
 
 export function ArticlesManager({ token, currentUsername }: { token: string; currentUsername: string }) {
   const [view, setView] = useState<"published" | "submissions">("published");
@@ -44,24 +49,44 @@ function PublishedArticlesManager({ token }: { token: string }) {
   const [form, setForm] = useState<ArticleForm>(emptyArticle());
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
+  const [viewsByArticle, setViewsByArticle] = useState<Record<number, number | null>>({});
 
   const load = useCallback(async () => {
-    setItems(await apiRequest<Article[]>("/articles", {}, { token, redirectOnUnauthorized: true }));
+    const articles = await apiRequest<Article[]>(
+      "/articles",
+      {},
+      { token, redirectOnUnauthorized: true },
+    );
+
+    setItems(articles);
+    setViewsByArticle({});
+
+    const viewEntries = await Promise.all(
+      articles.map(async (article) => {
+        try {
+          const data = await apiRequest<ArticleViewsResponse>(`/articles/${article.id}/views`);
+          return [article.id, data.views] as const;
+        } catch {
+          // El GET público de vistas devuelve 404 si el artículo todavía
+          // tiene fecha de publicación futura.
+          return [article.id, null] as const;
+        }
+      }),
+    );
+
+    setViewsByArticle(Object.fromEntries(viewEntries));
   }, [token]);
+
   useEffect(() => {
-    let cancelled = false;
+    void load().catch((error) => {
+      setMessage(error instanceof Error ? error.message : "No se pudieron cargar los artículos");
+    });
+  }, [load]);
 
-    void apiRequest<Article[]>("/articles", {}, { token, redirectOnUnauthorized: true })
-      .then((data) => {
-        if (!cancelled) setItems(data);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [token]);
-
-  const filtered = useMemo(() => items.filter((item) => `${item.title} ${item.author_name} ${item.author_lastname}`.toLowerCase().includes(search.toLowerCase())), [items, search]);
+  const filtered = useMemo(
+    () => items.filter((item) => `${item.title} ${item.author_name} ${item.author_lastname}`.toLowerCase().includes(search.toLowerCase())),
+    [items, search],
+  );
 
   const select = (item: Article) => {
     setSelectedId(item.id);
@@ -144,6 +169,15 @@ function PublishedArticlesManager({ token }: { token: string }) {
     await load();
   };
 
+  const formatViews = (articleId: number) => {
+    const views = viewsByArticle[articleId];
+
+    if (views === undefined) return "Cargando lecturas…";
+    if (views === null) return "Aún no publicado";
+
+    return `${views.toLocaleString("es-PE")} ${views === 1 ? "lectura" : "lecturas"}`;
+  };
+
   return (
     <div className={styles.manager}>
       <aside className={styles.listPanel}>
@@ -155,7 +189,9 @@ function PublishedArticlesManager({ token }: { token: string }) {
         <div className={styles.itemList}>
           {filtered.map((item) => (
             <button key={item.id} className={`${styles.listItem} ${selectedId === item.id ? styles.listItemActive : ""}`} onClick={() => select(item)}>
-              <strong>{item.title}</strong><span>{item.author_name} {item.author_lastname}</span><small>{item.date}</small>
+              <strong>{item.title}</strong>
+              <span>{item.author_name} {item.author_lastname}</span>
+              <small>{item.date} · {formatViews(item.id)}</small>
             </button>
           ))}
           {!filtered.length && <div className={styles.empty}>No hay artículos.</div>}
@@ -163,7 +199,14 @@ function PublishedArticlesManager({ token }: { token: string }) {
       </aside>
       <section className={styles.editor}>
         <div className={styles.editorHeader}>
-          <div><h2>{selectedId ? "Editar artículo" : "Nuevo artículo"}</h2><p>El contenido admite HTML editorial seguro.</p></div>
+          <div>
+            <h2>{selectedId ? "Editar artículo" : "Nuevo artículo"}</h2>
+            <p>
+              {selectedId
+                ? `El contenido admite HTML editorial seguro. · ${formatViews(selectedId)}`
+                : "El contenido admite HTML editorial seguro."}
+            </p>
+          </div>
           <div className={styles.actions}>
             {selectedId && <button className={styles.dangerButton} onClick={remove}>Eliminar</button>}
             <button className={styles.primaryButton} onClick={save}>Guardar</button>
