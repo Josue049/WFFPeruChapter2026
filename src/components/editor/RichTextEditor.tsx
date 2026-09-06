@@ -189,32 +189,60 @@ export function RichTextEditor({
     }
   };
 
-  const restoreSelection = () => {
+  const getInsertionRange = () => {
     const editor = editorRef.current;
 
-    if (!editor) return;
+    if (!editor) return null;
 
-    editor.focus();
+    const savedRange = savedRangeRef.current;
 
-    const savedRange =
-      savedRangeRef.current;
+    if (
+      savedRange &&
+      savedRange.startContainer.isConnected &&
+      savedRange.endContainer.isConnected &&
+      editor.contains(savedRange.startContainer) &&
+      editor.contains(savedRange.endContainer)
+    ) {
+      return savedRange.cloneRange();
+    }
 
-    if (!savedRange) return;
+    /*
+      Si por cualquier motivo el navegador perdió la selección
+      (por ejemplo al abrir el selector de archivos), usamos el
+      final del contenido como fallback. Nunca el inicio.
+    */
+    const fallbackRange = document.createRange();
+    fallbackRange.selectNodeContents(editor);
+    fallbackRange.collapse(false);
 
-    const selection =
-      window.getSelection();
+    return fallbackRange;
+  };
+
+  const restoreSelection = () => {
+    const editor = editorRef.current;
+    const range = getInsertionRange();
+
+    if (!editor || !range) return;
+
+    editor.focus({ preventScroll: true });
+
+    const selection = window.getSelection();
 
     if (!selection) return;
 
     selection.removeAllRanges();
-    selection.addRange(savedRange);
+    selection.addRange(range);
+
+    savedRangeRef.current = range.cloneRange();
   };
 
   /* =========================
      SINCRONIZAR HTML
      ========================= */
 
-  const syncValue = () => {
+  const syncValue = (
+    keepCurrentSelection = true,
+  ) => {
     const editor = editorRef.current;
 
     if (!editor) return;
@@ -227,11 +255,26 @@ export function RichTextEditor({
     ) {
       editor.innerHTML = "";
       onChange("");
+
+      if (keepCurrentSelection) {
+        saveSelection();
+      }
+
       return;
     }
 
     onChange(editor.innerHTML);
-    saveSelection();
+
+    /*
+      IMPORTANTE: al abrir el modal de enlaces o el selector
+      de archivos, el editor pierde el foco. En ese blur algunos
+      navegadores mueven la selección al comienzo del editor.
+      No debemos sobrescribir aquí la selección que guardamos al
+      pulsar el botón de la barra de herramientas.
+    */
+    if (keepCurrentSelection) {
+      saveSelection();
+    }
   };
 
   /* =========================
@@ -270,13 +313,47 @@ export function RichTextEditor({
   const insertHtml = (
     html: string,
   ) => {
-    restoreSelection();
+    const editor = editorRef.current;
+    const range = getInsertionRange();
 
-    document.execCommand(
-      "insertHTML",
-      false,
-      html,
-    );
+    if (!editor || !range) return;
+
+    /*
+      Insertamos con Range en lugar de depender de execCommand.
+      Así la imagen o el enlace se colocan exactamente en la
+      posición guardada aunque el modal/file picker haya quitado
+      el foco al contentEditable.
+    */
+    range.deleteContents();
+
+    const template = document.createElement("template");
+    template.innerHTML = html;
+
+    const fragment = template.content;
+    const lastInsertedNode = fragment.lastChild;
+
+    range.insertNode(fragment);
+
+    const nextRange = document.createRange();
+
+    if (lastInsertedNode?.isConnected) {
+      nextRange.setStartAfter(lastInsertedNode);
+    } else {
+      nextRange.selectNodeContents(editor);
+      nextRange.collapse(false);
+    }
+
+    nextRange.collapse(true);
+    savedRangeRef.current = nextRange.cloneRange();
+
+    editor.focus({ preventScroll: true });
+
+    const selection = window.getSelection();
+
+    if (selection) {
+      selection.removeAllRanges();
+      selection.addRange(nextRange);
+    }
 
     syncValue();
   };
@@ -288,18 +365,10 @@ export function RichTextEditor({
   const openLinkModal = () => {
     saveSelection();
 
-    const selection =
-      window.getSelection();
-
-    let selectedText = "";
-
-    if (
-      selection &&
-      selection.rangeCount > 0
-    ) {
-      selectedText =
-        selection.toString().trim();
-    }
+    const selectedText =
+      savedRangeRef.current
+        ?.toString()
+        .trim() ?? "";
 
     setLinkText(selectedText);
     setLinkUrl("");
@@ -417,19 +486,27 @@ export function RichTextEditor({
 
       La imagen se inserta inmediatamente.
     */
+    /*
+      IMPORTANTE:
+      Insertamos la imagen como <img> (contenido "phrasing") y no como
+      <figure> (bloque). Un <figure> puede quedar anidado dentro de <p> o
+      <span> cuando se inserta en mitad del texto mediante Range. El navegador
+      lo muestra en la posición correcta, pero al enviarlo el sanitizador del
+      backend vuelve a parsear ese HTML inválido y puede reubicar el bloque.
+
+      <img> sí es válido dentro de párrafos/spans, por lo que conserva
+      exactamente su posición al pasar por el backend y llegar al admin.
+    */
     insertHtml(
-      `<figure>
-        <img
-          src="${escapeHtml(
-            pending.previewUrl,
-          )}"
-          data-pending-image-id="${escapeHtml(
-            pending.id,
-          )}"
-          alt="${escapeHtml(alt)}"
-        >
-      </figure>
-      <p><br></p>`,
+      `<img
+        src="${escapeHtml(
+          pending.previewUrl,
+        )}"
+        data-pending-image-id="${escapeHtml(
+          pending.id,
+        )}"
+        alt="${escapeHtml(alt)}"
+      ><br><br>`,
     );
 
     if (
@@ -694,9 +771,10 @@ export function RichTextEditor({
               label={t(
                 "editor.image",
               )}
-              onPress={() =>
-                imageInputRef.current?.click()
-              }
+              onPress={() => {
+                saveSelection();
+                imageInputRef.current?.click();
+              }}
             >
               <span
                 className="material-symbols-outlined"
@@ -754,7 +832,9 @@ export function RichTextEditor({
           data-placeholder={
             placeholder
           }
-          onInput={syncValue}
+          onInput={() =>
+            syncValue()
+          }
           onMouseUp={
             saveSelection
           }
@@ -764,7 +844,9 @@ export function RichTextEditor({
           onFocus={
             saveSelection
           }
-          onBlur={syncValue}
+          onBlur={() =>
+            syncValue(false)
+          }
           onPaste={
             handlePaste
           }

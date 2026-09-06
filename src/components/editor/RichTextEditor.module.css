@@ -155,12 +155,12 @@
   margin: 24px 0;
 }
 
-.editor figure img,
-.editor > img {
+.editor img {
   display: block;
   width: 100%;
   max-width: 100%;
   height: auto;
+  margin: 24px 0;
   border-radius: 12px;
 }
 
