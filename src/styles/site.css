@@ -246,6 +246,15 @@ h6,
   transform: scale(1.2);
 }
 
+/* Da aire lateral a los cargos largos del comité. */
+.perfil-cargo {
+  padding-left: 16px;
+  padding-right: 16px;
+  line-height: 1.4;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
 /* =========================
    OVERLAY REDES
 ========================= */
@@ -812,6 +821,17 @@ p.m-0.text-uppercase {
 
 .language-switcher-option.active .language-switcher-code {
   color: #dd5a32;
+}
+
+.language-switcher-divider {
+  height: 1px;
+  margin: 4px 14px;
+  background: rgba(40, 40, 40, 0.08);
+}
+
+.language-switcher-auto .language-switcher-code {
+  min-width: 42px;
+  font-size: 11px;
 }
 
 @media (max-width: 1199px) and (min-width: 992px) {

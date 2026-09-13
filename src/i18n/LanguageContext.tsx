@@ -89,6 +89,23 @@ async function detectCountry(): Promise<string> {
   return "";
 }
 
+function languageFromBrowser(): Language {
+  const locales = [
+    ...(navigator.languages ?? []),
+    navigator.language,
+  ].filter(Boolean);
+
+  for (const locale of locales) {
+    const normalized = locale.toLowerCase();
+    if (normalized.startsWith("es")) return "es";
+    if (normalized.startsWith("pt")) return "pt";
+    if (normalized.startsWith("it")) return "it";
+    if (normalized.startsWith("en")) return "en";
+  }
+
+  return "en";
+}
+
 type LanguageContextValue = {
   language: Language;
   locale: string;
@@ -112,7 +129,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setDetecting(true);
     const detectedCountry = await detectCountry();
     setCountry(detectedCountry);
-    setLanguageState(languageFromCountry(detectedCountry));
+    setLanguageState(
+      detectedCountry ? languageFromCountry(detectedCountry) : languageFromBrowser(),
+    );
     setAutomatic(true);
     setDetecting(false);
   }, []);
@@ -138,7 +157,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       const detectedCountry = await detectCountry();
       if (cancelled) return;
       setCountry(detectedCountry);
-      setLanguageState(languageFromCountry(detectedCountry));
+      setLanguageState(
+        detectedCountry ? languageFromCountry(detectedCountry) : languageFromBrowser(),
+      );
       setAutomatic(true);
       setDetecting(false);
     };

@@ -11,7 +11,11 @@ const languages: Language[] = ["es", "en", "it", "pt"];
 export function LanguageSwitcher() {
   const {
     language,
+    country,
+    automatic,
+    detecting,
     setLanguage,
+    useAutomaticLanguage,
     t,
   } = useLanguage();
 
@@ -70,7 +74,7 @@ export function LanguageSwitcher() {
         </span>
 
         <strong>
-          {LANGUAGE_SHORT_LABELS[language]}
+          {detecting ? "…" : LANGUAGE_SHORT_LABELS[language]}
         </strong>
       </button>
 
@@ -79,6 +83,29 @@ export function LanguageSwitcher() {
           className="language-switcher-menu"
           role="menu"
         >
+          <button
+            type="button"
+            role="menuitem"
+            className={`language-switcher-option language-switcher-auto ${
+              automatic ? "active" : ""
+            }`}
+            onClick={() => {
+              void useAutomaticLanguage();
+              setOpen(false);
+            }}
+          >
+            <span className="language-switcher-code">AUTO</span>
+            <span className="language-switcher-name">
+              {detecting
+                ? t("language.detecting")
+                : `${t("language.auto")} · ${
+                    country || t("language.autoDescription")
+                  }`}
+            </span>
+          </button>
+
+          <div className="language-switcher-divider" aria-hidden="true" />
+
           {languages.map((item) => (
             <button
               key={item}

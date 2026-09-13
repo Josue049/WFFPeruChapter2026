@@ -105,9 +105,11 @@ export const optimizeAuthorSubmissionPhotoFile = (file: File) =>
 
 export const optimizeArticleSubmissionImageFile = (file: File) =>
   optimizeImageFile(file, {
-    maxWidth: 1600,
-    maxHeight: 1600,
-    targetBytes: 600 * 1024,
+    // Las imágenes del artículo nunca se envían con más de 1000 px de ancho.
+    // optimizeImageFile mantiene la proporción y nunca agranda imágenes pequeñas.
+    maxWidth: 1000,
+    maxHeight: 10000,
+    targetBytes: 450 * 1024,
     preservePng: false,
     quality: 0.82,
   });

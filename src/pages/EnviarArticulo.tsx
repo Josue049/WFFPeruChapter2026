@@ -9,7 +9,7 @@ import {
   RichTextEditor,
   type PendingEditorImage,
 } from "../components/editor/RichTextEditor";
-import { apiRequest } from "../services/api";
+import { ApiError, apiRequest } from "../services/api";
 import type { ArticleSubmissionPublicResponse } from "../types";
 import {
   optimizeArticleSubmissionImageFile,
@@ -167,6 +167,7 @@ const SUBMISSION_ERRORS: Record<
     titleLength: string;
     summaryLength: string;
     articleLength: string;
+    tooHeavy: string;
   }
 > = {
   es: {
@@ -183,6 +184,8 @@ const SUBMISSION_ERRORS: Record<
     titleLength: "El título debe tener entre 10 y 100 caracteres.",
     summaryLength: "El resumen debe tener entre 40 y 300 caracteres.",
     articleLength: "El contenido debe tener entre 300 y 2,500 palabras.",
+    tooHeavy:
+      "Tu postulación es demasiado pesada para enviarse. Elimina algunas imágenes o reduce su tamaño y vuelve a intentarlo.",
   },
 
   en: {
@@ -199,6 +202,8 @@ const SUBMISSION_ERRORS: Record<
     titleLength: "The title must be between 10 and 100 characters.",
     summaryLength: "The summary must be between 40 and 300 characters.",
     articleLength: "The content must be between 300 and 2,500 words.",
+    tooHeavy:
+      "Your submission is too large to send. Remove some images or reduce their size and try again.",
   },
 
   it: {
@@ -215,6 +220,8 @@ const SUBMISSION_ERRORS: Record<
     titleLength: "Il titolo deve contenere tra 10 e 100 caratteri.",
     summaryLength: "Il riepilogo deve contenere tra 40 e 300 caratteri.",
     articleLength: "Il contenuto deve contenere tra 300 e 2.500 parole.",
+    tooHeavy:
+      "La candidatura è troppo pesante per essere inviata. Rimuovi alcune immagini o riducine le dimensioni e riprova.",
   },
 
   pt: {
@@ -231,6 +238,8 @@ const SUBMISSION_ERRORS: Record<
     titleLength: "O título deve ter entre 10 e 100 caracteres.",
     summaryLength: "O resumo deve ter entre 40 e 300 caracteres.",
     articleLength: "O conteúdo deve ter entre 300 e 2.500 palavras.",
+    tooHeavy:
+      "Sua submissão está muito pesada para ser enviada. Remova algumas imagens ou reduza o tamanho delas e tente novamente.",
   },
 };
 
@@ -242,6 +251,10 @@ const SUMMARY_MIN_CHARS = 40;
 const SUMMARY_MAX_CHARS = 300;
 const ARTICLE_MIN_WORDS = 300;
 const ARTICLE_MAX_WORDS = 2500;
+
+// Nginx acepta 20 MB. Dejamos 2 MB de margen para el overhead de multipart/form-data.
+const MAX_SUBMISSION_UPLOAD_BYTES = 18 * 1024 * 1024;
+const MULTIPART_SAFETY_OVERHEAD_BYTES = 256 * 1024;
 
 const COUNT_LABELS: Record<
   Language,
@@ -366,6 +379,7 @@ export default function EnviarArticulo() {
     useRef<PendingEditorImage[]>([]);
 
   const authorPhotoPreviewRef = useRef("");
+  const errorRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     articleImagesRef.current = articleImages;
@@ -390,6 +404,19 @@ export default function EnviarArticulo() {
     },
     [],
   );
+
+  useEffect(() => {
+    if (!error) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      errorRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [error]);
 
   useEffect(() => {
     if (!sending) return;
@@ -563,6 +590,8 @@ export default function EnviarArticulo() {
     setError("");
     setMessage("");
 
+    let estimatedPayloadBytes = 0;
+
     try {
       /*
        * Las imágenes permanecen locales mientras el usuario edita.
@@ -598,11 +627,29 @@ export default function EnviarArticulo() {
           })),
         );
 
+      const serializedMetadata = JSON.stringify(form);
+
+      estimatedPayloadBytes =
+        new Blob([serializedMetadata]).size +
+        optimizedAuthor.size +
+        optimizedArticleImages.reduce(
+          (total, image) => total + image.file.size,
+          0,
+        ) +
+        MULTIPART_SAFETY_OVERHEAD_BYTES;
+
+      if (estimatedPayloadBytes > MAX_SUBMISSION_UPLOAD_BYTES) {
+        throw new ApiError(
+          submissionErrors.tooHeavy,
+          413,
+        );
+      }
+
       const payload = new FormData();
 
       payload.append(
         "metadata",
-        JSON.stringify(form),
+        serializedMetadata,
       );
 
       payload.append(
@@ -641,12 +688,21 @@ export default function EnviarArticulo() {
       setForm(emptyForm);
       setAcceptedRules(false);
     } catch (submitError) {
-      setError(
-        submitError instanceof Error
-          ? submitError.message
-          : "No se pudo enviar el artículo.",
-      );
+      const isTooHeavy =
+        (submitError instanceof ApiError && submitError.status === 413) ||
+        estimatedPayloadBytes > MAX_SUBMISSION_UPLOAD_BYTES;
+
+      if (isTooHeavy) {
+        setError(submissionErrors.tooHeavy);
+      } else {
+        setError(
+          submitError instanceof Error
+            ? submitError.message
+            : "No se pudo enviar el artículo.",
+        );
+      }
     } finally {
+      // Siempre reactivamos el formulario aunque falle el upload.
       setSending(false);
     }
   };
@@ -697,7 +753,12 @@ export default function EnviarArticulo() {
               onSubmit={submit}
             >
               {error && (
-                <div className={styles.error}>
+                <div
+                  ref={errorRef}
+                  className={styles.error}
+                  role="alert"
+                  aria-live="assertive"
+                >
                   {error}
                 </div>
               )}

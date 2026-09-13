@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { SubNav } from "./SubNav";
-// import { LanguageSwitcher } from "./LanguageSwitcher";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useLanguage } from "../../i18n/LanguageContext";
 
 export function NavBar() {
@@ -170,9 +170,9 @@ export function NavBar() {
                 </div>
               </div>
 
-              {/* <div className="nav-language-slot">
+              <div className="nav-language-slot">
                 <LanguageSwitcher />
-              </div> */}
+              </div>
 
               <div className="flex-start vertical-align nav-join-slot">
                 <a
