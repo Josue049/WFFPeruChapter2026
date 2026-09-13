@@ -66,12 +66,17 @@ export function LanguageSwitcher() {
           setOpen((value) => !value)
         }
       >
-        <span
-          className="material-symbols-outlined language-switcher-icon"
+        <svg
+          className="language-switcher-icon"
+          viewBox="0 0 24 24"
           aria-hidden="true"
+          focusable="false"
         >
-          language
-        </span>
+          <circle cx="12" cy="12" r="9" />
+          <path d="M3 12h18" />
+          <path d="M12 3c2.5 2.5 3.8 5.5 3.8 9S14.5 18.5 12 21" />
+          <path d="M12 3C9.5 5.5 8.2 8.5 8.2 12s1.3 6.5 3.8 9" />
+        </svg>
 
         <strong>
           {detecting ? "…" : LANGUAGE_SHORT_LABELS[language]}
