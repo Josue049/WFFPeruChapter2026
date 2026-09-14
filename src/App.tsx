@@ -19,7 +19,7 @@ import NotFound from "./pages/NotFound";
 import Politicasygobernanza from "./pages/politicasygobernanza";
 import Relacionamiento from "./pages/relacionamiento";
 import Voces from "./pages/Voces";
-import EnviarArticulo from "./pages/EnviarArticulo";
+// import EnviarArticulo from "./pages/EnviarArticulo";
 
 function App() {
   return (
