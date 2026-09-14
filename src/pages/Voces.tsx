@@ -45,11 +45,11 @@ export default function Voces() {
             alt="Voces del Capítulo"
             className="voces-logo"
           />
-          <div className="voces-submit-wrapper">
+          {/* <div className="voces-submit-wrapper">
             <Link to="/voces/enviar" className="voces-submit-button">
               {t("voices.send")}
             </Link>
-          </div>{" "}
+          </div>{" "} */}
         </div>
 
         {loading && <p className="page-status">{t("voices.loading")}</p>}

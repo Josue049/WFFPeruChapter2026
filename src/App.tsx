@@ -35,7 +35,7 @@ function App() {
           <Route path="/relacionamiento" element={<Relacionamiento />} />
           <Route path="/empoderamiento-femenino" element={<EmpoderamientoFemenino />} />
           <Route path="/voces" element={<Voces />} />
-          <Route path="/voces/enviar" element={<EnviarArticulo />} />
+          {/* <Route path="/voces/enviar" element={<EnviarArticulo />} /> */}
           <Route path="/voces/:slug" element={<Articulo />} />
           <Route path="/hitos" element={<Hitos />} />
           <Route path="/hitos/:slug" element={<HitoDetalle />} />
