@@ -52,6 +52,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        
         <Route path="/loginadmin" element={<LoginAdmin />} />
 
         <Route path="/Admin" element={<Navigate to="/admin" replace />} />
