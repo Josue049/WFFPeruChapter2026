@@ -683,3 +683,19 @@ body {
   letter-spacing: 0;
   text-transform: none;
 }
+
+/* Etiqueta editorial al inicio del contenido, en lugar del rótulo fijo. */
+.article-meta-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  max-width: 100%;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: .015em;
+  line-height: 1.1;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
