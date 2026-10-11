@@ -208,20 +208,15 @@ export default function Articulo() {
       {!loading && post && (
         <main className="article-page">
           <header className="articulo-header">
-            <p className="articulo-categoria">
-              <Link className="voz1" to="/voces">
-                {t("article.category")}
-              </Link>
-              <span className="voz2"> / {t("article.article")}</span>
-            </p>
-
-            {post.tag_name && (
-              <div className="article-tag-pill-row">
+            <div className="articulo-categoria">
+              <Link className="voz1" to="/voces">{t("article.category")}</Link>
+              <span className="voz2"> / {t("article.article")}{post.tag_name ? " de " : ""}</span>
+              {post.tag_name && (
                 <span className="tag-pill tag-pill-detail" style={{ background: tagBg, color: tagText }}>
                   {post.tag_name}
                 </span>
-              </div>
-            )}
+              )}
+            </div>
 
             <div className="Persona articulo-author-block">
               {post.author_photo && (
