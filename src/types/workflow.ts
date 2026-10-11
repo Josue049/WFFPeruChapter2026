@@ -16,6 +16,7 @@ export interface ArticleSubmission {
   submitted_at: string;
   reviewed_at: string | null;
   reviewed_by_id: number | null;
+  tag_id: number | null;
   published_article_id: number | null;
 }
 

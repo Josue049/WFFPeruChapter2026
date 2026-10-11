@@ -7,7 +7,7 @@ import styles from "./AdminForms.module.css";
 
 type EditableSubmission = Pick<ArticleSubmission,
   "author_name" | "author_lastname" | "author_photo" | "author_cargo" | "author_email" | "is_chapter_member" | "title" | "subtitle" | "body"
-> & { reviewer_notes: string; status: "pending" | "in_review" | "rejected" };
+> & { tag_id: number | null; reviewer_notes: string; status: "pending" | "in_review" | "rejected" };
 
 export function ArticleSubmissionsManager({
   token,
@@ -25,6 +25,10 @@ export function ArticleSubmissionsManager({
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const [tags, setTags] = useState<{ id: number; name: string }[]>([]);
+  const [newTag, setNewTag] = useState("");
+  const [creatingTag, setCreatingTag] = useState(false);
+  const [tagNotice, setTagNotice] = useState("");
   const canDelete = currentUsername === "WFFAdmin";
 
   const load = useCallback(async () => {
@@ -32,6 +36,35 @@ export function ArticleSubmissionsManager({
   }, [token]);
 
   useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    // El selector sigue visible si la API de etiquetas aún no está disponible.
+    void apiRequest<{ id: number; name: string }[]>("/article-tags")
+      .then(setTags)
+      .catch(() => setTagNotice("El catálogo estará disponible cuando se actualice el backend."));
+  }, []);
+
+  const addTag = async () => {
+    const name = newTag.trim().replace(/\s+/g, " ");
+    if (!name || creatingTag) return;
+    const existing = tags.find((tag) => tag.name.toLocaleLowerCase("es") === name.toLocaleLowerCase("es"));
+    if (existing) {
+      setForm((current) => current ? { ...current, tag_id: existing.id } : current);
+      setNewTag("");
+      return;
+    }
+    setCreatingTag(true);
+    try {
+      const tag = await apiRequest<{ id: number; name: string }>("/article-tags", {
+        method: "POST", body: JSON.stringify({ name }),
+      }, { token, redirectOnUnauthorized: true });
+      setTags((current) => [...current, tag].sort((a, b) => a.name.localeCompare(b.name, "es")));
+      setForm((current) => current ? { ...current, tag_id: tag.id } : current);
+      setNewTag("");
+      setTagNotice("");
+    } catch (error) {
+      setTagNotice(error instanceof Error ? error.message : "No se pudo crear la etiqueta. El backend debe estar actualizado.");
+    } finally { setCreatingTag(false); }
+  };
 
   const visible = useMemo(() => items.filter((item) => {
     const matchesSearch = `${item.title} ${item.author_name} ${item.author_lastname} ${item.author_email}`.toLowerCase().includes(search.toLowerCase());
@@ -51,6 +84,7 @@ export function ArticleSubmissionsManager({
       title: item.title,
       subtitle: item.subtitle,
       body: item.body,
+      tag_id: item.tag_id ?? null,
       reviewer_notes: item.reviewer_notes ?? "",
       status: item.status === "rejected" ? "rejected" : item.status === "in_review" ? "in_review" : "pending",
     });
@@ -192,6 +226,18 @@ export function ArticleSubmissionsManager({
                     <option value="no">No miembro</option>
                   </select>
                 </label>
+              </div>
+              <div className={styles.field}>
+                <label htmlFor="submission-tag">Etiqueta del artículo</label>
+                <select id="submission-tag" value={form.tag_id ?? ""} onChange={(event) => setForm({ ...form, tag_id: event.target.value ? Number(event.target.value) : null })}>
+                  <option value="">Sin etiqueta</option>
+                  {tags.map((tag) => <option key={tag.id} value={tag.id}>{tag.name}</option>)}
+                </select>
+                <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                  <input aria-label="Nueva etiqueta" placeholder="Escribir nueva etiqueta" maxLength={80} value={newTag} onChange={(event) => setNewTag(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); void addTag(); } }} />
+                  <button type="button" className={styles.secondaryButton} disabled={!newTag.trim() || creatingTag} onClick={() => void addTag()}>{creatingTag ? "Agregando…" : "+ Agregar"}</button>
+                </div>
+                {tagNotice && <small role="status">{tagNotice}</small>}
               </div>
               <Field label="Título" value={form.title} onChange={(title) => setForm({ ...form, title })} />
               <Field label="Breve descripción" value={form.subtitle} onChange={(subtitle) => setForm({ ...form, subtitle })} />

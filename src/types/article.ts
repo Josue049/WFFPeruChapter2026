@@ -8,4 +8,6 @@ export interface Article {
   subtitle: string;
   date: string;
   body: string;
+  tag_id: number | null;
+  tag_name: string | null;
 }

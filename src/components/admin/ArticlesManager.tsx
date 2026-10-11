@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Article } from "../../types";
-import { ApiError, apiRequest } from "../../services/api";
+import { apiRequest } from "../../services/api";
 import { HtmlPreview } from "./HtmlPreview";
 import { ImageField } from "./ImageField";
 import { ArticleSubmissionsManager } from "./ArticleSubmissionsManager";
 import styles from "./AdminForms.module.css";
 
-type ArticleForm = Omit<Article, "id">;
+type ArticleForm = Omit<Article, "id" | "tag_name">;
+type ArticleTag = { id: number; name: string };
 
 interface ArticleViewsResponse {
   article_id: number;
@@ -23,6 +24,7 @@ const emptyArticle = (): ArticleForm => ({
   subtitle: "",
   date: new Date().toISOString().slice(0, 10),
   body: "",
+  tag_id: null,
 });
 
 export function ArticlesManager({ token, currentUsername }: { token: string; currentUsername: string }) {
@@ -45,6 +47,9 @@ export function ArticlesManager({ token, currentUsername }: { token: string; cur
 
 function PublishedArticlesManager({ token }: { token: string }) {
   const [items, setItems] = useState<Article[]>([]);
+  const [tags, setTags] = useState<ArticleTag[]>([]);
+  const [newTag, setNewTag] = useState("");
+  const [creatingTag, setCreatingTag] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [form, setForm] = useState<ArticleForm>(emptyArticle());
   const [search, setSearch] = useState("");
@@ -59,6 +64,7 @@ function PublishedArticlesManager({ token }: { token: string }) {
     );
 
     setItems(articles);
+    setTags(await apiRequest<ArticleTag[]>("/article-tags"));
     setViewsByArticle({});
 
     const viewEntries = await Promise.all(
@@ -101,6 +107,7 @@ function PublishedArticlesManager({ token }: { token: string }) {
       subtitle: item.subtitle ?? "",
       date: item.date.slice(0, 10),
       body: item.body ?? "",
+      tag_id: item.tag_id ?? null,
     });
     setMessage("");
   };
@@ -118,46 +125,35 @@ function PublishedArticlesManager({ token }: { token: string }) {
         subtitle: form.subtitle,
         date: form.date,
         body: form.body,
+        tag_id: form.tag_id,
       };
-      let result: Article;
-      try {
-        result = await apiRequest<Article>(
+      const result = await apiRequest<Article>(
           selectedId ? `/articles/${selectedId}` : "/articles",
           { method: selectedId ? "PUT" : "POST", body: JSON.stringify(payload) },
           { token, redirectOnUnauthorized: true },
         );
-      } catch (requestError) {
-        // Algunas instalaciones del backend todavía usan el esquema de edición
-        // anterior, que no admite apellido/cargo en PUT (Pydantic extra=forbid).
-        // Reintentamos únicamente en ese caso para que editar una Voz no falle.
-        if (
-          selectedId &&
-          requestError instanceof ApiError &&
-          requestError.status === 422 &&
-          /extra inputs are not permitted/i.test(requestError.message)
-        ) {
-          const legacyPayload = {
-            author_name: payload.author_name,
-            author_photo: payload.author_photo,
-            title: payload.title,
-            subtitle: payload.subtitle,
-            date: payload.date,
-            body: payload.body,
-          };
-          result = await apiRequest<Article>(
-            `/articles/${selectedId}`,
-            { method: "PUT", body: JSON.stringify(legacyPayload) },
-            { token, redirectOnUnauthorized: true },
-          );
-        } else {
-          throw requestError;
-        }
-      }
       select(result);
       await load();
       setMessage("Artículo guardado correctamente.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "No se pudo guardar");
+    }
+  };
+
+  const addTag = async () => {
+    const name = newTag.trim().replace(/\s+/g, " ");
+    if (!name || creatingTag) return;
+    setCreatingTag(true);
+    try {
+      const created = await apiRequest<ArticleTag>("/article-tags", { method: "POST", body: JSON.stringify({ name }) }, { token, redirectOnUnauthorized: true });
+      setTags(await apiRequest<ArticleTag[]>("/article-tags"));
+      setForm((current) => ({ ...current, tag_id: created.id }));
+      setNewTag("");
+      setMessage(`Etiqueta «${created.name}» seleccionada.`);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "No se pudo crear la etiqueta");
+    } finally {
+      setCreatingTag(false);
     }
   };
 
@@ -190,7 +186,7 @@ function PublishedArticlesManager({ token }: { token: string }) {
           {filtered.map((item) => (
             <button key={item.id} className={`${styles.listItem} ${selectedId === item.id ? styles.listItemActive : ""}`} onClick={() => select(item)}>
               <strong>{item.title}</strong>
-              <span>{item.author_name} {item.author_lastname}</span>
+              <span>{item.author_name} {item.author_lastname}{item.tag_name ? ` · ${item.tag_name}` : ""}</span>
               <small>{item.date} · {formatViews(item.id)}</small>
             </button>
           ))}
@@ -222,6 +218,17 @@ function PublishedArticlesManager({ token }: { token: string }) {
           <Field label="Cargo o entidad" value={form.author_cargo} onChange={(value) => setForm({ ...form, author_cargo: value })} />
           <Field label="Título" value={form.title} onChange={(value) => setForm({ ...form, title: value })} />
           <Field label="Breve descripción" value={form.subtitle} onChange={(value) => setForm({ ...form, subtitle: value })} />
+          <div className={styles.field}>
+            <label>Etiqueta del artículo</label>
+            <select value={form.tag_id ?? ""} onChange={(e) => setForm({ ...form, tag_id: e.target.value ? Number(e.target.value) : null })}>
+              <option value="">Sin etiqueta (artículos anteriores)</option>
+              {tags.map((tag) => <option key={tag.id} value={tag.id}>{tag.name}</option>)}
+            </select>
+            <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+              <input aria-label="Nueva etiqueta" value={newTag} placeholder="Nueva etiqueta" maxLength={80} onChange={(e) => setNewTag(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void addTag(); } }} />
+              <button type="button" disabled={!newTag.trim() || creatingTag} onClick={() => void addTag()}>+ Agregar</button>
+            </div>
+          </div>
           <Field label="Fecha de publicación" type="date" value={form.date} onChange={(value) => setForm({ ...form, date: value })} />
           <TextArea label="Artículo" value={form.body} onChange={(value) => setForm({ ...form, body: value })} rows={14} />
         </div>

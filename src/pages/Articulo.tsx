@@ -228,6 +228,7 @@ export default function Articulo() {
               )}
             </div>
 
+            {post.tag_name && <p style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.04em" }}>{post.tag_name}</p>}
             <h1 className="articulo-titulo">{post.title}</h1>
             {post.subtitle && (
               <p className="articulo-subtitulo">

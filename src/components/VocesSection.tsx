@@ -39,7 +39,7 @@ export const VocesSection: FC<Props> = ({ posts }) => {
     const q = search.toLowerCase().trim();
     if (!q) return true;
     const fullName = `${post.author_name} ${post.author_lastname}`.toLowerCase();
-    return post.title.toLowerCase().includes(q) || fullName.includes(q);
+    return post.title.toLowerCase().includes(q) || fullName.includes(q) || (post.tag_name ?? "").toLowerCase().includes(q);
   });
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
@@ -116,6 +116,7 @@ export const VocesSection: FC<Props> = ({ posts }) => {
             >
               <div className="blog-card">
                 <p style={{ fontSize: "13px", opacity: 0.6 }}>{formatDate(post.date)}</p>
+                {post.tag_name && <span style={{ fontSize: 12, fontWeight: 600, opacity: 0.7 }}>{post.tag_name}</span>}
                 <h3>{post.title}</h3>
                 <p style={{ fontStyle: "italic" }}>{post.subtitle}</p>
                 <p style={{ fontSize: "13px", opacity: 0.6 }}>{t("voices.writtenBy")}</p>
