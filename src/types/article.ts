@@ -10,4 +10,5 @@ export interface Article {
   body: string;
   tag_id: number | null;
   tag_name: string | null;
+  tag_color: string | null;
 }

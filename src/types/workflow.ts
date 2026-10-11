@@ -11,6 +11,7 @@ export interface ArticleSubmission {
   title: string;
   subtitle: string;
   body: string;
+  publication_date: string | null;
   status: SubmissionStatus | string;
   reviewer_notes: string | null;
   submitted_at: string;

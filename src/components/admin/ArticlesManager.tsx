@@ -4,10 +4,12 @@ import { apiRequest } from "../../services/api";
 import { HtmlPreview } from "./HtmlPreview";
 import { ImageField } from "./ImageField";
 import { ArticleSubmissionsManager } from "./ArticleSubmissionsManager";
+import { TagsManager } from "./TagsManager";
+import { VoicesSettingsManager } from "./VoicesSettingsManager";
 import styles from "./AdminForms.module.css";
 
-type ArticleForm = Omit<Article, "id" | "tag_name">;
-type ArticleTag = { id: number; name: string };
+type ArticleForm = Omit<Article, "id" | "tag_name" | "tag_color">;
+type ArticleTag = { id: number; name: string; color: string };
 
 interface ArticleViewsResponse {
   article_id: number;
@@ -28,19 +30,20 @@ const emptyArticle = (): ArticleForm => ({
 });
 
 export function ArticlesManager({ token, currentUsername }: { token: string; currentUsername: string }) {
-  const [view, setView] = useState<"published" | "submissions">("published");
+  const [view, setView] = useState<"published" | "submissions" | "tags" | "settings">("published");
 
   return (
     <div>
       <div className={styles.managerTabs}>
         <button className={view === "published" ? styles.managerTabActive : ""} onClick={() => setView("published")}>Artículos</button>
         <button className={view === "submissions" ? styles.managerTabActive : ""} onClick={() => setView("submissions")}>Postulaciones</button>
+        <button className={view === "tags" ? styles.managerTabActive : ""} onClick={() => setView("tags")}>Etiquetas</button>
+        <button className={view === "settings" ? styles.managerTabActive : ""} onClick={() => setView("settings")}>Configuración</button>
       </div>
-      {view === "published" ? (
-        <PublishedArticlesManager token={token} />
-      ) : (
-        <ArticleSubmissionsManager token={token} currentUsername={currentUsername} onPublished={() => setView("published")} />
-      )}
+      {view === "published" && <PublishedArticlesManager token={token} />}
+      {view === "submissions" && <ArticleSubmissionsManager token={token} currentUsername={currentUsername} onPublished={() => setView("published")} />}
+      {view === "tags" && <TagsManager token={token} />}
+      {view === "settings" && <VoicesSettingsManager token={token} />}
     </div>
   );
 }

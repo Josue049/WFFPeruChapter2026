@@ -9,6 +9,7 @@ import { sanitizeHtml } from "../utils/sanitizeHtml";
 import { mediaUrl } from "../utils/mediaUrl";
 import { slugify } from "../utils/slugify";
 import { useLanguage } from "../i18n/LanguageContext";
+import { getContrastTextColor } from "../utils/color";
 
 interface ArticleViewsResponse {
   article_id: number;
@@ -190,6 +191,9 @@ export default function Articulo() {
       .slice(0, 3);
   }, [post, posts]);
 
+  const tagBg = post?.tag_color ?? "#E75733";
+  const tagText = getContrastTextColor(tagBg);
+
   if (!loading && !post) {
     return <Navigate to="/404" replace />;
   }
@@ -211,6 +215,14 @@ export default function Articulo() {
               <span className="voz2"> / {t("article.article")}</span>
             </p>
 
+            {post.tag_name && (
+              <div className="article-tag-pill-row">
+                <span className="tag-pill tag-pill-detail" style={{ background: tagBg, color: tagText }}>
+                  {post.tag_name}
+                </span>
+              </div>
+            )}
+
             <div className="Persona articulo-author-block">
               {post.author_photo && (
                 <img
@@ -228,7 +240,6 @@ export default function Articulo() {
               )}
             </div>
 
-            {post.tag_name && <p style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.04em" }}>{post.tag_name}</p>}
             <h1 className="articulo-titulo">{post.title}</h1>
             {post.subtitle && (
               <p className="articulo-subtitulo">

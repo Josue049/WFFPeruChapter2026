@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { NavBar } from "../components/Header/NavBar";
 import { TopBar } from "../components/Header/TopBar";
 import { ScrollTopButton } from "../components/ScrollTopButton";
@@ -8,18 +8,28 @@ import { apiRequest } from "../services/api";
 import type { Article } from "../types/article";
 import { useLanguage } from "../i18n/LanguageContext";
 
+interface VoicesSettings {
+  is_submission_open: boolean;
+}
+
 export default function Voces() {
   const { t } = useLanguage();
   const [posts, setPosts] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [submissionsOpen, setSubmissionsOpen] = useState(false);
 
   useEffect(() => {
     let active = true;
 
-    apiRequest<Article[]>("/articles/published")
-      .then((data) => {
-        if (active) setPosts(data);
+    Promise.all([
+      apiRequest<Article[]>("/articles/published"),
+      apiRequest<VoicesSettings>("/voices/settings").catch(() => ({ is_submission_open: false })),
+    ])
+      .then(([data, settings]) => {
+        if (!active) return;
+        setPosts(data);
+        setSubmissionsOpen(Boolean(settings.is_submission_open));
       })
       .catch(() => {
         if (active) setError(t("voices.error"));
@@ -45,11 +55,13 @@ export default function Voces() {
             alt="Voces del Capítulo"
             className="voces-logo"
           />
-          {/* <div className="voces-submit-wrapper">
-            <Link to="/voces/enviar" className="voces-submit-button">
-              {t("voices.send")}
-            </Link>
-          </div>{" "} */}
+          {submissionsOpen && (
+            <div className="voces-submit-wrapper">
+              <Link to="/voces/enviar" className="voces-submit-button">
+                {t("voices.send")}
+              </Link>
+            </div>
+          )}
         </div>
 
         {loading && <p className="page-status">{t("voices.loading")}</p>}

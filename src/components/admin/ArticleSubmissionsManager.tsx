@@ -6,7 +6,7 @@ import { ImageField } from "./ImageField";
 import styles from "./AdminForms.module.css";
 
 type EditableSubmission = Pick<ArticleSubmission,
-  "author_name" | "author_lastname" | "author_photo" | "author_cargo" | "author_email" | "is_chapter_member" | "title" | "subtitle" | "body"
+  "author_name" | "author_lastname" | "author_photo" | "author_cargo" | "author_email" | "is_chapter_member" | "title" | "subtitle" | "body" | "publication_date"
 > & { tag_id: number | null; reviewer_notes: string; status: "pending" | "in_review" | "rejected" };
 
 export function ArticleSubmissionsManager({
@@ -84,6 +84,7 @@ export function ArticleSubmissionsManager({
       title: item.title,
       subtitle: item.subtitle,
       body: item.body,
+      publication_date: item.publication_date ? item.publication_date.slice(0, 10) : new Date().toISOString().slice(0, 10),
       tag_id: item.tag_id ?? null,
       reviewer_notes: item.reviewer_notes ?? "",
       status: item.status === "rejected" ? "rejected" : item.status === "in_review" ? "in_review" : "pending",
@@ -241,6 +242,7 @@ export function ArticleSubmissionsManager({
               </div>
               <Field label="Título" value={form.title} onChange={(title) => setForm({ ...form, title })} />
               <Field label="Breve descripción" value={form.subtitle} onChange={(subtitle) => setForm({ ...form, subtitle })} />
+              <Field label="Fecha de publicación" type="date" value={form.publication_date ?? ""} onChange={(publication_date) => setForm({ ...form, publication_date })} />
               <div className={styles.field}><label>Artículo</label><textarea rows={16} value={form.body} onChange={(event) => setForm({ ...form, body: event.target.value })} /><HtmlPreview value={form.body} /></div>
               <div className={styles.twoColumns}>
                 <div className={styles.field}><label>Estado</label><select value={form.status} onChange={(event) => setForm({ ...form, status: event.target.value as EditableSubmission["status"] })}><option value="pending">Pendiente</option><option value="in_review">En revisión</option><option value="rejected">Rechazado</option></select></div>

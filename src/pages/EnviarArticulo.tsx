@@ -19,6 +19,10 @@ import styles from "./VocesSubmission.module.css";
 import { useLanguage } from "../i18n/LanguageContext";
 import type { Language } from "../i18n/translations";
 
+interface VoicesSettings {
+  is_submission_open: boolean;
+}
+
 interface SubmissionForm {
   author_name: string;
   author_lastname: string;
@@ -374,6 +378,8 @@ export default function EnviarArticulo() {
   const [error, setError] = useState("");
   const [acceptedRules, setAcceptedRules] =
     useState(false);
+  const [loadingAvailability, setLoadingAvailability] = useState(true);
+  const [submissionsOpen, setSubmissionsOpen] = useState(false);
 
   const articleImagesRef =
     useRef<PendingEditorImage[]>([]);
@@ -417,6 +423,27 @@ export default function EnviarArticulo() {
 
     return () => window.cancelAnimationFrame(frame);
   }, [error]);
+
+  useEffect(() => {
+    let active = true;
+
+    apiRequest<VoicesSettings>("/voices/settings")
+      .then((data) => {
+        if (!active) return;
+        setSubmissionsOpen(Boolean(data.is_submission_open));
+      })
+      .catch(() => {
+        if (!active) return;
+        setSubmissionsOpen(false);
+      })
+      .finally(() => {
+        if (active) setLoadingAvailability(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (!sending) return;
@@ -713,6 +740,16 @@ export default function EnviarArticulo() {
       <NavBar />
 
       <main className={styles.page}>
+        {loadingAvailability ? (
+          <div className={styles.shell}><section className={styles.card}><p>Cargando formulario…</p></section></div>
+        ) : !submissionsOpen ? (
+          <div className={styles.shell}>
+            <Link className={styles.back} to="/voces">← {t("submission.back")}</Link>
+            <section className={styles.card}>
+              <div className={styles.sectionHeading}><span>•</span><div><h2>Convocatoria cerrada</h2><p>El formulario de postulaciones no está disponible en este momento.</p></div></div>
+            </section>
+          </div>
+        ) : (
         <div className={styles.shell}>
           <Link
             className={styles.back}
@@ -1189,6 +1226,7 @@ export default function EnviarArticulo() {
             </form>
           )}
         </div>
+        )}
       </main>
 
       {sending && (

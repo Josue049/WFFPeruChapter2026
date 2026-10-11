@@ -258,3 +258,95 @@
   background-color: #e9a900 !important;
   color: #ffffff !important;
 }
+.voces-filters-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 24px auto 14px;
+  padding: 0 16px;
+}
+
+.voces-search-box {
+  position: relative;
+  width: min(480px, 100%);
+}
+
+.voces-search-input {
+  width: 100%;
+  padding: 10px 36px 10px 14px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.73);
+  color: inherit;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.voces-search-clear {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  opacity: 0.4;
+  line-height: 1;
+  padding: 0;
+}
+
+.voces-tag-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 220px;
+}
+
+.voces-tag-filter label {
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+.voces-tag-filter select {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.tag-pill-card {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  max-width: calc(100% - 60px);
+  text-align: center;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+.blog-date {
+  margin-bottom: 16px;
+  max-width: calc(100% - 140px);
+}
+
+@media (max-width: 768px) {
+  .voces-tag-filter {
+    width: min(480px, 100%);
+  }
+}
