@@ -21,6 +21,14 @@ const getDriveImage = (url: string) => {
 };
 
 const PAGE_SIZE = 9;
+const MAX_DESCRIPTION_WORDS = 13;
+
+const shortenDescription = (description: string): string => {
+  const words = description.trim().split(/\s+/).filter(Boolean);
+  return words.length > MAX_DESCRIPTION_WORDS
+    ? `${words.slice(0, MAX_DESCRIPTION_WORDS).join(" ")}...`
+    : description.trim();
+};
 
 export const VocesSection: FC<Props> = ({ posts }) => {
   const { t, locale } = useLanguage();
@@ -129,7 +137,7 @@ export const VocesSection: FC<Props> = ({ posts }) => {
                   )}
                   <p className="blog-date">{formatDate(post.date)}</p>
                   <h3>{post.title}</h3>
-                  <p style={{ fontStyle: "italic" }}>{post.subtitle}</p>
+                  <p style={{ fontStyle: "italic" }}>{shortenDescription(post.subtitle ?? "")}</p>
                   <p style={{ fontSize: "13px", opacity: 0.6 }}>{t("voices.writtenBy")}</p>
 
                   <div className="perfil-grid">
