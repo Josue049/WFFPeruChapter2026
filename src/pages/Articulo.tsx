@@ -10,6 +10,12 @@ import { mediaUrl } from "../utils/mediaUrl";
 import { slugify } from "../utils/slugify";
 import { useLanguage } from "../i18n/LanguageContext";
 import { getContrastTextColor } from "../utils/color";
+import { ArticleShare } from "../components/ArticleShare";
+import { EXTRA } from "../i18n/extra";
+import { usePageMeta } from "../seo/pageMeta";
+import { recommendArticles } from "../utils/recommend";
+import { useArticleViews } from "../utils/articleViews";
+import "../styles/pages/voces-extras.css";
 
 interface ArticleViewsResponse {
   article_id: number;
@@ -50,7 +56,9 @@ const formatDate = (dateStr: string, locale: string) => {
 };
 
 export default function Articulo() {
-  const { t, locale } = useLanguage();
+  const { t, locale, language } = useLanguage();
+  const extra = EXTRA[language];
+  const allViews = useArticleViews();
   const { slug } = useParams();
   const [post, setPost] = useState<Article | null>(null);
   const [posts, setPosts] = useState<Article[]>([]);
@@ -182,14 +190,60 @@ export default function Articulo() {
 
   const safeBody = useMemo(() => sanitizeHtml(post?.body ?? ""), [post?.body]);
 
-  const recommendedPosts = useMemo(() => {
-    if (!post) return [];
+  const recommendations = useMemo(
+    () => (post ? recommendArticles(post, posts, allViews, 3) : []),
+    [post, posts, allViews],
+  );
 
-    return posts
-      .filter((article) => article.id !== post.id)
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, 3);
-  }, [post, posts]);
+  const reasonLabel = {
+    topic: extra.reasonTopic,
+    author: extra.reasonAuthor,
+    popular: extra.reasonPopular,
+    related: extra.reasonRelated,
+  } as const;
+
+  const readingMinutes = useMemo(() => {
+    const words = safeBody
+      .replace(/<[^>]+>/g, " ")
+      .split(/\s+/)
+      .filter(Boolean).length;
+    return Math.max(1, Math.ceil(words / 200));
+  }, [safeBody]);
+
+  const articlePath = post ? `/voces/${slugify(post.title)}` : "";
+  const articleUrl = `https://www.wffperuchapter.page${articlePath}`;
+  const firstBodyImage = /<img[^>]+src=["']([^"']+)["']/i.exec(post?.body ?? "")?.[1];
+
+  usePageMeta(
+    post
+      ? {
+          title: `${post.title} | Voces WFF Perú`,
+          description: (post.subtitle || post.title).slice(0, 200),
+          path: articlePath,
+          type: "article",
+          image: mediaUrl(firstBodyImage || post.author_photo) || undefined,
+          jsonLd: [
+            {
+              "@context": "https://schema.org",
+              "@type": "Article",
+              headline: post.title,
+              description: post.subtitle || undefined,
+              datePublished: post.date,
+              author: {
+                "@type": "Person",
+                name: `${post.author_name} ${post.author_lastname}`.trim(),
+              },
+              publisher: {
+                "@type": "Organization",
+                name: "WFF Perú Chapter",
+                logo: { "@type": "ImageObject", url: "https://www.wffperuchapter.page/img/logoWFFPeru.webp" },
+              },
+              mainEntityOfPage: articleUrl,
+            },
+          ],
+        }
+      : null,
+  );
 
   const tagBg = post?.tag_color ?? "#E75733";
   const tagText = getContrastTextColor(tagBg);
@@ -258,6 +312,9 @@ export default function Articulo() {
                         date: formatDate(post.date, locale),
                       })}
                     </time>
+                    <span className="article-readtime">
+                      {extra.minRead.replace("{n}", String(readingMinutes))}
+                    </span>
                     {(viewLoading || viewState?.articleId === post.id) && (
                       <span
                         className={`article-views ${
@@ -304,6 +361,8 @@ export default function Articulo() {
                   aria-hidden="true"
                   style={{ width: "100%", height: "1px" }}
                 />
+
+                <ArticleShare url={articleUrl} title={post.title} />
               </div>
             </article>
 
@@ -317,14 +376,15 @@ export default function Articulo() {
                   <h2>{t("article.recommended")}</h2>
                 </div>
 
-                {recommendedPosts.length > 0 ? (
+                {recommendations.length > 0 ? (
                   <div className="recommended-list">
-                    {recommendedPosts.map((article) => (
+                    {recommendations.map(({ article, reason }) => (
                       <Link
                         key={article.id}
                         to={`/voces/${slugify(article.title)}`}
                         className="recommended-card"
                       >
+                        <span className="recommended-reason">{reasonLabel[reason]}</span>
                         <time dateTime={article.date}>
                           {formatDate(article.date, locale)}
                         </time>

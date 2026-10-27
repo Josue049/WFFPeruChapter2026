@@ -85,13 +85,13 @@ export function LanguageSwitcher() {
 
       {open && (
         <div
-          className="language-switcher-menu"
+          className="dropdown-menu dropdown-menu-right language-dropdown-menu border-0 rounded-0 m-0 show"
           role="menu"
         >
           <button
             type="button"
             role="menuitem"
-            className={`language-switcher-option language-switcher-auto ${
+            className={`dropdown-item language-switcher-option language-switcher-auto ${
               automatic ? "active" : ""
             }`}
             onClick={() => {
@@ -116,7 +116,7 @@ export function LanguageSwitcher() {
               key={item}
               type="button"
               role="menuitem"
-              className={`language-switcher-option ${
+              className={`dropdown-item language-switcher-option ${
                 item === language
                   ? "active"
                   : ""

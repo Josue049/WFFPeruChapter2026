@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /loginadmin
+Disallow: /admin
+Disallow: /voces/enviar
+
+Sitemap: https://www.wffperuchapter.page/sitemap.xml

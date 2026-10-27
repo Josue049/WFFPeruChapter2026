@@ -18,6 +18,8 @@ import {
 import NotFound from "./NotFound";
 import styles from "./VocesSubmission.module.css";
 import { useLanguage } from "../i18n/LanguageContext";
+import { EXTRA } from "../i18n/extra";
+import "../styles/pages/voces-extras.css";
 import type { Language } from "../i18n/translations";
 
 interface VoicesSettings {
@@ -435,14 +437,96 @@ function extractUsedPendingImageIds(html: string): string[] {
     .filter(Boolean);
 }
 
+const DRAFT_STORAGE_KEY = "wff_voces_draft_v1";
+const DRAFT_SAVE_DELAY_MS = 700;
+// Tamaños tras la optimización (ver utils/imageOptimizer.ts).
+const AUTHOR_PHOTO_TARGET_BYTES = 250 * 1024;
+const ARTICLE_IMAGE_TARGET_BYTES = 450 * 1024;
+
+interface LoadedDraft {
+  form: SubmissionForm;
+  removedImages: number;
+}
+
+function isEmptyDraft(form: SubmissionForm) {
+  return (
+    !form.author_name.trim() &&
+    !form.author_lastname.trim() &&
+    !form.author_cargo.trim() &&
+    !form.author_email.trim() &&
+    !form.title.trim() &&
+    !form.subtitle.trim() &&
+    !htmlToPlainText(form.body)
+  );
+}
+
+// Las imágenes locales (blob:) no sobreviven a una recarga: se quitan del texto.
+function stripPendingImages(html: string): { html: string; removed: number } {
+  if (!html || typeof DOMParser === "undefined") return { html, removed: 0 };
+
+  const parsed = new DOMParser().parseFromString(html, "text/html");
+  const images = parsed.querySelectorAll("img[data-pending-image-id]");
+  images.forEach((image) => image.remove());
+
+  return { html: parsed.body.innerHTML, removed: images.length };
+}
+
+function loadDraft(): LoadedDraft | null {
+  try {
+    const raw = window.localStorage.getItem(DRAFT_STORAGE_KEY);
+    if (!raw) return null;
+
+    const saved = JSON.parse(raw) as { form?: Partial<SubmissionForm> };
+    if (!saved.form) return null;
+
+    const stripped = stripPendingImages(String(saved.form.body ?? ""));
+    const form: SubmissionForm = {
+      ...emptyForm,
+      ...saved.form,
+      body: stripped.html,
+    };
+
+    return isEmptyDraft(form) ? null : { form, removedImages: stripped.removed };
+  } catch {
+    return null;
+  }
+}
+
+function saveDraft(form: SubmissionForm) {
+  try {
+    if (isEmptyDraft(form)) {
+      window.localStorage.removeItem(DRAFT_STORAGE_KEY);
+      return;
+    }
+    window.localStorage.setItem(
+      DRAFT_STORAGE_KEY,
+      JSON.stringify({ form, savedAt: Date.now() }),
+    );
+  } catch {
+    // Sin almacenamiento disponible el formulario sigue funcionando.
+  }
+}
+
+function clearDraft() {
+  try {
+    window.localStorage.removeItem(DRAFT_STORAGE_KEY);
+  } catch {
+    // Ignorado: el borrador es solo una comodidad.
+  }
+}
+
 export default function EnviarArticulo() {
   const { t, language } = useLanguage();
 
   const submissionRules = SUBMISSION_RULES[language];
   const submissionErrors = SUBMISSION_ERRORS[language];
 
-  const [form, setForm] =
-    useState<SubmissionForm>(emptyForm);
+  const [initialDraft] = useState(loadDraft);
+  const [draftNotice, setDraftNotice] = useState(initialDraft !== null);
+  const [form, setForm] = useState<SubmissionForm>(
+    () => initialDraft?.form ?? emptyForm,
+  );
+  const extra = EXTRA[language];
 
   const [authorPhotoFile, setAuthorPhotoFile] =
     useState<File | null>(null);
@@ -506,6 +590,11 @@ export default function EnviarArticulo() {
 
     return () => window.cancelAnimationFrame(frame);
   }, [error, errorTick]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => saveDraft(form), DRAFT_SAVE_DELAY_MS);
+    return () => window.clearTimeout(timer);
+  }, [form]);
 
   useEffect(() => {
     let active = true;
@@ -583,6 +672,25 @@ export default function EnviarArticulo() {
       acceptedRules,
     ],
   );
+
+  const estimatedUploadBytes = useMemo(() => {
+    const usedIds = new Set(extractUsedPendingImageIds(form.body));
+    let total = new Blob([JSON.stringify(form)]).size + MULTIPART_SAFETY_OVERHEAD_BYTES;
+
+    if (authorPhotoFile) {
+      total += Math.min(authorPhotoFile.size, AUTHOR_PHOTO_TARGET_BYTES);
+    }
+    for (const image of articleImages) {
+      if (usedIds.has(image.id)) {
+        total += Math.min(image.file.size, ARTICLE_IMAGE_TARGET_BYTES);
+      }
+    }
+    return total;
+  }, [form, authorPhotoFile, articleImages]);
+
+  const weightRatio = estimatedUploadBytes / MAX_SUBMISSION_UPLOAD_BYTES;
+  const weightLevel = weightRatio >= 1 ? "over" : weightRatio >= 0.75 ? "high" : "ok";
+  const hasAttachments = authorPhotoFile !== null || articleImages.length > 0;
 
   const missingKeys = new Set<MissingKey>();
   if (form.author_name.trim().length === 0) missingKeys.add("author_name");
@@ -785,6 +893,8 @@ export default function EnviarArticulo() {
       );
 
       resetLocalFiles();
+      clearDraft();
+      setDraftNotice(false);
       setForm(emptyForm);
       setAcceptedRules(false);
     } catch (submitError) {
@@ -875,6 +985,27 @@ export default function EnviarArticulo() {
               onSubmit={submit}
               noValidate
             >
+              {draftNotice && (
+                <div className="draft-notice" role="status">
+                  <span>
+                    {extra.draftRestored}
+                    {initialDraft && initialDraft.removedImages > 0 && (
+                      <> {extra.draftImagesRemoved.replace("{n}", String(initialDraft.removedImages))}</>
+                    )}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      clearDraft();
+                      setForm(emptyForm);
+                      setDraftNotice(false);
+                    }}
+                  >
+                    {extra.draftDiscard}
+                  </button>
+                </div>
+              )}
+
               {error && (
                 <div
                   ref={errorRef}
@@ -1290,6 +1421,28 @@ export default function EnviarArticulo() {
                   </span>
                 </label>
               </section>
+
+              {hasAttachments && (
+                <div className={`weight-meter weight-meter-${weightLevel}`} role="status">
+                  <div className="weight-meter-head">
+                    <span>{extra.weightTitle}</span>
+                    <span>
+                      {formatMegabytes(estimatedUploadBytes)} MB {extra.weightOf}{" "}
+                      {formatMegabytes(MAX_SUBMISSION_UPLOAD_BYTES)} MB
+                    </span>
+                  </div>
+                  <div className="weight-meter-bar" aria-hidden="true">
+                    <span style={{ width: `${Math.min(100, Math.round(weightRatio * 100))}%` }} />
+                  </div>
+                  <p>
+                    {weightLevel === "over"
+                      ? extra.weightOver
+                      : weightLevel === "high"
+                        ? extra.weightHigh
+                        : extra.weightOk}
+                  </p>
+                </div>
+              )}
 
               <div className={styles.submitRow}>
                 <p>

@@ -792,80 +792,53 @@ p.m-0.text-uppercase {
   transform: scale(0.98);
 }
 
-/* Menú: rectangular, con abreviatura + nombre del idioma */
-.language-switcher-menu {
-  position: absolute;
-  z-index: 1300;
-  top: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  min-width: 210px;
-  padding: 6px 0;
-  background: #fff;
-  /* border: 1px solid rgba(40, 40, 40, 0.08); */
-  border-radius: 0;
-  /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); */
+/* Menú: mismo diseño que el dropdown de Áreas (clases dropdown-menu / dropdown-item) */
+.language-dropdown-menu {
+  min-width: 250px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  margin-top: 10px !important;
 }
 
-.language-switcher-option {
+.language-dropdown-menu .dropdown-item {
   display: flex;
   align-items: center;
   gap: 12px;
   width: 100%;
-  padding: 11px 18px;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  color: #292929;
-  font-family: "Poppins", sans-serif;
-  text-align: left;
+  padding: 8px 28px;
+  box-sizing: border-box;
+  line-height: 1.35;
+  font-family: inherit;
   cursor: pointer;
-  transition: background 0.18s ease, color 0.18s ease;
 }
 
 .language-switcher-code {
-  min-width: 28px;
-  color: #555;
+  min-width: 34px;
   font-size: 13px;
   font-weight: 700;
   line-height: 1;
-  text-align: center;
 }
 
 .language-switcher-name {
-  color: inherit;
-  font-size: 14px;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* Idioma activo: marcado como el enlace activo del menú */
+.language-dropdown-menu .dropdown-item.active,
+.language-dropdown-menu .dropdown-item:active {
+  background: transparent;
+  color: #dd5a32;
   font-weight: 700;
-  line-height: 1.2;
-}
-
-.language-switcher-option:hover {
-  background: #fff6ef;
-}
-
-.language-switcher-option.active {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 122, 114, 0.11),
-    rgba(255, 180, 0, 0.11)
-  );
-  color: #dd5a32;
-}
-
-.language-switcher-option.active .language-switcher-code {
-  color: #dd5a32;
 }
 
 .language-switcher-divider {
   height: 1px;
-  margin: 4px 14px;
+  margin: 6px 28px;
   background: rgba(40, 40, 40, 0.08);
 }
 
 .language-switcher-auto .language-switcher-code {
-  min-width: 42px;
   font-size: 11px;
 }
 
@@ -924,19 +897,16 @@ p.m-0.text-uppercase {
     justify-content: center;
   }
 
-  .language-switcher-menu {
+  .language-dropdown-menu {
     position: absolute;
-    top: calc(100% + 8px);
-    left: 50%;
-    width: auto;
-    min-width: 190px;
-    margin-top: 0;
-    transform: translateX(-50%);
-    box-shadow: 0 8px 24px rgba(40, 31, 23, 0.1);
+    left: 0;
+    right: auto;
+    min-width: 230px;
+    margin-top: 8px !important;
   }
 
-  .language-switcher-option {
-    padding: 10px 15px;
+  .language-dropdown-menu .dropdown-item {
+    padding: 10px 20px;
   }
 }
 

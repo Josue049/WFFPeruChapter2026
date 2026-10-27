@@ -15,8 +15,9 @@
       content="Jóvenes peruanos por los sistemas agroalimentarios. ¡Únete al Capítulo Nacional!"
     />
     <meta property="og:image" content="https://www.wffperuchapter.page/img/logoWFFPeru.webp" />
-    <meta property="og:url" content="https://wffperuchapter.page" />
+    <meta property="og:url" content="https://www.wffperuchapter.page/" />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="WFF Perú Chapter" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -56,15 +57,48 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "WFF Perú Chapter",
-        "alternateName": "Capítulo Nacional de Juventud del World Food Forum en Perú",
-        "url": "https://wffperuchapter.page",
-        "logo": "https://wffperuchapter.page/img/logoWFFPeru.webp",
-        "sameAs": [
-          "https://www.facebook.com/WFFPeruChapter",
-          "https://www.instagram.com/wff_peru_chapter/",
-          "https://www.linkedin.com/company/wffperuchapter/"
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://www.wffperuchapter.page/#organization",
+            "name": "WFF Perú Chapter",
+            "alternateName": [
+              "WFF Peru Chapter",
+              "Capítulo Nacional de Juventud del World Food Forum en Perú"
+            ],
+            "url": "https://www.wffperuchapter.page/",
+            "logo": "https://www.wffperuchapter.page/img/logoWFFPeru.webp",
+            "sameAs": [
+              "https://www.facebook.com/WFFPeruChapter",
+              "https://www.instagram.com/wff_peru_chapter/",
+              "https://www.linkedin.com/company/wffperuchapter/"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://www.wffperuchapter.page/#website",
+            "url": "https://www.wffperuchapter.page/",
+            "name": "WFF Perú Chapter",
+            "alternateName": "WFF Peru Chapter",
+            "inLanguage": "es",
+            "publisher": { "@id": "https://www.wffperuchapter.page/#organization" }
+          },
+          {
+            "@type": "ItemList",
+            "@id": "https://www.wffperuchapter.page/#navigation",
+            "name": "Navegación principal",
+            "itemListElement": [
+              { "@type": "SiteNavigationElement", "position": 1, "name": "Nosotros", "url": "https://www.wffperuchapter.page/nosotros" },
+              { "@type": "SiteNavigationElement", "position": 2, "name": "Educación y Cultura", "url": "https://www.wffperuchapter.page/educacionycultura" },
+              { "@type": "SiteNavigationElement", "position": 3, "name": "Ciencia e Innovación", "url": "https://www.wffperuchapter.page/cienciaeinnovacion" },
+              { "@type": "SiteNavigationElement", "position": 4, "name": "Políticas y Gobernanza", "url": "https://www.wffperuchapter.page/politicasygobernanza" },
+              { "@type": "SiteNavigationElement", "position": 5, "name": "Gestión de las Comunicaciones", "url": "https://www.wffperuchapter.page/comunicaciones" },
+              { "@type": "SiteNavigationElement", "position": 6, "name": "Relacionamiento y Gestión de Recursos", "url": "https://www.wffperuchapter.page/relacionamiento" },
+              { "@type": "SiteNavigationElement", "position": 7, "name": "Voces", "url": "https://www.wffperuchapter.page/voces" },
+              { "@type": "SiteNavigationElement", "position": 8, "name": "Hitos", "url": "https://www.wffperuchapter.page/hitos" },
+              { "@type": "SiteNavigationElement", "position": 9, "name": "Voluntarios Destacados", "url": "https://www.wffperuchapter.page/voluntarios-destacados" }
+            ]
+          }
         ]
       }
     </script>

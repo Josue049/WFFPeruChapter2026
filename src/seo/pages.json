@@ -1,0 +1,83 @@
+{
+  "site": {
+    "name": "WFF Perú Chapter",
+    "legalName": "Capítulo Nacional de Juventud del World Food Forum en Perú",
+    "origin": "https://www.wffperuchapter.page",
+    "logo": "https://www.wffperuchapter.page/img/logoWFFPeru.webp",
+    "locale": "es_PE",
+    "sameAs": [
+      "https://www.facebook.com/WFFPeruChapter",
+      "https://www.instagram.com/wff_peru_chapter/",
+      "https://www.linkedin.com/company/wffperuchapter/"
+    ]
+  },
+  "pages": {
+    "/": {
+      "title": "WFF Perú Chapter | Capítulo Nacional de Juventud WFF",
+      "description": "Capítulo Nacional de Juventud del WFF en Perú, promoviendo acción juvenil para transformar los sistemas agroalimentarios junto a la FAO.",
+      "nav": "Inicio",
+      "priority": "1.0"
+    },
+    "/nosotros": {
+      "title": "Nosotros | WFF Perú Chapter",
+      "description": "Conoce quiénes somos, nuestra misión, nuestro comité y la estructura del Capítulo Nacional de Juventud del World Food Forum en Perú.",
+      "nav": "Nosotros",
+      "priority": "0.9"
+    },
+    "/educacionycultura": {
+      "title": "Educación y Cultura | WFF Perú Chapter",
+      "description": "Iniciativas de educación y cultura del Capítulo WFF Perú para acercar a las y los jóvenes a los sistemas agroalimentarios.",
+      "nav": "Educación y Cultura",
+      "priority": "0.8"
+    },
+    "/cienciaeinnovacion": {
+      "title": "Ciencia e Innovación | WFF Perú Chapter",
+      "description": "Proyectos y temas de ciencia e innovación que impulsa el Capítulo WFF Perú para transformar los sistemas agroalimentarios.",
+      "nav": "Ciencia e Innovación",
+      "priority": "0.8"
+    },
+    "/politicasygobernanza": {
+      "title": "Políticas y Gobernanza | WFF Perú Chapter",
+      "description": "Participación juvenil en políticas públicas y gobernanza de los sistemas agroalimentarios desde el Capítulo WFF Perú.",
+      "nav": "Políticas y Gobernanza",
+      "priority": "0.8"
+    },
+    "/comunicaciones": {
+      "title": "Gestión de las Comunicaciones | WFF Perú Chapter",
+      "description": "Estrategia de comunicación del Capítulo WFF Perú: cómo difundimos la voz y las acciones de la juventud agroalimentaria.",
+      "nav": "Gestión de las Comunicaciones",
+      "priority": "0.8"
+    },
+    "/relacionamiento": {
+      "title": "Relacionamiento y Gestión de Recursos | WFF Perú Chapter",
+      "description": "Alianzas, relacionamiento institucional y gestión de recursos del Capítulo Nacional de Juventud WFF Perú.",
+      "nav": "Relacionamiento y Gestión de Recursos",
+      "priority": "0.8"
+    },
+    "/empoderamiento-femenino": {
+      "title": "Empoderamiento Femenino | WFF Perú Chapter",
+      "description": "Acciones del Capítulo WFF Perú para impulsar el liderazgo y el empoderamiento de las mujeres en los sistemas agroalimentarios.",
+      "nav": "Empoderamiento Femenino",
+      "priority": "0.6"
+    },
+    "/voces": {
+      "title": "Voces del Capítulo | WFF Perú Chapter",
+      "description": "Artículos y testimonios escritos por jóvenes del Capítulo WFF Perú sobre agricultura, alimentación, innovación y sostenibilidad.",
+      "nav": "Voces",
+      "priority": "0.9"
+    },
+    "/hitos": {
+      "title": "Hitos | WFF Perú Chapter",
+      "description": "Los principales hitos y logros del Capítulo Nacional de Juventud del World Food Forum en Perú.",
+      "nav": "Hitos",
+      "priority": "0.8"
+    },
+    "/voluntarios-destacados": {
+      "title": "Voluntarios Destacados | WFF Perú Chapter",
+      "description": "Historias de las y los voluntarios que hacen posible el Capítulo WFF Perú.",
+      "nav": "Voluntarios Destacados",
+      "priority": "0.8"
+    }
+  },
+  "noindex": ["/loginadmin", "/admin", "/voces/enviar", "/clases", "/muro/mi-reflexion"]
+}

@@ -3,6 +3,7 @@ import { Layout } from "./Layout";
 import { NavBarFixed } from "./Header/NavBarFixed";
 import { ScrollToTop } from "./ScrollToTop";
 import styles from "./PublicShell.module.css";
+import { RouteMeta } from "../seo/pageMeta";
 
 export function PublicShell() {
   const [showFixedNavigation, setShowFixedNavigation] = useState(false);
@@ -23,6 +24,7 @@ export function PublicShell() {
   return (
     <>
       <ScrollToTop />
+      <RouteMeta />
       <div
         className={`${styles.fixedNavigation} ${showFixedNavigation ? styles.visible : ""}`}
       >

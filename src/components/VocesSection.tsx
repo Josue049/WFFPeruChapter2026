@@ -6,9 +6,11 @@ import { slugify } from "../utils/slugify";
 import { mediaUrl } from "../utils/mediaUrl";
 import { useLanguage } from "../i18n/LanguageContext";
 import { getContrastTextColor } from "../utils/color";
+import { EXTRA } from "../i18n/extra";
 
 interface Props {
   posts: Article[];
+  views?: Map<number, number>;
 }
 
 const getDriveImage = (url: string) => {
@@ -30,8 +32,9 @@ const shortenDescription = (description: string): string => {
     : description.trim();
 };
 
-export const VocesSection: FC<Props> = ({ posts }) => {
-  const { t, locale } = useLanguage();
+export const VocesSection: FC<Props> = ({ posts, views }) => {
+  const { t, locale, language } = useLanguage();
+  const extra = EXTRA[language];
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [selectedTag, setSelectedTag] = useState<string>("all");
@@ -136,6 +139,16 @@ export const VocesSection: FC<Props> = ({ posts }) => {
                     </span>
                   )}
                   <p className="blog-date">{formatDate(post.date)}</p>
+                  {views?.has(post.id) && (
+                    <p className="blog-views" title={`${views.get(post.id)} ${extra.readMany}`}>
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                      {(views.get(post.id) ?? 0).toLocaleString(locale)}{" "}
+                      {views.get(post.id) === 1 ? extra.readOne : extra.readMany}
+                    </p>
+                  )}
                   <h3>{post.title}</h3>
                   <p style={{ fontStyle: "italic" }}>{shortenDescription(post.subtitle ?? "")}</p>
                   <p style={{ fontSize: "13px", opacity: 0.6 }}>{t("voices.writtenBy")}</p>
