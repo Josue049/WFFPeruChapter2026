@@ -24,10 +24,6 @@ import type { VoicesSettings as FullVoicesSettings } from "../components/VocesCo
 import "../styles/pages/voces-extras.css";
 import type { Language } from "../i18n/translations";
 
-interface VoicesSettings {
-  is_submission_open: boolean;
-}
-
 interface SubmissionForm {
   author_name: string;
   author_lastname: string;
