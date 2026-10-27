@@ -135,10 +135,32 @@
   gap: 8px;
 }
 
+/* Tiempo de lectura: bajo la línea de separación, sobre el contenido */
 .article-readtime {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 42px 0;
   color: #7a6f66;
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   font-weight: 600;
+}
+
+/* Icono de libro: solo el borde, del mismo gris que el texto */
+.article-readtime svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 768px) {
+  .article-readtime {
+    margin: 12px 22px 0;
+  }
 }
 
 /* Recomendados: etiqueta del tipo de artículo y foto del autor */
@@ -164,6 +186,45 @@
   flex: 0 0 22px;
   border-radius: 3px;
   object-fit: cover;
+}
+
+/* Al pasar el mouse: el título se mantiene negro y el autor se vuelve naranja y toda la card crece un poco */
+.article-sidebar .recommended-card {
+  transform-origin: left center;
+  transition: transform 0.25s ease;
+}
+
+.article-sidebar .recommended-card:hover,
+.article-sidebar .recommended-card:focus-visible {
+  transform: scale(1.05);
+}
+
+.article-sidebar .recommended-card:hover h3,
+.article-sidebar .recommended-card:focus-visible h3 {
+  color: #2a2a2a;
+}
+
+.article-sidebar .recommended-card .recommended-author {
+  transition: color 0.2s ease;
+}
+
+.article-sidebar .recommended-card:hover .recommended-author,
+.article-sidebar .recommended-card:focus-visible .recommended-author {
+  color: #e75733;
+}
+
+/* Etiqueta y foto en blanco y negro hasta pasar el mouse por la card */
+.recommended-card .recommended-tag,
+.recommended-card .recommended-author-photo {
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+
+.recommended-card:hover .recommended-tag,
+.recommended-card:hover .recommended-author-photo,
+.recommended-card:focus-visible .recommended-tag,
+.recommended-card:focus-visible .recommended-author-photo {
+  filter: grayscale(0%);
 }
 
 /* Compartir: iconos, debajo de las recomendaciones */
@@ -246,7 +307,7 @@
 }
 
 .voces-grid .blog-card {
-  padding: 22px 24px;
+  padding: 22px 36px;
 }
 
 .voces-grid .blog-card:hover {
@@ -271,8 +332,9 @@
 }
 
 .voces-grid .blog-card .author-photo {
-  width: 32px !important;
-  height: 32px;
+  width: 44px !important;
+  height: 44px;
+  flex-shrink: 0;
   object-fit: cover;
   border-radius: 4px;
 }
@@ -364,4 +426,32 @@
 
 .weight-meter-over p {
   color: #b42318;
+}
+
+/* Bloque del autor: siempre al fondo de la card y con la misma altura,
+   para que todas las fotos queden alineadas en cada fila */
+.voces-grid .blog-card {
+  justify-content: flex-start;
+}
+
+.voces-grid .blog-card .blog-written-by {
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.voces-grid .blog-card .perfil-grid {
+  align-items: flex-start;
+  height: 78px;
+}
+
+.voces-grid .perfilDatos-grid {
+  min-width: 0;
+}
+
+.voces-grid .perfilDatos-grid strong,
+.voces-grid .perfilDatos-grid p {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }

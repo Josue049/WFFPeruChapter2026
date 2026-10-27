@@ -151,7 +151,7 @@ export const VocesSection: FC<Props> = ({ posts, views }) => {
                   )}
                   <h3>{post.title}</h3>
                   <p style={{ fontStyle: "italic" }}>{shortenDescription(post.subtitle ?? "")}</p>
-                  <p style={{ fontSize: "13px", opacity: 0.6 }}>{t("voices.writtenBy")}</p>
+                  <p className="blog-written-by" style={{ fontSize: "13px", opacity: 0.6 }}>{t("voices.writtenBy")}</p>
 
                   <div className="perfil-grid">
                     {post.author_photo && (

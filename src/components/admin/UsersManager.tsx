@@ -9,6 +9,8 @@ import type {
   AdminUser,
 } from "../../types";
 
+import { FEATURES } from "../../config/features";
+
 import {
   apiRequest,
 } from "../../services/api";
@@ -35,6 +37,8 @@ interface UserForm {
   manage_milestones: boolean;
   manage_volunteers: boolean;
   manage_users: boolean;
+  manage_muro: boolean;
+  manage_classes: boolean;
 }
 
 
@@ -52,6 +56,8 @@ const emptyUser =
     manage_milestones: true,
     manage_volunteers: true,
     manage_users: false,
+    manage_muro: true,
+    manage_classes: false,
   });
 
 
@@ -187,6 +193,12 @@ export function UsersManager({
 
       manage_users:
         item.manage_users,
+
+      manage_muro:
+        Boolean(item.manage_muro),
+
+      manage_classes:
+        Boolean(item.manage_classes),
     });
 
     setMessage("");
@@ -227,6 +239,9 @@ export function UsersManager({
 
         manage_users:
           true,
+
+        manage_muro: true,
+        manage_classes: true,
       });
 
       return;
@@ -253,6 +268,9 @@ export function UsersManager({
 
         manage_users:
           false,
+
+        manage_muro: true,
+        manage_classes: false,
       });
 
       return;
@@ -293,6 +311,12 @@ export function UsersManager({
 
               manage_users:
                 form.manage_users,
+
+              manage_muro:
+                form.manage_muro,
+
+              manage_classes:
+                form.manage_classes,
 
               ...(form.password
                 ? {
@@ -1065,6 +1089,26 @@ export function UsersManager({
                 })
               }
             />
+
+            {FEATURES.muro && (
+              <Check
+                label="Moderar el Muro"
+                checked={form.manage_muro}
+                onChange={(manage_muro) =>
+                  setForm({ ...form, role: "custom", manage_muro })
+                }
+              />
+            )}
+
+            {FEATURES.clases && (
+              <Check
+                label="Gestionar Clases (campus)"
+                checked={form.manage_classes}
+                onChange={(manage_classes) =>
+                  setForm({ ...form, role: "custom", manage_classes })
+                }
+              />
+            )}
           </div>
 
 

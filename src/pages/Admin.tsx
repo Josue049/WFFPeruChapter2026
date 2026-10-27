@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { clearAuthToken, getAuthToken } from "../auth/session";
 import { ArticlesManager } from "../components/admin/ArticlesManager";
 import { AuditLogsManager } from "../components/admin/AuditLogsManager";
+import { ClassesManager } from "../components/admin/ClassesManager";
+import { MuroManager } from "../components/admin/MuroManager";
+import { FEATURES } from "../config/features";
 import { MilestonesManager } from "../components/admin/MilestonesManager";
 import { UsersManager } from "../components/admin/UsersManager";
 import { VolunteersManager } from "../components/admin/VolunteersManager";
@@ -12,8 +15,10 @@ import styles from "./AdminDashboard.module.css";
 
 const sectionInfo: Record<AdminSection, { label: string; title: string; description: string }> = {
   articles: { label: "Voces", title: "Artículos y voces", description: "Publica y actualiza las columnas del capítulo." },
+  muro: { label: "Muro", title: "Muro de reflexiones", description: "Modera las reflexiones enviadas: aprueba, observa, rechaza o retira publicaciones." },
   milestones: { label: "Hitos", title: "Hitos del capítulo", description: "Gestiona la memoria visual y su línea mensual." },
   volunteers: { label: "Voluntarios", title: "Voluntarios destacados", description: "Cuenta historias, logros e impacto de la comunidad." },
+  classes: { label: "Clases", title: "Campus virtual", description: "Cursos, contenidos, evaluaciones, estudiantes y seguimiento." },
   users: { label: "Accesos", title: "Usuarios y permisos", description: "Crea cuentas individuales y limita sus funciones." },
   audit: { label: "Actividad", title: "Registro de actividad", description: "Revisa quién cambió qué y cuándo dentro del centro de contenidos." },
 };
@@ -35,8 +40,10 @@ export default function Admin() {
 
   const sections = useMemo(() => user ? [
     user.manage_articles && "articles",
+    FEATURES.muro && user.manage_muro && "muro",
     user.manage_milestones && "milestones",
     user.manage_volunteers && "volunteers",
+    FEATURES.clases && user.manage_classes && "classes",
     user.manage_users && "users",
     user.manage_users && "audit",
   ].filter(Boolean) as AdminSection[] : [], [user]);
@@ -70,6 +77,8 @@ export default function Admin() {
         {!sections.length ? <div className={styles.noPermissions}>Tu cuenta no tiene módulos asignados. Contacta a un gestor de accesos.</div> : (
           <>
             {activeSection === "articles" && <ArticlesManager token={token} currentUsername={user.username} />}
+            {activeSection === "muro" && <MuroManager token={token} currentUsername={user.username} />}
+            {activeSection === "classes" && <ClassesManager token={token} />}
             {activeSection === "milestones" && <MilestonesManager token={token} />}
             {activeSection === "volunteers" && <VolunteersManager token={token} />}
             {activeSection === "users" && <UsersManager token={token} currentUserId={user.id} />}

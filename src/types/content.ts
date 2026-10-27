@@ -62,9 +62,11 @@ export interface AdminUser {
   manage_milestones: boolean;
   manage_volunteers: boolean;
   manage_users: boolean;
+  manage_muro?: boolean;
+  manage_classes?: boolean;
   created_at: string;
   updated_at: string;
   last_login_at: string | null;
 }
 
-export type AdminSection = "articles" | "milestones" | "volunteers" | "users" | "audit";
+export type AdminSection = "articles" | "muro" | "milestones" | "volunteers" | "classes" | "users" | "audit";

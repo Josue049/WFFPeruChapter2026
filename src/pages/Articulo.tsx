@@ -300,9 +300,6 @@ export default function Articulo() {
                     ) : (
                       <span className="article-meta-label">{t("article.meta")}</span>
                     )}
-                    <span className="article-readtime">
-                      {extra.minRead.replace("{n}", String(readingMinutes))}
-                    </span>
                   </div>
                   <div className="article-meta-right">
                     <time className="FechaArticulo" dateTime={post.date}>
@@ -341,6 +338,14 @@ export default function Articulo() {
                 </div>
 
                 <div className="lineaWidth" />
+
+                <p className="article-readtime">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                  </svg>
+                  {extra.minRead.replace("{n}", String(readingMinutes))}
+                </p>
 
                 <div
                   className="ArticuloParrafos"
