@@ -19,6 +19,8 @@ import NotFound from "./NotFound";
 import styles from "./VocesSubmission.module.css";
 import { useLanguage } from "../i18n/LanguageContext";
 import { EXTRA } from "../i18n/extra";
+import { VocesCountdown } from "../components/VocesCountdown";
+import type { VoicesSettings as FullVoicesSettings } from "../components/VocesCountdown";
 import "../styles/pages/voces-extras.css";
 import type { Language } from "../i18n/translations";
 
@@ -547,6 +549,7 @@ export default function EnviarArticulo() {
     useState(false);
   const [loadingAvailability, setLoadingAvailability] = useState(true);
   const [submissionsOpen, setSubmissionsOpen] = useState(false);
+  const [voicesSettings, setVoicesSettings] = useState<FullVoicesSettings | null>(null);
 
   const articleImagesRef =
     useRef<PendingEditorImage[]>([]);
@@ -599,10 +602,11 @@ export default function EnviarArticulo() {
   useEffect(() => {
     let active = true;
 
-    apiRequest<VoicesSettings>("/voices/settings")
+    apiRequest<FullVoicesSettings>("/voices/settings")
       .then((data) => {
         if (!active) return;
         setSubmissionsOpen(Boolean(data.is_submission_open));
+        setVoicesSettings(data);
       })
       .catch(() => {
         if (!active) return;
@@ -966,6 +970,8 @@ export default function EnviarArticulo() {
               {t("submission.intro")}
             </p>
           </header>
+
+          <VocesCountdown settings={voicesSettings} />
 
           {message ? (
             <section className={styles.success}>

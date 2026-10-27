@@ -1,10 +1,7 @@
 import type { Article } from "../types/article";
 
-export type RecommendationReason = "topic" | "author" | "popular" | "related";
-
 export interface Recommendation {
   article: Article;
-  reason: RecommendationReason;
   score: number;
 }
 
@@ -130,12 +127,7 @@ export function recommendArticles(
     };
     const score = parts.related + parts.topic + parts.author + parts.popular + parts.fresh;
 
-    let reason: RecommendationReason = "related";
-    if (sameTag && parts.topic >= parts.related * 0.5) reason = "topic";
-    else if (parts.related < 0.5 && parts.popular > 0.5) reason = "popular";
-    else if (sameAuthor && parts.related < 1) reason = "author";
-
-    return { article, reason, score };
+    return { article, score };
   });
 
   // Selección voraz: penaliza repetir el mismo autor para dar variedad.

@@ -195,13 +195,6 @@ export default function Articulo() {
     [post, posts, allViews],
   );
 
-  const reasonLabel = {
-    topic: extra.reasonTopic,
-    author: extra.reasonAuthor,
-    popular: extra.reasonPopular,
-    related: extra.reasonRelated,
-  } as const;
-
   const readingMinutes = useMemo(() => {
     const words = safeBody
       .replace(/<[^>]+>/g, " ")
@@ -296,25 +289,27 @@ export default function Articulo() {
             <article className="ArticuloCompleto">
               <div className="bgDesktopWhite">
                 <div className="article-meta-row">
-                  {post.tag_name ? (
-                    <span
-                      className="article-meta-tag"
-                      style={{ backgroundColor: tagBg, color: tagText }}
-                    >
-                      {post.tag_name}
+                  <div className="article-meta-left">
+                    {post.tag_name ? (
+                      <span
+                        className="article-meta-tag"
+                        style={{ backgroundColor: tagBg, color: tagText }}
+                      >
+                        {post.tag_name}
+                      </span>
+                    ) : (
+                      <span className="article-meta-label">{t("article.meta")}</span>
+                    )}
+                    <span className="article-readtime">
+                      {extra.minRead.replace("{n}", String(readingMinutes))}
                     </span>
-                  ) : (
-                    <span className="article-meta-label">{t("article.meta")}</span>
-                  )}
+                  </div>
                   <div className="article-meta-right">
                     <time className="FechaArticulo" dateTime={post.date}>
                       {t("article.published", {
                         date: formatDate(post.date, locale),
                       })}
                     </time>
-                    <span className="article-readtime">
-                      {extra.minRead.replace("{n}", String(readingMinutes))}
-                    </span>
                     {(viewLoading || viewState?.articleId === post.id) && (
                       <span
                         className={`article-views ${
@@ -361,8 +356,6 @@ export default function Articulo() {
                   aria-hidden="true"
                   style={{ width: "100%", height: "1px" }}
                 />
-
-                <ArticleShare url={articleUrl} title={post.title} />
               </div>
             </article>
 
@@ -378,20 +371,40 @@ export default function Articulo() {
 
                 {recommendations.length > 0 ? (
                   <div className="recommended-list">
-                    {recommendations.map(({ article, reason }) => (
+                    {recommendations.map(({ article }) => (
                       <Link
                         key={article.id}
                         to={`/voces/${slugify(article.title)}`}
                         className="recommended-card"
                       >
-                        <span className="recommended-reason">{reasonLabel[reason]}</span>
+                        {article.tag_name && (
+                          <span
+                            className="recommended-tag"
+                            style={{
+                              backgroundColor: article.tag_color ?? "#E75733",
+                              color: getContrastTextColor(article.tag_color ?? "#E75733"),
+                            }}
+                          >
+                            {article.tag_name}
+                          </span>
+                        )}
                         <time dateTime={article.date}>
                           {formatDate(article.date, locale)}
                         </time>
                         <h3>{article.title}</h3>
                         {article.subtitle && <p>{article.subtitle}</p>}
                         <span className="recommended-author">
-                          {article.author_name} {article.author_lastname}
+                          {article.author_photo && (
+                            <img
+                              src={mediaUrl(article.author_photo)}
+                              alt=""
+                              className="recommended-author-photo"
+                              loading="lazy"
+                            />
+                          )}
+                          <span>
+                            {article.author_name} {article.author_lastname}
+                          </span>
                         </span>
                       </Link>
                     ))}
@@ -405,6 +418,8 @@ export default function Articulo() {
                 <Link to="/voces" className="article-back-link">
                   {t("article.viewAll")}
                 </Link>
+
+                <ArticleShare url={articleUrl} title={post.title} />
               </div>
             </aside>
           </div>

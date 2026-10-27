@@ -12,10 +12,6 @@ export interface ExtraStrings {
   copyLink: string;
   copied: string;
   nativeShare: string;
-  reasonTopic: string;
-  reasonAuthor: string;
-  reasonPopular: string;
-  reasonRelated: string;
   opensIn: string;
   closesIn: string;
   openNow: string;
@@ -44,10 +40,6 @@ export const EXTRA: Record<Language, ExtraStrings> = {
     copyLink: "Copiar enlace",
     copied: "¡Enlace copiado!",
     nativeShare: "Compartir…",
-    reasonTopic: "Mismo tema",
-    reasonAuthor: "Mismo autor",
-    reasonPopular: "Muy leído",
-    reasonRelated: "Relacionado",
     opensIn: "La convocatoria abre en",
     closesIn: "La convocatoria cierra en",
     openNow: "Convocatoria abierta",
@@ -77,10 +69,6 @@ export const EXTRA: Record<Language, ExtraStrings> = {
     copyLink: "Copy link",
     copied: "Link copied!",
     nativeShare: "Share…",
-    reasonTopic: "Same topic",
-    reasonAuthor: "Same author",
-    reasonPopular: "Most read",
-    reasonRelated: "Related",
     opensIn: "The call opens in",
     closesIn: "The call closes in",
     openNow: "Call open",
@@ -110,10 +98,6 @@ export const EXTRA: Record<Language, ExtraStrings> = {
     copyLink: "Copia il link",
     copied: "Link copiato!",
     nativeShare: "Condividi…",
-    reasonTopic: "Stesso tema",
-    reasonAuthor: "Stesso autore",
-    reasonPopular: "Più letto",
-    reasonRelated: "Correlato",
     opensIn: "La candidatura apre tra",
     closesIn: "La candidatura chiude tra",
     openNow: "Candidature aperte",
@@ -143,10 +127,6 @@ export const EXTRA: Record<Language, ExtraStrings> = {
     copyLink: "Copiar link",
     copied: "Link copiado!",
     nativeShare: "Compartilhar…",
-    reasonTopic: "Mesmo tema",
-    reasonAuthor: "Mesmo autor",
-    reasonPopular: "Mais lido",
-    reasonRelated: "Relacionado",
     opensIn: "A chamada abre em",
     closesIn: "A chamada fecha em",
     openNow: "Chamada aberta",
