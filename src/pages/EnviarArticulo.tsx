@@ -15,6 +15,7 @@ import {
   optimizeArticleSubmissionImageFile,
   optimizeAuthorSubmissionPhotoFile,
 } from "../utils/imageOptimizer";
+import NotFound from "./NotFound";
 import styles from "./VocesSubmission.module.css";
 import { useLanguage } from "../i18n/LanguageContext";
 import type { Language } from "../i18n/translations";
@@ -734,6 +735,8 @@ export default function EnviarArticulo() {
     }
   };
 
+  if (!loadingAvailability && !submissionsOpen) return <NotFound />;
+
   return (
     <>
       <TopBar />
@@ -742,13 +745,6 @@ export default function EnviarArticulo() {
       <main className={styles.page}>
         {loadingAvailability ? (
           <div className={styles.shell}><section className={styles.card}><p>Cargando formulario…</p></section></div>
-        ) : !submissionsOpen ? (
-          <div className={styles.shell}>
-            <Link className={styles.back} to="/voces">← {t("submission.back")}</Link>
-            <section className={styles.card}>
-              <div className={styles.sectionHeading}><span>•</span><div><h2>Convocatoria cerrada</h2><p>El formulario de postulaciones no está disponible en este momento.</p></div></div>
-            </section>
-          </div>
         ) : (
         <div className={styles.shell}>
           <Link
