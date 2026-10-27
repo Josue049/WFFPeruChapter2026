@@ -193,7 +193,9 @@
   color: #303030;
   font-size: 16px;
   line-height: 1.82;
-  text-align: left;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
   overflow-wrap: anywhere;
 }
 
@@ -234,6 +236,8 @@
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1.25;
+  text-align: left;
+  hyphens: manual;
 }
 
 .article-page .ArticuloParrafos h1,

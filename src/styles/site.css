@@ -728,6 +728,38 @@ p.m-0.text-uppercase {
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
+/* Botón "Únete": mismo estilo que el botón de idiomas */
+.nav-join-slot .btn-unirse {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ff7a72 0%, #ffb400 100%);
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 5px 16px rgba(236, 120, 54, 0.16);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.nav-join-slot .btn-unirse:hover,
+.nav-join-slot .btn-unirse:focus-visible {
+  color: #fff;
+  outline: none;
+  transform: translateY(-1px);
+  box-shadow: 0 7px 20px rgba(236, 120, 54, 0.22);
+  filter: brightness(1.02);
+}
+
+.nav-join-slot .btn-unirse:active {
+  transform: scale(0.98);
+}
+
 .language-switcher-button strong {
   color: #fff;
   font-size: 15px;
@@ -844,9 +876,9 @@ p.m-0.text-uppercase {
     font-size: 13px;
   }
 
-  .btn-unirse {
-    padding-left: 14px;
-    padding-right: 14px;
+  .nav-join-slot .btn-unirse {
+    height: 44px;
+    padding: 0 15px;
     font-size: 13px;
   }
 
@@ -873,6 +905,11 @@ p.m-0.text-uppercase {
   .nav-join-slot {
     width: 100%;
     padding: 7px 15px;
+  }
+
+  .nav-join-slot .btn-unirse {
+    height: 44px;
+    padding: 0 15px;
   }
 
   .language-switcher {

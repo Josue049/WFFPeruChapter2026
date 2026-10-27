@@ -173,6 +173,8 @@ const SUBMISSION_ERRORS: Record<
     summaryLength: string;
     articleLength: string;
     tooHeavy: string;
+    networkHeavy: string;
+    missingPrefix: string;
   }
 > = {
   es: {
@@ -190,7 +192,10 @@ const SUBMISSION_ERRORS: Record<
     summaryLength: "El resumen debe tener entre 40 y 300 caracteres.",
     articleLength: "El contenido debe tener entre 300 y 2,500 palabras.",
     tooHeavy:
-      "Tu postulación es demasiado pesada para enviarse. Elimina algunas imágenes o reduce su tamaño y vuelve a intentarlo.",
+      "Tu postulación pesa {size} MB y el límite es {max} MB, por eso no se pudo enviar. Cómo solucionarlo: usa menos imágenes dentro del artículo, reduce el tamaño de las imágenes antes de subirlas (por ejemplo con squoosh.app o TinyPNG), prefiere JPG o WebP en lugar de PNG, y evita fotos originales de cámara o de celular en alta resolución.",
+    networkHeavy:
+      "No se recibió respuesta del servidor. Si tu postulación pesa mucho ({size} MB; el límite es {max} MB), este suele ser el motivo. Prueba con menos imágenes o más livianas (JPG o WebP, reducidas con squoosh.app o TinyPNG). Si el problema continúa, revisa tu conexión e inténtalo de nuevo.",
+    missingPrefix: "Falta completar o marcar:",
   },
 
   en: {
@@ -208,7 +213,10 @@ const SUBMISSION_ERRORS: Record<
     summaryLength: "The summary must be between 40 and 300 characters.",
     articleLength: "The content must be between 300 and 2,500 words.",
     tooHeavy:
-      "Your submission is too large to send. Remove some images or reduce their size and try again.",
+      "Your submission weighs {size} MB and the limit is {max} MB, so it could not be sent. How to fix it: use fewer images in the article, reduce image sizes before uploading them (for example with squoosh.app or TinyPNG), prefer JPG or WebP over PNG, and avoid full-resolution camera or phone photos.",
+    networkHeavy:
+      "No response was received from the server. If your submission is very large ({size} MB; the limit is {max} MB), that is usually the reason. Try fewer or lighter images (JPG or WebP, reduced with squoosh.app or TinyPNG). If the problem continues, check your connection and try again.",
+    missingPrefix: "Missing or incomplete:",
   },
 
   it: {
@@ -226,7 +234,10 @@ const SUBMISSION_ERRORS: Record<
     summaryLength: "Il riepilogo deve contenere tra 40 e 300 caratteri.",
     articleLength: "Il contenuto deve contenere tra 300 e 2.500 parole.",
     tooHeavy:
-      "La candidatura è troppo pesante per essere inviata. Rimuovi alcune immagini o riducine le dimensioni e riprova.",
+      "La candidatura pesa {size} MB e il limite è {max} MB, quindi non è stato possibile inviarla. Come risolvere: usa meno immagini nell'articolo, riduci le dimensioni delle immagini prima di caricarle (ad esempio con squoosh.app o TinyPNG), preferisci JPG o WebP al PNG ed evita le foto originali ad alta risoluzione di fotocamera o cellulare.",
+    networkHeavy:
+      "Nessuna risposta dal server. Se la candidatura è molto pesante ({size} MB; il limite è {max} MB), di solito è questo il motivo. Prova con meno immagini o più leggere (JPG o WebP, ridotte con squoosh.app o TinyPNG). Se il problema persiste, controlla la connessione e riprova.",
+    missingPrefix: "Da completare o selezionare:",
   },
 
   pt: {
@@ -244,7 +255,10 @@ const SUBMISSION_ERRORS: Record<
     summaryLength: "O resumo deve ter entre 40 e 300 caracteres.",
     articleLength: "O conteúdo deve ter entre 300 e 2.500 palavras.",
     tooHeavy:
-      "Sua submissão está muito pesada para ser enviada. Remova algumas imagens ou reduza o tamanho delas e tente novamente.",
+      "Sua submissão pesa {size} MB e o limite é {max} MB, por isso não foi possível enviá-la. Como resolver: use menos imagens no artigo, reduza o tamanho das imagens antes de enviá-las (por exemplo com squoosh.app ou TinyPNG), prefira JPG ou WebP em vez de PNG e evite fotos originais de câmera ou celular em alta resolução.",
+    networkHeavy:
+      "Nenhuma resposta do servidor. Se a submissão for muito pesada ({size} MB; o limite é {max} MB), esse costuma ser o motivo. Tente com menos imagens ou mais leves (JPG ou WebP, reduzidas com squoosh.app ou TinyPNG). Se o problema continuar, verifique sua conexão e tente novamente.",
+    missingPrefix: "Falta preencher ou marcar:",
   },
 };
 
@@ -260,6 +274,72 @@ const ARTICLE_MAX_WORDS = 2500;
 // Nginx acepta 20 MB. Dejamos 2 MB de margen para el overhead de multipart/form-data.
 const MAX_SUBMISSION_UPLOAD_BYTES = 18 * 1024 * 1024;
 const MULTIPART_SAFETY_OVERHEAD_BYTES = 256 * 1024;
+
+type MissingKey =
+  | "author_name"
+  | "author_lastname"
+  | "author_cargo"
+  | "author_email"
+  | "member"
+  | "photo"
+  | "title"
+  | "subtitle"
+  | "body"
+  | "rules";
+
+const MISSING_LABELS: Record<Language, Record<MissingKey, string>> = {
+  es: {
+    author_name: "Nombres",
+    author_lastname: "Apellidos",
+    author_cargo: "Cargo",
+    author_email: "Correo electrónico válido",
+    member: "Indicar si eres miembro del capítulo",
+    photo: "Fotografía del autor",
+    title: "Título (10 a 100 caracteres)",
+    subtitle: "Resumen (40 a 300 caracteres)",
+    body: "Contenido (300 a 2,500 palabras)",
+    rules: "Aceptar las reglas de publicación",
+  },
+  en: {
+    author_name: "First names",
+    author_lastname: "Last names",
+    author_cargo: "Position",
+    author_email: "Valid email",
+    member: "Say whether you are a chapter member",
+    photo: "Author photo",
+    title: "Title (10 to 100 characters)",
+    subtitle: "Summary (40 to 300 characters)",
+    body: "Content (300 to 2,500 words)",
+    rules: "Accept the publishing rules",
+  },
+  it: {
+    author_name: "Nomi",
+    author_lastname: "Cognomi",
+    author_cargo: "Ruolo",
+    author_email: "Email valida",
+    member: "Indicare se sei membro del capitolo",
+    photo: "Foto dell'autore",
+    title: "Titolo (da 10 a 100 caratteri)",
+    subtitle: "Riepilogo (da 40 a 300 caratteri)",
+    body: "Contenuto (da 300 a 2.500 parole)",
+    rules: "Accettare le regole di pubblicazione",
+  },
+  pt: {
+    author_name: "Nomes",
+    author_lastname: "Sobrenomes",
+    author_cargo: "Cargo",
+    author_email: "E-mail válido",
+    member: "Indicar se você é membro do capítulo",
+    photo: "Foto do autor",
+    title: "Título (10 a 100 caracteres)",
+    subtitle: "Resumo (40 a 300 caracteres)",
+    body: "Conteúdo (300 a 2.500 palavras)",
+    rules: "Aceitar as regras de publicação",
+  },
+};
+
+const formatMegabytes = (bytes: number) =>
+  (bytes / (1024 * 1024)).toFixed(1);
 
 const COUNT_LABELS: Record<
   Language,
@@ -377,6 +457,8 @@ export default function EnviarArticulo() {
   const [sending, setSending] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [showInvalid, setShowInvalid] = useState(false);
+  const [errorTick, setErrorTick] = useState(0);
   const [acceptedRules, setAcceptedRules] =
     useState(false);
   const [loadingAvailability, setLoadingAvailability] = useState(true);
@@ -423,7 +505,7 @@ export default function EnviarArticulo() {
     });
 
     return () => window.cancelAnimationFrame(frame);
-  }, [error]);
+  }, [error, errorTick]);
 
   useEffect(() => {
     let active = true;
@@ -501,6 +583,20 @@ export default function EnviarArticulo() {
       acceptedRules,
     ],
   );
+
+  const missingKeys = new Set<MissingKey>();
+  if (form.author_name.trim().length === 0) missingKeys.add("author_name");
+  if (form.author_lastname.trim().length === 0) missingKeys.add("author_lastname");
+  if (form.author_cargo.trim().length === 0) missingKeys.add("author_cargo");
+  if (!/^\S+@\S+\.\S+$/.test(form.author_email.trim())) missingKeys.add("author_email");
+  if (form.is_chapter_member === null) missingKeys.add("member");
+  if (authorPhotoFile === null) missingKeys.add("photo");
+  if (titleLength < TITLE_MIN_CHARS || titleLength > TITLE_MAX_CHARS) missingKeys.add("title");
+  if (summaryLength < SUMMARY_MIN_CHARS || summaryLength > SUMMARY_MAX_CHARS) missingKeys.add("subtitle");
+  if (articleWordCount < ARTICLE_MIN_WORDS || articleWordCount > ARTICLE_MAX_WORDS) missingKeys.add("body");
+  if (!acceptedRules) missingKeys.add("rules");
+
+  const isInvalid = (key: MissingKey) => showInvalid && missingKeys.has(key);
 
   const selectAuthorPhoto = async (file: File) => {
     setError("");
@@ -580,37 +676,16 @@ export default function EnviarArticulo() {
   const submit = async (event: FormEvent) => {
     event.preventDefault();
 
-    if (!acceptedRules) {
-      setError(submissionErrors.acceptRules);
-      return;
-    }
-
-    if (
-      titleLength < TITLE_MIN_CHARS ||
-      titleLength > TITLE_MAX_CHARS
-    ) {
-      setError(submissionErrors.titleLength);
-      return;
-    }
-
-    if (
-      summaryLength < SUMMARY_MIN_CHARS ||
-      summaryLength > SUMMARY_MAX_CHARS
-    ) {
-      setError(submissionErrors.summaryLength);
-      return;
-    }
-
-    if (
-      articleWordCount < ARTICLE_MIN_WORDS ||
-      articleWordCount > ARTICLE_MAX_WORDS
-    ) {
-      setError(submissionErrors.articleLength);
-      return;
-    }
-
-    if (!canSend || !authorPhotoFile) {
-      setError(submissionErrors.completeFields);
+    if (missingKeys.size > 0 || !canSend || !authorPhotoFile) {
+      const labels = MISSING_LABELS[language];
+      setShowInvalid(true);
+      setMessage("");
+      setError(
+        `${submissionErrors.missingPrefix} ${Array.from(missingKeys)
+          .map((key) => labels[key])
+          .join(" · ")}`,
+      );
+      setErrorTick((tick) => tick + 1);
       return;
     }
 
@@ -667,10 +742,7 @@ export default function EnviarArticulo() {
         MULTIPART_SAFETY_OVERHEAD_BYTES;
 
       if (estimatedPayloadBytes > MAX_SUBMISSION_UPLOAD_BYTES) {
-        throw new ApiError(
-          submissionErrors.tooHeavy,
-          413,
-        );
+        throw new ApiError("too-heavy", 413);
       }
 
       const payload = new FormData();
@@ -716,12 +788,28 @@ export default function EnviarArticulo() {
       setForm(emptyForm);
       setAcceptedRules(false);
     } catch (submitError) {
+      const overLimit = estimatedPayloadBytes > MAX_SUBMISSION_UPLOAD_BYTES;
       const isTooHeavy =
         (submitError instanceof ApiError && submitError.status === 413) ||
-        estimatedPayloadBytes > MAX_SUBMISSION_UPLOAD_BYTES;
+        overLimit;
+      // Cuando el servidor corta el envío por peso responde sin cabeceras CORS,
+      // y el navegador lo reporta como un TypeError sin código HTTP.
+      const isNetworkFailure = submitError instanceof TypeError;
+      const sizeText = formatMegabytes(estimatedPayloadBytes);
+      const maxText = formatMegabytes(MAX_SUBMISSION_UPLOAD_BYTES);
 
       if (isTooHeavy) {
-        setError(submissionErrors.tooHeavy);
+        setError(
+          submissionErrors.tooHeavy
+            .replace("{size}", sizeText)
+            .replace("{max}", maxText),
+        );
+      } else if (isNetworkFailure) {
+        setError(
+          submissionErrors.networkHeavy
+            .replace("{size}", sizeText)
+            .replace("{max}", maxText),
+        );
       } else {
         setError(
           submitError instanceof Error
@@ -729,6 +817,7 @@ export default function EnviarArticulo() {
             : "No se pudo enviar el artículo.",
         );
       }
+      setErrorTick((tick) => tick + 1);
     } finally {
       // Siempre reactivamos el formulario aunque falle el upload.
       setSending(false);
@@ -784,6 +873,7 @@ export default function EnviarArticulo() {
             <form
               className={styles.form}
               onSubmit={submit}
+              noValidate
             >
               {error && (
                 <div
@@ -864,6 +954,7 @@ export default function EnviarArticulo() {
                       "submission.names",
                     )}
                     value={form.author_name}
+                    invalid={isInvalid("author_name")}
                     onChange={(author_name) =>
                       setForm({
                         ...form,
@@ -879,6 +970,7 @@ export default function EnviarArticulo() {
                     value={
                       form.author_lastname
                     }
+                    invalid={isInvalid("author_lastname")}
                     onChange={(
                       author_lastname,
                     ) =>
@@ -898,6 +990,7 @@ export default function EnviarArticulo() {
                       "submission.position",
                     )}
                     value={form.author_cargo}
+                    invalid={isInvalid("author_cargo")}
                     onChange={(author_cargo) =>
                       setForm({
                         ...form,
@@ -912,6 +1005,7 @@ export default function EnviarArticulo() {
                     )}
                     type="email"
                     value={form.author_email}
+                    invalid={isInvalid("author_email")}
                     onChange={(author_email) =>
                       setForm({
                         ...form,
@@ -922,7 +1016,7 @@ export default function EnviarArticulo() {
                 </div>
 
                 <div
-                  className={styles.memberField}
+                  className={`${styles.memberField} ${isInvalid("member") ? styles.invalid : ""}`}
                 >
                   <span
                     className={
@@ -990,7 +1084,7 @@ export default function EnviarArticulo() {
                 </div>
 
                 <div
-                  className={styles.photoField}
+                  className={`${styles.photoField} ${isInvalid("photo") ? styles.invalid : ""}`}
                 >
                   <label>
                     {t(
@@ -1094,6 +1188,7 @@ export default function EnviarArticulo() {
                     "submission.articleTitle",
                   )}
                   value={form.title}
+                    invalid={isInvalid("title")}
                   maxLength={TITLE_MAX_CHARS}
                   helper={`${titleLength} / ${TITLE_MAX_CHARS} ${countLabels.characters} · ${countLabels.minimum} ${TITLE_MIN_CHARS}`}
                   onChange={(title) =>
@@ -1109,6 +1204,7 @@ export default function EnviarArticulo() {
                     "submission.subtitle",
                   )}
                   value={form.subtitle}
+                    invalid={isInvalid("subtitle")}
                   maxLength={SUMMARY_MAX_CHARS}
                   helper={`${summaryLength} / ${SUMMARY_MAX_CHARS} ${countLabels.characters} · ${countLabels.minimum} ${SUMMARY_MIN_CHARS}`}
                   onChange={(subtitle) =>
@@ -1119,7 +1215,7 @@ export default function EnviarArticulo() {
                   }
                 />
 
-                <div className={styles.field}>
+                <div className={`${styles.field} ${isInvalid("body") ? styles.invalid : ""}`}>
                   <label>
                     {t(
                       "submission.content",
@@ -1175,9 +1271,7 @@ export default function EnviarArticulo() {
                 }
               >
                 <label
-                  className={
-                    styles.rulesAcceptance
-                  }
+                  className={`${styles.rulesAcceptance} ${isInvalid("rules") ? styles.invalid : ""}`}
                 >
                   <input
                     type="checkbox"
@@ -1206,8 +1300,11 @@ export default function EnviarArticulo() {
 
                 <button
                   type="submit"
-                  disabled={
-                    !canSend || sending
+                  disabled={sending}
+                  className={
+                    showInvalid && missingKeys.size > 0
+                      ? styles.submitInvalid
+                      : ""
                   }
                 >
                   {sending
@@ -1272,6 +1369,7 @@ function Field({
   type = "text",
   maxLength,
   helper,
+  invalid,
 }: {
   label: string;
   value: string;
@@ -1279,14 +1377,15 @@ function Field({
   type?: string;
   maxLength?: number;
   helper?: string;
+  invalid?: boolean;
 }) {
   return (
-    <div className={styles.field}>
+    <div className={`${styles.field} ${invalid ? styles.invalid : ""}`}>
       <label>{label}</label>
 
       <input
-        required
         type={type}
+        aria-invalid={invalid || undefined}
         value={value}
         maxLength={maxLength}
         onChange={(event) =>

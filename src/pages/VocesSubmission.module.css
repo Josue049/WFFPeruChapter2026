@@ -159,3 +159,10 @@
     animation-duration: 2.4s;
   }
 }
+
+.invalid input, .invalid textarea { border-color: #d92d20; background: #fff5f4; box-shadow: 0 0 0 3px rgba(217,45,32,.12); }
+.invalid > label, .invalid > .memberLabel { color: #b42318; }
+.memberField.invalid, .photoField.invalid, .rulesAcceptance.invalid { border: 1px solid #d92d20; border-radius: 14px; background: #fff5f4; padding: 12px; box-shadow: 0 0 0 3px rgba(217,45,32,.12); }
+.field.invalid > label::after, .photoField.invalid > label::after { content: " *"; color: #d92d20; }
+.submitRow button.submitInvalid { background: #d92d20; box-shadow: 0 0 0 3px rgba(217,45,32,.2); }
+.error { white-space: pre-line; }
