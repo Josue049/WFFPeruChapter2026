@@ -15,6 +15,12 @@ export default defineConfig([
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
     ],
+    rules: {
+      // Patrones válidos (reiniciar el estado de carga al cambiar de ruta,
+      // exportar el hook junto a su Provider): se muestran como aviso.
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-refresh/only-export-components': 'warn',
+    },
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,

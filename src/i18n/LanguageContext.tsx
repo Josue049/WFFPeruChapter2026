@@ -113,7 +113,7 @@ type LanguageContextValue = {
   automatic: boolean;
   detecting: boolean;
   setLanguage: (language: Language) => void;
-  useAutomaticLanguage: () => Promise<void>;
+  resetToAutomaticLanguage: () => Promise<void>;
   t: (key: TranslationKey, values?: Record<string, string | number>) => string;
 };
 
@@ -185,7 +185,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const useAutomaticLanguage = useCallback(async () => {
+  const resetToAutomaticLanguage = useCallback(async () => {
     try {
       window.localStorage.removeItem(LANGUAGE_STORAGE_KEY);
       window.sessionStorage.removeItem(COUNTRY_SESSION_KEY);
@@ -216,10 +216,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       automatic,
       detecting,
       setLanguage,
-      useAutomaticLanguage,
+      resetToAutomaticLanguage,
       t,
     }),
-    [language, country, automatic, detecting, setLanguage, useAutomaticLanguage, t],
+    [language, country, automatic, detecting, setLanguage, resetToAutomaticLanguage, t],
   );
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;

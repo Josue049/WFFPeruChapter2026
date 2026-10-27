@@ -117,7 +117,7 @@ const COPY: Record<Language, Copy> = {
   },
 };
 
-export const empoderamientoFemenino: FC = () => {
+export const EmpoderamientoFemenino: FC = () => {
   const { t, language } = useLanguage();
   const copy = COPY[language];
 
@@ -140,4 +140,4 @@ export const empoderamientoFemenino: FC = () => {
   );
 };
 
-export default empoderamientoFemenino;
+export default EmpoderamientoFemenino;

@@ -15,7 +15,7 @@ export function LanguageSwitcher() {
     automatic,
     detecting,
     setLanguage,
-    useAutomaticLanguage,
+    resetToAutomaticLanguage,
     t,
   } = useLanguage();
 
@@ -95,7 +95,7 @@ export function LanguageSwitcher() {
               automatic ? "active" : ""
             }`}
             onClick={() => {
-              void useAutomaticLanguage();
+              void resetToAutomaticLanguage();
               setOpen(false);
             }}
           >
