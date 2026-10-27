@@ -19,7 +19,7 @@ export default function AreasSection() {
       image: "img/FondoFAO4.webp",
       href: "/politicasygobernanza",
     },
-    { title: t("nav.areas"), image: "img/FondoFAO4.webp", href: "/comunicaciones" },
+    { title: t("nav.communications"), image: "img/FondoFAO4.webp", href: "/comunicaciones" },
     {
       title: t("nav.relations"),
       image: "img/FondoFAO4.webp",
