@@ -1,4 +1,19 @@
 {
+  "redirects": [
+    {
+      "source": "/:path(.*)",
+      "has": [{ "type": "host", "value": "^wffperuchapter[.]page$" }],
+      "destination": "https://www.wffperuchapter.page/:path",
+      "permanent": true
+    },
+    { "source": "/comunicaciones.html", "destination": "/comunicaciones", "permanent": true },
+    { "source": "/politicasygobernanza.html", "destination": "/politicasygobernanza", "permanent": true },
+    { "source": "/relacionamiento.html", "destination": "/relacionamiento", "permanent": true },
+    { "source": "/nosotros.html", "destination": "/nosotros", "permanent": true },
+    { "source": "/educacionycultura.html", "destination": "/educacionycultura", "permanent": true },
+    { "source": "/cienciaeinnovacion.html", "destination": "/cienciaeinnovacion", "permanent": true },
+    { "source": "/empoderamiento-femenino.html", "destination": "/empoderamiento-femenino", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/sitemap.xml", "destination": "/api/sitemap" },
     {

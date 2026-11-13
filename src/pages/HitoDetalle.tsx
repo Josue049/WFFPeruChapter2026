@@ -9,6 +9,7 @@ import { mediaUrl } from "../utils/mediaUrl";
 import { sanitizeHtml } from "../utils/sanitizeHtml";
 import styles from "./EditorialPages.module.css";
 import { useLanguage } from "../i18n/LanguageContext";
+import { usePageMeta } from "../seo/pageMeta";
 
 export default function HitoDetalle() {
   const { t, locale } = useLanguage();
@@ -49,6 +50,18 @@ export default function HitoDetalle() {
   const related = useMemo(
     () => allItems.filter((candidate) => candidate.id !== item?.id).slice(0, 3),
     [allItems, item?.id],
+  );
+
+  usePageMeta(
+    item && slug
+      ? {
+          title: `${item.title} | Hitos WFF Perú`,
+          description: (item.summary || item.title).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 200),
+          path: `/hitos/${slug}`,
+          type: "article",
+          image: mediaUrl(item.cover_image) || undefined,
+        }
+      : null,
   );
 
   const moveSlide = (direction: number) => {

@@ -20,11 +20,21 @@ export default async function handler(request, response) {
     entry(path, { priority: page.priority, changefreq: path === "/voces" ? "daily" : "weekly" }),
   );
 
-  const [articles, milestones, volunteers] = await Promise.all([
-    getJson("/articles/published").catch(() => []),
-    getJson("/milestones/published").catch(() => []),
-    getJson("/volunteer-stories/published").catch(() => []),
-  ]);
+  // Si la API falla no se publica un sitemap parcial (Google podría descartar
+  // URLs válidas): se responde 503 para que reintente más tarde.
+  let articles, milestones, volunteers;
+  try {
+    [articles, milestones, volunteers] = await Promise.all([
+      getJson("/articles/published"),
+      getJson("/milestones/published"),
+      getJson("/volunteer-stories/published"),
+    ]);
+  } catch {
+    response.setHeader("Cache-Control", "no-store");
+    response.setHeader("Retry-After", "3600");
+    response.status(503).send("Sitemap temporalmente no disponible.");
+    return;
+  }
 
   for (const article of articles) {
     urls.push(
@@ -54,7 +64,15 @@ export default async function handler(request, response) {
     );
   }
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`;
+  const seen = new Set();
+  const unique = urls.filter((item) => {
+    const loc = /<loc>(.*?)<\/loc>/.exec(item)[1];
+    if (seen.has(loc)) return false;
+    seen.add(loc);
+    return true;
+  });
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${unique.join("\n")}\n</urlset>\n`;
 
   response.setHeader("Content-Type", "application/xml; charset=utf-8");
   response.setHeader("Cache-Control", "public, s-maxage=3600, stale-while-revalidate=86400");

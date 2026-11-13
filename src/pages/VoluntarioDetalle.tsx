@@ -9,6 +9,7 @@ import { mediaUrl } from "../utils/mediaUrl";
 import { sanitizeHtml } from "../utils/sanitizeHtml";
 import styles from "./EditorialPages.module.css";
 import { useLanguage } from "../i18n/LanguageContext";
+import { usePageMeta } from "../seo/pageMeta";
 
 const edition = (value: number) => String(value).padStart(2, "0");
 
@@ -41,6 +42,18 @@ export default function VoluntarioDetalle() {
   const related = useMemo(
     () => allStories.filter((story) => story.id !== item?.id).slice(0, 3),
     [allStories, item?.id],
+  );
+
+  usePageMeta(
+    item && slug
+      ? {
+          title: `${item.name} | Voluntarios Destacados WFF Perú`,
+          description: (item.headline || item.name).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 200),
+          path: `/voluntarios-destacados/${slug}`,
+          type: "article",
+          image: mediaUrl(item.portrait_image) || undefined,
+        }
+      : null,
   );
 
   return (

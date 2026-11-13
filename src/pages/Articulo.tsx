@@ -82,9 +82,13 @@ export default function Articulo() {
         if (!active) return;
 
         setPosts(data);
-        setPost(
-          data.find((article) => slugify(article.title) === slug) ?? null,
-        );
+        const exact = data.find((article) => slugify(article.title) === slug);
+        // URL truncada: si el inicio identifica a un único artículo, se usa ese.
+        const byPrefix =
+          !exact && slug && slug.length >= 20
+            ? data.filter((article) => slugify(article.title).startsWith(slug))
+            : [];
+        setPost(exact ?? (byPrefix.length === 1 ? byPrefix[0] : null));
       })
       .catch(() => {
         if (!active) return;
@@ -238,8 +242,15 @@ export default function Articulo() {
       : null,
   );
 
+  const canonicalSlug = post ? slugify(post.title) : "";
+  const needsCanonicalRedirect = Boolean(post && slug && canonicalSlug !== slug);
+
   const tagBg = post?.tag_color ?? "#E75733";
   const tagText = getContrastTextColor(tagBg);
+
+  if (needsCanonicalRedirect) {
+    return <Navigate to={articlePath} replace />;
+  }
 
   if (!loading && !post) {
     return <Navigate to="/404" replace />;

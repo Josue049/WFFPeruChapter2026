@@ -25,6 +25,27 @@ const normalizePath = (value) => {
   return clean || "/";
 };
 
+// Rutas reales de la SPA que no tienen ficha en pages.json (secciones
+// opcionales o privadas). Siguen respondiendo 200; las privadas llevan noindex.
+const KNOWN_SPA_PREFIXES = ["/muro", "/clases", "/admin", "/loginadmin", "/voces/enviar"];
+const isKnownSpaPath = (path) => {
+  const lower = path.toLowerCase(); // /Admin y /LoginAdmin son rutas válidas de la SPA
+  return KNOWN_SPA_PREFIXES.some((prefix) => lower === prefix || lower.startsWith(`${prefix}/`));
+};
+
+// Texto plano del cuerpo para que el HTML inicial tenga contenido sin JS.
+const bodyParagraphs = (html, max = 6000) =>
+  plainText(html, max)
+    .split(/(?<=[.!?…])\s+(?=[A-ZÁÉÍÓÚÑ¿¡"])/)
+    .reduce((chunks, sentence) => {
+      const last = chunks[chunks.length - 1];
+      if (last && last.length < 400) chunks[chunks.length - 1] = `${last} ${sentence}`;
+      else chunks.push(sentence);
+      return chunks;
+    }, [])
+    .map((chunk) => `<p>${esc(chunk)}</p>`)
+    .join("");
+
 const isNoindex = (path) =>
   NOINDEX.some((blocked) => path === blocked || path.startsWith(`${blocked}/`));
 
@@ -61,7 +82,17 @@ async function resolveMeta(path) {
   if (match && match[1] !== "enviar") {
     const articles = await getJson("/articles/published").catch(() => []);
     const article = articles.find((item) => slugify(item.title) === match[1]);
-    if (!article) return { notFound: true, path };
+    if (!article) {
+      // URL truncada o con un slug antiguo: si el inicio identifica a un único
+      // artículo, se redirige de forma permanente a su dirección completa.
+      if (match[1].length >= 20) {
+        const candidates = articles.filter((item) => slugify(item.title).startsWith(match[1]));
+        if (candidates.length === 1) {
+          return { redirect: `/voces/${slugify(candidates[0].title)}` };
+        }
+      }
+      return { notFound: true, path };
+    }
 
     const author = `${article.author_name} ${article.author_lastname}`.trim();
     const image = firstImage(article.body) || absoluteMedia(article.author_photo) || DEFAULT_IMAGE;
@@ -74,6 +105,8 @@ async function resolveMeta(path) {
       image,
       type: "article",
       path,
+      content: `<h2>${esc(article.subtitle || "")}</h2>${bodyParagraphs(article.body)}`,
+      heading: article.title,
       article: { published: article.date, author, tag: article.tag_name },
       jsonLd: [
         {
@@ -110,13 +143,44 @@ async function resolveMeta(path) {
   if (match) {
     const milestone = await getJson(`/milestones/published/${encodeURIComponent(match[1])}`).catch(() => null);
     if (!milestone) return { notFound: true, path };
+    const url = SITE.origin + path;
+    const description = plainText(milestone.summary || milestone.body, 200);
+    const image = absoluteMedia(milestone.cover_image) || DEFAULT_IMAGE;
     return {
       title: `${milestone.title} | Hitos WFF Perú`,
-      description: plainText(milestone.summary || milestone.body, 200),
-      image: absoluteMedia(milestone.cover_image) || DEFAULT_IMAGE,
+      description,
+      image,
       type: "article",
       path,
-      jsonLd: [],
+      heading: milestone.title,
+      content: bodyParagraphs(milestone.body),
+      jsonLd: [
+        {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: milestone.title,
+          description,
+          image: [image],
+          datePublished: milestone.event_date || undefined,
+          dateModified: milestone.updated_at || undefined,
+          publisher: {
+            "@type": "Organization",
+            name: SITE.name,
+            logo: { "@type": "ImageObject", url: SITE.logo },
+          },
+          mainEntityOfPage: url,
+          inLanguage: "es",
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Inicio", item: SITE.origin + "/" },
+            { "@type": "ListItem", position: 2, name: "Hitos", item: SITE.origin + "/hitos" },
+            { "@type": "ListItem", position: 3, name: milestone.title, item: url },
+          ],
+        },
+      ],
     };
   }
 
@@ -131,7 +195,19 @@ async function resolveMeta(path) {
       image: absoluteMedia(story.portrait_image) || DEFAULT_IMAGE,
       type: "article",
       path,
-      jsonLd: [],
+      heading: story.name,
+      content: bodyParagraphs(story.introduction),
+      jsonLd: [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Inicio", item: SITE.origin + "/" },
+            { "@type": "ListItem", position: 2, name: "Voluntarios Destacados", item: SITE.origin + "/voluntarios-destacados" },
+            { "@type": "ListItem", position: 3, name: story.name, item: SITE.origin + path },
+          ],
+        },
+      ],
     };
   }
 
@@ -172,7 +248,7 @@ function bodyFallback(meta) {
   const links = Object.entries(PAGES)
     .map(([path, page]) => `<li><a href="${esc(SITE.origin + path)}">${esc(page.nav)}</a></li>`)
     .join("");
-  return `<div id="root"><main><h1>${esc(meta.title)}</h1><p>${esc(meta.description)}</p><nav aria-label="Principal"><ul>${links}</ul></nav></main></div>`;
+  return `<div id="root"><main><h1>${esc(meta.heading || meta.title)}</h1><p>${esc(meta.description)}</p>${meta.content || ""}<nav aria-label="Principal"><ul>${links}</ul></nav></main></div>`;
 }
 
 function render(html, meta, robots) {
@@ -201,15 +277,22 @@ export default async function handler(request, response) {
     const resolved = await resolveMeta(path);
     const noindex = isNoindex(path);
 
+    if (resolved?.redirect) {
+      response.setHeader("Cache-Control", "public, s-maxage=3600");
+      response.redirect(301, resolved.redirect);
+      return;
+    }
+
     let meta;
     let status = 200;
     let robots = noindex ? "noindex, nofollow" : "";
 
     if (resolved && !resolved.notFound) {
       meta = resolved;
-    } else if (resolved?.notFound) {
+    } else if (resolved?.notFound || (!resolved && !isKnownSpaPath(path))) {
       status = 404;
       robots = "noindex";
+      response.setHeader("X-Robots-Tag", "noindex");
       meta = {
         title: "Página no encontrada | WFF Perú Chapter",
         description: "La página que buscas no existe o ya no está disponible.",
