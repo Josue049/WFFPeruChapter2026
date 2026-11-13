@@ -13,7 +13,6 @@ export function SubNav() {
         <li><NavLink to="/hitos">{t("subnav.milestones")}</NavLink></li>
         {FEATURES.clases && <li><NavLink to="/clases">{t("subnav.classes")}</NavLink></li>}
         {/* <li><NavLink to="/voluntarios-destacados">{t("subnav.volunteers")}</NavLink></li> */}
-        <li><NavLink to="/empoderamiento-femenino">{t("subnav.women").toUpperCase()}</NavLink></li>
       </ul>
     </div>
   );

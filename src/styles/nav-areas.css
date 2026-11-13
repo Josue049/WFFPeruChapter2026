@@ -1,0 +1,11 @@
+/* Empoderamiento Femenino en el menú de Áreas: solo se separa con una línea. */
+.areas-dropdown-menu .areas-special-divider {
+  margin: 8px 0;
+}
+
+.areas-dropdown-menu .areas-special-item:hover,
+.areas-dropdown-menu .areas-special-item:focus,
+.areas-dropdown-menu .areas-special-item.active {
+  background: #fbd9e8;
+  color: #a3245f;
+}

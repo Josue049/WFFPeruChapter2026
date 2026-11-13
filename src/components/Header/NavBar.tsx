@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import "../../styles/nav-areas.css";
 import { SubNav } from "./SubNav";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useLanguage } from "../../i18n/LanguageContext";
@@ -17,6 +18,7 @@ export function NavBar() {
     "/politicasygobernanza",
     "/comunicaciones",
     "/relacionamiento",
+    "/empoderamiento-femenino",
   ];
 
   const isAreasActive = areasRoutes.includes(location.pathname);
@@ -26,9 +28,43 @@ export function NavBar() {
     setAreasOpen(false);
   };
 
+  // En escritorio con mouse el menú se abre al pasar el cursor; en táctiles y en el menú
+  // móvil sigue funcionando con clic.
+  const canHover = () =>
+    typeof window !== "undefined" &&
+    window.matchMedia("(hover: hover) and (min-width: 992px)").matches;
+
+  const hoverTimer = useRef<number | null>(null);
+
+  const clearHoverTimer = () => {
+    if (hoverTimer.current !== null) {
+      window.clearTimeout(hoverTimer.current);
+      hoverTimer.current = null;
+    }
+  };
+
+  const openAreasOnHover = () => {
+    if (!canHover()) return;
+    clearHoverTimer();
+    setAreasOpen(true);
+  };
+
+  const closeAreasOnLeave = () => {
+    if (!canHover()) return;
+    clearHoverTimer();
+    // Pequeña espera para que el menú no parpadee al mover el cursor hacia él.
+    hoverTimer.current = window.setTimeout(() => setAreasOpen(false), 140);
+  };
+
   const toggleAreas = () => {
+    if (canHover()) {
+      setAreasOpen(true);
+      return;
+    }
     setAreasOpen(!areasOpen);
   };
+
+  useEffect(() => clearHoverTimer, []);
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -102,13 +138,20 @@ export function NavBar() {
                 {t("nav.about")}
               </NavLink>
 
-              <div className="nav-item dropdown" ref={areasMenuRef}>
+              <div
+                className="nav-item dropdown"
+                ref={areasMenuRef}
+                onMouseEnter={openAreasOnHover}
+                onMouseLeave={closeAreasOnLeave}
+              >
                 <button
                   className={`nav-link dropdown-toggle btn btn-link ${
                     isAreasActive ? "active" : ""
                   }`}
                   style={{ textDecoration: "none" }}
                   type="button"
+                  aria-expanded={areasOpen}
+                  aria-haspopup="true"
                   onClick={toggleAreas}
                 >
                   {t("nav.areas")}
@@ -159,14 +202,15 @@ export function NavBar() {
                     {t("nav.relations")}
                   </NavLink>
 
-                  {/* <NavLink
-                    to="/womensEmpowerment"
-                    className="dropdown-item"
+                  {/* Área especial: va separada por una línea, con el mismo estilo que las demás. */}
+                  <div className="dropdown-divider areas-special-divider" role="separator" />
+                  <NavLink
+                    to="/empoderamiento-femenino"
+                    className="dropdown-item areas-special-item"
                     onClick={closeMenu}
                   >
-                    Empoderamiento
-                    <br /> Femenino
-                  </NavLink> */}
+                    {t("subnav.women")}
+                  </NavLink>
                 </div>
               </div>
 
