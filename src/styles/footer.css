@@ -1,0 +1,154 @@
+/* Pie de página institucional (independiente de site.css) */
+.wff-footer {
+  margin-top: 90px;
+  background: #fffaf2;
+  border-top: 3px solid #ffc107;
+  color: #3c4043;
+  font-family: "Poppins", sans-serif;
+}
+
+.wff-footer__inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 56px 24px 0;
+  box-sizing: border-box;
+}
+
+.wff-footer__main {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 44px;
+}
+
+.wff-footer__logo {
+  display: inline-block;
+}
+
+.wff-footer__logo img {
+  display: block;
+  height: 58px;
+  width: auto;
+  max-width: 100%;
+}
+
+.wff-footer__brand p {
+  margin: 18px 0 0;
+  max-width: 420px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #5f6368;
+}
+
+.wff-footer__group h2 {
+  margin: 0 0 16px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #e75733;
+}
+
+.wff-footer__group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wff-footer__group a {
+  display: inline-block;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #3c4043;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.wff-footer__group a:hover,
+.wff-footer__group a:focus-visible {
+  color: #e75733;
+  border-bottom-color: #ffc107;
+}
+
+.wff-footer__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 0 24px;
+  border-top: 1px solid rgba(60, 64, 67, 0.14);
+}
+
+.wff-footer__bottom p {
+  margin: 0;
+  font-size: 13px;
+  color: #6b6f73;
+}
+
+.wff-footer__social {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 10px;
+}
+
+.wff-footer__social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(60, 64, 67, 0.22);
+  color: #3c4043;
+  font-size: 15px;
+  text-decoration: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.wff-footer__social a:hover,
+.wff-footer__social a:focus-visible {
+  background: #e75733;
+  border-color: #e75733;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 991px) {
+  .wff-footer__main {
+    grid-template-columns: 1fr 1fr;
+    gap: 36px 32px;
+  }
+
+  .wff-footer__brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 575px) {
+  .wff-footer {
+    margin-top: 60px;
+  }
+
+  .wff-footer__inner {
+    padding: 40px 20px 0;
+  }
+
+  .wff-footer__main {
+    gap: 32px 20px;
+    padding-bottom: 32px;
+  }
+
+  .wff-footer__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+}
