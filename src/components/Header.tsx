@@ -1,6 +1,7 @@
 import { TopBar } from "./Header/TopBar";
 import { NavBar } from "./Header/NavBar";
 import HeroCarousel from "./Header/HeroCarousel";
+import "../styles/header-title.css";
 
 type HeaderProps = {
   variant?: "carousel" | "static";
@@ -49,9 +50,9 @@ export function Header({
                 </div>
               )}
 
-              <h3 className="display-4 text-white text-uppercase text-center">
+              <h1 className="display-4 text-white text-uppercase text-center header-page-title">
                 {title}
-              </h3>
+              </h1>
 
               {subtitle && (
                 <div className="d-inline-flex text-white">

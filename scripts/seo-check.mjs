@@ -115,12 +115,15 @@ for (const f of ["public/img/iconCapitulo.webp", "public/img/logoWFFPeru.webp"])
 ok(/rel="icon"/.test(indexHtml) && /rel="apple-touch-icon"/.test(indexHtml), "favicon y apple-touch-icon declarados");
 const footer = readFileSync("src/components/Footer.tsx", "utf8");
 const footerLinks = [...footer.matchAll(/to: "(\/[^"]*)"/g)].map((m) => m[1]);
-for (const path of ["/nosotros", "/educacionycultura", "/politicasygobernanza", "/relacionamiento", "/voces", "/hitos"]) {
-  ok(footerLinks.includes(path), `footer enlaza ${path} con <Link> (genera <a href>)`);
-}
+const expectedFooter = ["/nosotros", "/hitos", "/voces", "/educacionycultura", "/politicasygobernanza", "/relacionamiento", "/cienciaeinnovacion", "/comunicaciones", "/empoderamiento-femenino"];
+for (const path of expectedFooter) ok(footerLinks.includes(path), `footer enlaza ${path} con <Link> (genera <a href>)`);
+ok(footerLinks.length === expectedFooter.length && new Set(footerLinks).size === footerLinks.length, "footer: exactamente las 3 secciones y 6 áreas, sin duplicados");
+ok(/background:\s*#ffffff/i.test(readFileSync("src/styles/footer.css", "utf8")), "footer: fondo blanco puro");
+const header = readFileSync("src/components/Header.tsx", "utf8");
+ok(/<h1 className="display-4[^"]*"/.test(header) && !/<h3 className="display-4/.test(header), "cabecera de sección: el título de la página es el H1");
 ok(footerLinks.every((l) => pages.pages[l]), "footer: todos los destinos existen en pages.json");
 const navbar = readFileSync("src/components/Header/NavBar.tsx", "utf8") + readFileSync("src/components/Header/SubNav.tsx", "utf8");
-for (const path of Object.keys(pages.pages).filter((x) => x !== "/" && x !== "/voluntarios-destacados")) ok(navbar.includes(`"${path}"`), `menú principal enlaza ${path}`);
+for (const path of Object.keys(pages.pages).filter((x) => x !== "/")) ok(navbar.includes(`"${path}"`), `menú principal enlaza ${path}`);
 
 const robots = readFileSync("public/robots.txt", "utf8");
 ok(robots.includes(`Sitemap: ${ORIGIN}/sitemap.xml`), "robots.txt declara el sitemap");

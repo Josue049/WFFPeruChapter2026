@@ -1,8 +1,8 @@
 /* Pie de página institucional (independiente de site.css) */
 .wff-footer {
   margin-top: 90px;
-  background: #fffaf2;
-  border-top: 3px solid #ffc107;
+  background: #ffffff;
+  border-top: 1px solid #e6e6e6;
   color: #3c4043;
   font-family: "Poppins", sans-serif;
 }
@@ -16,7 +16,7 @@
 
 .wff-footer__main {
   display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr;
+  grid-template-columns: 1.5fr 0.8fr 1.2fr;
   gap: 48px;
   padding-bottom: 44px;
 }

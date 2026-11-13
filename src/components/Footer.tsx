@@ -2,42 +2,43 @@ import { Link } from "react-router-dom";
 import "../styles/footer.css";
 import { useLanguage } from "../i18n/LanguageContext";
 import type { Language } from "../i18n/translations";
+import { useSiteSections } from "../hooks/useSiteSections";
 
 const sentence = (text: string) => {
   const lower = text.toLowerCase();
   return lower.charAt(0).toUpperCase() + lower.slice(1);
 };
 
-const COPY: Record<Language, { description: string; chapter: string; explore: string; rights: string; follow: string }> = {
+const COPY: Record<Language, { description: string; sections: string; areas: string; rights: string; follow: string }> = {
   es: {
     description:
       "Capítulo Nacional de Juventud del World Food Forum en Perú. Impulsamos la participación juvenil para transformar los sistemas agroalimentarios hacia modelos más sostenibles.",
-    chapter: "El Capítulo",
-    explore: "Explora",
+    sections: "Secciones",
+    areas: "Áreas",
     rights: "Todos los derechos reservados.",
     follow: "Síguenos",
   },
   en: {
     description:
       "National Youth Chapter of the World Food Forum in Peru. We promote youth participation to transform agrifood systems towards more sustainable models.",
-    chapter: "The Chapter",
-    explore: "Explore",
+    sections: "Sections",
+    areas: "Areas",
     rights: "All rights reserved.",
     follow: "Follow us",
   },
   it: {
     description:
       "Capitolo Nazionale Giovanile del World Food Forum in Perù. Promuoviamo la partecipazione giovanile per trasformare i sistemi agroalimentari verso modelli più sostenibili.",
-    chapter: "Il Capitolo",
-    explore: "Esplora",
+    sections: "Sezioni",
+    areas: "Aree",
     rights: "Tutti i diritti riservati.",
     follow: "Seguici",
   },
   pt: {
     description:
       "Capítulo Nacional de Juventude do World Food Forum no Peru. Promovemos a participação juvenil para transformar os sistemas agroalimentares em direção a modelos mais sustentáveis.",
-    chapter: "O Capítulo",
-    explore: "Explore",
+    sections: "Seções",
+    areas: "Áreas",
     rights: "Todos os direitos reservados.",
     follow: "Siga-nos",
   },
@@ -51,18 +52,23 @@ const SOCIAL = [
 
 export function Footer() {
   const { t, language } = useLanguage();
+  const { sections } = useSiteSections();
   const copy = COPY[language] ?? COPY.es;
 
-  // Enlaces a las secciones principales: navegación real y rastreable en todas las páginas.
-  const chapterLinks: Array<{ to: string; label: string }> = [
+  // Enlaces rastreables (<a href>) a las secciones y áreas principales.
+  // Las secciones que se desactiven desde el panel de administración no se muestran.
+  const sectionLinks: Array<{ to: string; label: string }> = [
     { to: "/nosotros", label: t("nav.about") },
+    ...(sections.hitos ? [{ to: "/hitos", label: sentence(t("subnav.milestones")) }] : []),
+    ...(sections.voces ? [{ to: "/voces", label: sentence(t("subnav.voices")) }] : []),
+  ];
+  const areaLinks: Array<{ to: string; label: string }> = [
+    { to: "/educacionycultura", label: t("nav.education") },
     { to: "/politicasygobernanza", label: t("nav.policies") },
     { to: "/relacionamiento", label: t("nav.relations") },
-  ];
-  const exploreLinks: Array<{ to: string; label: string }> = [
-    { to: "/voces", label: sentence(t("subnav.voices")) },
-    { to: "/hitos", label: sentence(t("subnav.milestones")) },
-    { to: "/educacionycultura", label: t("nav.education") },
+    { to: "/cienciaeinnovacion", label: t("nav.science") },
+    { to: "/comunicaciones", label: t("nav.communications") },
+    { to: "/empoderamiento-femenino", label: t("subnav.women") },
   ];
 
   return (
@@ -76,10 +82,10 @@ export function Footer() {
             <p>{copy.description}</p>
           </div>
 
-          <nav className="wff-footer__group" aria-label={copy.chapter}>
-            <h2>{copy.chapter}</h2>
+          <nav className="wff-footer__group" aria-label={copy.sections}>
+            <h2>{copy.sections}</h2>
             <ul>
-              {chapterLinks.map((link) => (
+              {sectionLinks.map((link) => (
                 <li key={link.to}>
                   <Link to={link.to}>{link.label}</Link>
                 </li>
@@ -87,10 +93,10 @@ export function Footer() {
             </ul>
           </nav>
 
-          <nav className="wff-footer__group" aria-label={copy.explore}>
-            <h2>{copy.explore}</h2>
+          <nav className="wff-footer__group" aria-label={copy.areas}>
+            <h2>{copy.areas}</h2>
             <ul>
-              {exploreLinks.map((link) => (
+              {areaLinks.map((link) => (
                 <li key={link.to}>
                   <Link to={link.to}>{link.label}</Link>
                 </li>
