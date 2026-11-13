@@ -1,0 +1,10 @@
+.area-a h5 {
+  padding: 0 18px;
+  text-align: center;
+}
+
+/* Área especial (Empoderamiento Femenino): en reposo conserva su aspecto original (rojo, como la imagen);
+   solo cambia de color al pasar el mouse. */
+.areas-special:hover .area-a {
+  background: linear-gradient(135deg, rgba(190, 36, 112, .74), rgba(112, 40, 160, .62));
+}

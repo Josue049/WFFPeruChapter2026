@@ -1,9 +1,10 @@
+import "../styles/areas-grid.css";
 import { useLanguage } from "../i18n/LanguageContext";
 
 export default function AreasSection() {
   const { t } = useLanguage();
 
-  const areas = [
+  const areas: Array<{ title: string; image: string; href: string; special?: boolean }> = [
     {
       title: t("nav.education"),
       image: "img/FondoFAO4.webp",
@@ -29,6 +30,7 @@ export default function AreasSection() {
       title: t("subnav.women"),
       image: "img/FondoFAO5.webp",
       href: "/empoderamiento-femenino",
+      special: true,
     },
   ];
 
@@ -60,7 +62,7 @@ export default function AreasSection() {
         <div className="row">
           {areas.map((area) => (
             <div key={area.href} className="col-lg-4 col-md-6 mb-4">
-              <div className="areas position-relative overflow-hidden mb-2">
+              <div className={`areas position-relative overflow-hidden mb-2 ${area.special ? "areas-special" : ""}`}>
                 <img className="img-fluid" src={area.image} alt={area.title} />
                 <a
                   className="area-a text-white text-decoration-none"
