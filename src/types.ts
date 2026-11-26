@@ -3,6 +3,7 @@ export type {
   AdminSection,
   AdminUser,
   FeaturedVolunteer,
+  HeroSlide,
   Milestone,
   VolunteerHighlight,
   VolunteerStory,

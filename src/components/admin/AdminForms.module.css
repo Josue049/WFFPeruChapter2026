@@ -570,6 +570,72 @@
   }
 }
 
+/* ===== Galería: progreso, arrastrar y ordenar ===== */
+.uploadProgress {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #f0e6da;
+}
+
+.uploadProgress span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #ef5b2a, #e9a61f);
+  transition: width 0.25s ease;
+}
+
+.galleryDrop {
+  outline: 2px dashed #ef7d22;
+  outline-offset: 6px;
+  border-radius: 12px;
+  background: #fff7ee;
+}
+
+.galleryHint {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 18px;
+  border: 1px dashed #dcd5cb;
+  border-radius: 12px;
+  color: #8a8f87;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.galleryMove {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  z-index: 2;
+  display: flex;
+  gap: 4px;
+}
+
+.galleryItem .galleryMove button {
+  position: static;
+  padding: 3px 8px;
+}
+
+.galleryMove button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* ===== Acciones sobre la vista previa de una imagen ===== */
+.previewActions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: flex;
+  gap: 6px;
+}
+
+.imagePreview .previewActions button {
+  position: static;
+}
+
 /* ===== Preview usando los estilos reales de las páginas públicas ===== */
 .articlePublicPreview,
 .volunteerPublicPreview,

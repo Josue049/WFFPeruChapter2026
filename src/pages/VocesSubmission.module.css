@@ -13,6 +13,8 @@
 .sectionHeading p { margin: 4px 0 0; color: #777; }
 .twoColumns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .field { display: grid; gap: 7px; margin-bottom: 16px; }
+.contentHead { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.field.invalid .contentHead > label::after { content: " *"; color: #d92d20; }
 .field label, .photoField > label { color: #333; font-size: .9rem; font-weight: 800; }
 .field input, .field textarea { width: 100%; border: 1px solid #dcd2c7; border-radius: 12px; background: #fffdfa; padding: 12px 13px; font: inherit; color: #222; }
 .field textarea { resize: vertical; line-height: 1.7; }

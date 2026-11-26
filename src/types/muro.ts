@@ -79,3 +79,9 @@ export interface MuroAuthorView {
   images: MuroImage[];
   submitted_at: string;
 }
+
+export interface MuroMonth {
+  /** AAAA-MM */
+  month: string;
+  total: number;
+}

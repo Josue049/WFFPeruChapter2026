@@ -1,0 +1,24 @@
+.modes {
+  display: inline-flex;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid #eadbce;
+  border-radius: 999px;
+  background: #fff;
+}
+
+.modes button {
+  border: 0;
+  border-radius: 999px;
+  padding: 7px 14px;
+  background: transparent;
+  color: #6b625b;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.modes .modeActive {
+  background: linear-gradient(90deg, #ef5b2a, #e9a61f);
+  color: #fff;
+}

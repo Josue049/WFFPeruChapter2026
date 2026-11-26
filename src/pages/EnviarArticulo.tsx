@@ -5,6 +5,8 @@ import { NavBar } from "../components/Header/NavBar";
 import { TopBar } from "../components/Header/TopBar";
 import { ScrollTopButton } from "../components/ScrollTopButton";
 import { HtmlPreview } from "../components/admin/HtmlPreview";
+import { ModeSwitch } from "../components/editor/ModeSwitch";
+import type { EditorMode } from "../components/editor/ModeSwitch";
 import {
   RichTextEditor,
   type PendingEditorImage,
@@ -636,6 +638,7 @@ export default function EnviarArticulo() {
   }, [sending]);
 
   const countLabels = COUNT_LABELS[language];
+  const [bodyMode, setBodyMode] = useState<EditorMode>("write");
 
   const titleLength = countPlainCharacters(form.title);
   const summaryLength = countPlainCharacters(form.subtitle);
@@ -1349,27 +1352,30 @@ export default function EnviarArticulo() {
                 />
 
                 <div className={`${styles.field} ${isInvalid("body") ? styles.invalid : ""}`}>
-                  <label>
-                    {t(
-                      "submission.content",
-                    )}
-                  </label>
+                  <div className={styles.contentHead}>
+                    <label>{t("submission.content")}</label>
+                    <ModeSwitch mode={bodyMode} onChange={setBodyMode} />
+                  </div>
 
-                  <RichTextEditor
-                    value={form.body}
-                    onChange={(body) =>
-                      setForm((current) => ({
-                        ...current,
-                        body,
-                      }))
-                    }
-                    onRegisterImage={
-                      registerArticleImage
-                    }
-                    placeholder={t(
-                      "submission.placeholder",
-                    )}
-                  />
+                  {bodyMode === "preview" ? (
+                    <HtmlPreview value={form.body} />
+                  ) : (
+                    <RichTextEditor
+                      value={form.body}
+                      onChange={(body) =>
+                        setForm((current) => ({
+                          ...current,
+                          body,
+                        }))
+                      }
+                      onRegisterImage={
+                        registerArticleImage
+                      }
+                      placeholder={t(
+                        "submission.placeholder",
+                      )}
+                    />
+                  )}
 
                   <small
                     className={
@@ -1393,9 +1399,6 @@ export default function EnviarArticulo() {
                   </small>
                 </div>
 
-                <HtmlPreview
-                  value={form.body}
-                />
               </section>
 
               <section

@@ -1,0 +1,35 @@
+.field {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.head strong {
+  color: #363b36;
+  font-size: 0.95rem;
+}
+
+.field textarea.code {
+  display: block;
+  width: 100%;
+  height: 480px;
+  box-sizing: border-box;
+  resize: vertical;
+  border: 1px solid #dcd2c7;
+  border-radius: 14px;
+  padding: 16px 18px;
+  background: #fffdfa;
+  color: #252a25;
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  tab-size: 2;
+}

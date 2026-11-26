@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Article } from "../../types";
 import { apiRequest } from "../../services/api";
-import { HtmlPreview } from "./HtmlPreview";
+import { StoryEditor } from "./StoryEditor";
+import { useStoryImages } from "./storyImages";
 import { ImageField } from "./ImageField";
 import { ArticleSubmissionsManager } from "./ArticleSubmissionsManager";
 import { TagsManager } from "./TagsManager";
@@ -35,8 +36,8 @@ export function ArticlesManager({ token, currentUsername }: { token: string; cur
   return (
     <div>
       <div className={styles.managerTabs}>
-        <button className={view === "published" ? styles.managerTabActive : ""} onClick={() => setView("published")}>Artículos</button>
-        <button className={view === "submissions" ? styles.managerTabActive : ""} onClick={() => setView("submissions")}>Postulaciones</button>
+        <button className={view === "published" ? styles.managerTabActive : ""} onClick={() => setView("published")}>Publicados</button>
+        <button className={view === "submissions" ? styles.managerTabActive : ""} onClick={() => setView("submissions")}>Postulados</button>
         <button className={view === "tags" ? styles.managerTabActive : ""} onClick={() => setView("tags")}>Etiquetas</button>
         <button className={view === "settings" ? styles.managerTabActive : ""} onClick={() => setView("settings")}>Configuración</button>
       </div>
@@ -51,13 +52,12 @@ export function ArticlesManager({ token, currentUsername }: { token: string; cur
 function PublishedArticlesManager({ token }: { token: string }) {
   const [items, setItems] = useState<Article[]>([]);
   const [tags, setTags] = useState<ArticleTag[]>([]);
-  const [newTag, setNewTag] = useState("");
-  const [creatingTag, setCreatingTag] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [form, setForm] = useState<ArticleForm>(emptyArticle());
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
   const [viewsByArticle, setViewsByArticle] = useState<Record<number, number | null>>({});
+  const storyImages = useStoryImages(token);
 
   const load = useCallback(async () => {
     const articles = await apiRequest<Article[]>(
@@ -127,7 +127,7 @@ function PublishedArticlesManager({ token }: { token: string }) {
         title: form.title,
         subtitle: form.subtitle,
         date: form.date,
-        body: form.body,
+        body: await storyImages.upload(form.body),
         tag_id: form.tag_id,
       };
       const result = await apiRequest<Article>(
@@ -140,23 +140,6 @@ function PublishedArticlesManager({ token }: { token: string }) {
       setMessage("Artículo guardado correctamente.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "No se pudo guardar");
-    }
-  };
-
-  const addTag = async () => {
-    const name = newTag.trim().replace(/\s+/g, " ");
-    if (!name || creatingTag) return;
-    setCreatingTag(true);
-    try {
-      const created = await apiRequest<ArticleTag>("/article-tags", { method: "POST", body: JSON.stringify({ name }) }, { token, redirectOnUnauthorized: true });
-      setTags(await apiRequest<ArticleTag[]>("/article-tags"));
-      setForm((current) => ({ ...current, tag_id: created.id }));
-      setNewTag("");
-      setMessage(`Etiqueta «${created.name}» seleccionada.`);
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : "No se pudo crear la etiqueta");
-    } finally {
-      setCreatingTag(false);
     }
   };
 
@@ -227,13 +210,15 @@ function PublishedArticlesManager({ token }: { token: string }) {
               <option value="">Sin etiqueta (artículos anteriores)</option>
               {tags.map((tag) => <option key={tag.id} value={tag.id}>{tag.name}</option>)}
             </select>
-            <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-              <input aria-label="Nueva etiqueta" value={newTag} placeholder="Nueva etiqueta" maxLength={80} onChange={(e) => setNewTag(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void addTag(); } }} />
-              <button type="button" disabled={!newTag.trim() || creatingTag} onClick={() => void addTag()}>+ Agregar</button>
-            </div>
           </div>
           <Field label="Fecha de publicación" type="date" value={form.date} onChange={(value) => setForm({ ...form, date: value })} />
-          <TextArea label="Artículo" value={form.body} onChange={(value) => setForm({ ...form, body: value })} rows={14} />
+          <StoryEditor
+            key={selectedId ?? "nuevo"}
+            label="Artículo"
+            value={form.body}
+            onChange={(body) => setForm((current) => ({ ...current, body }))}
+            onRegisterImage={storyImages.register}
+          />
         </div>
       </section>
     </div>
@@ -242,7 +227,4 @@ function PublishedArticlesManager({ token }: { token: string }) {
 
 function Field({ label, value, onChange, type = "text" }: { label: string; value: string; onChange: (value: string) => void; type?: string }) {
   return <div className={styles.field}><label>{label}</label><input type={type} value={value} onChange={(e) => onChange(e.target.value)} /></div>;
-}
-function TextArea({ label, value, onChange, rows = 6 }: { label: string; value: string; onChange: (value: string) => void; rows?: number }) {
-  return <div className={styles.field}><label>{label}</label><textarea rows={rows} value={value} onChange={(e) => onChange(e.target.value)} /><HtmlPreview value={value} /></div>;
 }

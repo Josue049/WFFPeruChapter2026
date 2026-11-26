@@ -1,4 +1,4 @@
-/* El título de la cabecera de cada sección es el H1 de la página; conserva el peso visual que tenía como h3. */
+/* El título de la cabecera de cada sección es el H1 de la página; va en negrita. */
 .header-page-title {
-  font-weight: 300 !important;
+  font-weight: 700 !important;
 }

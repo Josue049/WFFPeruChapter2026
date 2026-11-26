@@ -21,6 +21,8 @@ type RichTextEditorProps = {
     file: File,
   ) => PendingEditorImage;
   maxImages?: number;
+  /** Solo tamaño, negrita y cursiva. */
+  basic?: boolean;
 };
 
 type TextSize =
@@ -103,6 +105,7 @@ export function RichTextEditor({
   placeholder = "Escribe aquí tu artículo…",
   onRegisterImage,
   maxImages = 8,
+  basic = false,
 }: RichTextEditorProps) {
   const { t } = useLanguage();
 
@@ -630,6 +633,7 @@ export function RichTextEditor({
             <em>I</em>
           </ToolbarButton>
 
+          {!basic && (<>
           <ToolbarButton
             label={t(
               "editor.underline",
@@ -763,6 +767,7 @@ export function RichTextEditor({
               link
             </span>
           </ToolbarButton>
+          </>)}
 
           {/* IMAGEN */}
 

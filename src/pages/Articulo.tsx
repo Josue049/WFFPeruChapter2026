@@ -138,8 +138,8 @@ export default function Articulo() {
     };
   }, [post?.id]);
 
-  // La lectura se registra únicamente cuando el usuario llega
-  // al final del contenido del artículo.
+  // La lectura se registra cuando el usuario llega a la mitad
+  // del contenido del artículo.
   useEffect(() => {
     if (!post?.id) return;
 
@@ -150,7 +150,14 @@ export default function Articulo() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting || readingCountedRef.current) return;
+        // Cuenta al llegar a la mitad del contenido o si ya la dejó atrás
+        // (p. ej. saltó con un ancla o recargó con el scroll avanzado).
+        const passedMidpoint = entry.boundingClientRect.top < 0;
+        if (
+          (!entry.isIntersecting && !passedMidpoint) ||
+          readingCountedRef.current
+        )
+          return;
 
         readingCountedRef.current = true;
         const visitorKey = getVisitorKey();
@@ -180,7 +187,7 @@ export default function Articulo() {
           });
       },
       {
-        threshold: 0.5,
+        threshold: 0,
       },
     );
 
@@ -265,35 +272,34 @@ export default function Articulo() {
 
       {!loading && post && (
         <main className="article-page">
-          <header className="articulo-header">
-            <p className="articulo-categoria">
-              <Link className="voz1" to="/voces">{t("article.category")}</Link>
-              <span className="voz2"> / {t("article.article")}</span>
+          <header className="article-head">
+            <p className="article-kicker">
+              <Link to="/voces">{t("article.category")}</Link>
+              <span aria-hidden="true">|</span>
+              <span>{t("article.article")}</span>
             </p>
 
-            <div className="Persona articulo-author-block">
+            <h1 className="article-title">{post.title}</h1>
+            {post.subtitle && <p className="article-sub">{post.subtitle}</p>}
+
+            <div className="article-byline">
               {post.author_photo && (
                 <img
                   src={mediaUrl(post.author_photo)}
-                  alt={`${post.author_name} ${post.author_lastname}`}
-                  className="articulo-avatar"
+                  alt=""
+                  className="article-byline-photo"
                 />
               )}
-
-              <p className="articulo-autor">
-                {post.author_name} {post.author_lastname}
+              <div className="article-byline-author">
+                <strong>{post.author_name} {post.author_lastname}</strong>
+                {post.author_cargo && <span>{post.author_cargo}</span>}
+              </div>
+              <p className="article-byline-meta">
+                <span>{extra.minRead.replace("{n}", String(readingMinutes))}</span>
+                <span aria-hidden="true">·</span>
+                <time dateTime={post.date}>{formatDate(post.date, locale)}</time>
               </p>
-              {post.author_cargo && (
-                <p className="articulo-cargo voz1">{post.author_cargo}</p>
-              )}
             </div>
-
-            <h1 className="articulo-titulo">{post.title}</h1>
-            {post.subtitle && (
-              <p className="articulo-subtitulo">
-                <i>“{post.subtitle}”</i>
-              </p>
-            )}
           </header>
 
           <div className="article-layout">
@@ -313,11 +319,6 @@ export default function Articulo() {
                     )}
                   </div>
                   <div className="article-meta-right">
-                    <time className="FechaArticulo" dateTime={post.date}>
-                      {t("article.published", {
-                        date: formatDate(post.date, locale),
-                      })}
-                    </time>
                     {(viewLoading || viewState?.articleId === post.id) && (
                       <span
                         className={`article-views ${
@@ -350,28 +351,29 @@ export default function Articulo() {
 
                 <div className="lineaWidth" />
 
-                <p className="article-readtime">
-                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                  </svg>
-                  {extra.minRead.replace("{n}", String(readingMinutes))}
-                </p>
+                <div style={{ position: "relative" }}>
+                  <div
+                    className="ArticuloParrafos"
+                    dangerouslySetInnerHTML={{ __html: safeBody }}
+                  />
 
-                <div
-                  className="ArticuloParrafos"
-                  dangerouslySetInnerHTML={{ __html: safeBody }}
-                />
-
-                {/*
-                  Este marcador está justo después del contenido.
-                  Al entrar en el viewport se registra la lectura.
-                */}
-                <div
-                  ref={articleEndRef}
-                  aria-hidden="true"
-                  style={{ width: "100%", height: "1px" }}
-                />
+                  {/*
+                    Este marcador está en la mitad del contenido.
+                    Al llegar a él (o pasarlo) se registra la lectura.
+                  */}
+                  <div
+                    ref={articleEndRef}
+                    aria-hidden="true"
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: 0,
+                      width: "100%",
+                      height: "1px",
+                      pointerEvents: "none",
+                    }}
+                  />
+                </div>
               </div>
             </article>
 

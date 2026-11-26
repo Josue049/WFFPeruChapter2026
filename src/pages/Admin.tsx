@@ -2,10 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { clearAuthToken, getAuthToken } from "../auth/session";
 import { ArticlesManager } from "../components/admin/ArticlesManager";
+import { AdminSidebarNav } from "../components/admin/AdminSidebarNav";
 import { AuditLogsManager } from "../components/admin/AuditLogsManager";
-import { ClassesManager } from "../components/admin/ClassesManager";
+import { BannersManager } from "../components/admin/BannersManager";
 import { MuroManager } from "../components/admin/MuroManager";
-import { FEATURES } from "../config/features";
+import { SectionsManager } from "../components/admin/SectionsManager";
 import { MilestonesManager } from "../components/admin/MilestonesManager";
 import { UsersManager } from "../components/admin/UsersManager";
 import { VolunteersManager } from "../components/admin/VolunteersManager";
@@ -15,10 +16,11 @@ import styles from "./AdminDashboard.module.css";
 
 const sectionInfo: Record<AdminSection, { label: string; title: string; description: string }> = {
   articles: { label: "Voces", title: "Artículos y voces", description: "Publica y actualiza las columnas del capítulo." },
-  muro: { label: "Muro", title: "Muro de reflexiones", description: "Modera las reflexiones enviadas: aprueba, observa, rechaza o retira publicaciones." },
+  muro: { label: "Muro", title: "Muro de reflexiones", description: "Gestiona las reflexiones publicadas, las postulaciones de la comunidad y las etiquetas." },
   milestones: { label: "Hitos", title: "Hitos del capítulo", description: "Gestiona la memoria visual y su línea mensual." },
   volunteers: { label: "Voluntarios", title: "Voluntarios destacados", description: "Cuenta historias, logros e impacto de la comunidad." },
-  classes: { label: "Clases", title: "Campus virtual", description: "Cursos, contenidos, evaluaciones, estudiantes y seguimiento." },
+  banners: { label: "Banner de inicio", title: "Banner de la pantalla principal", description: "Cambia las imágenes, textos y botones del carrusel de inicio." },
+  sections: { label: "Secciones", title: "Secciones del sitio", description: "Activa o desactiva cada espacio público: Voces, Muro, Hitos y Voluntarios." },
   users: { label: "Accesos", title: "Usuarios y permisos", description: "Crea cuentas individuales y limita sus funciones." },
   audit: { label: "Actividad", title: "Registro de actividad", description: "Revisa quién cambió qué y cuándo dentro del centro de contenidos." },
 };
@@ -30,6 +32,7 @@ export default function Admin() {
   const [section, setSection] = useState<AdminSection>("articles");
   const [menuOpen, setMenuOpen] = useState(false);
   const [loadError, setLoadError] = useState("");
+  const [pending, setPending] = useState<Partial<Record<AdminSection, number>>>({});
 
   useEffect(() => {
     if (!token) return;
@@ -38,15 +41,34 @@ export default function Admin() {
       .catch((error: unknown) => setLoadError(error instanceof Error ? error.message : "No se pudo cargar el panel"));
   }, [token]);
 
+  const userId = user?.id;
+  useEffect(() => {
+    if (!token || !userId) return;
+    let active = true;
+    const refresh = () =>
+      apiRequest<Record<string, number>>("/admin/pending-counts", {}, { token })
+        .then((counts) => active && setPending({ articles: counts.articles, muro: counts.muro }))
+        .catch(() => undefined); // las insignias son opcionales: si falla, simplemente no se muestran
+    void refresh();
+    const timer = window.setInterval(() => void refresh(), 60_000);
+    return () => {
+      active = false;
+      window.clearInterval(timer);
+    };
+  }, [token, userId, section]);
+
+  const canManageMedia = !!user && (user.manage_articles || user.manage_milestones || user.manage_volunteers);
+
   const sections = useMemo(() => user ? [
     user.manage_articles && "articles",
-    FEATURES.muro && user.manage_muro && "muro",
+    user.manage_muro && "muro",
     user.manage_milestones && "milestones",
     user.manage_volunteers && "volunteers",
-    FEATURES.clases && user.manage_classes && "classes",
+    canManageMedia && "banners",
+    user.manage_users && "sections",
     user.manage_users && "users",
     user.manage_users && "audit",
-  ].filter(Boolean) as AdminSection[] : [], [user]);
+  ].filter(Boolean) as AdminSection[] : [], [user, canManageMedia]);
 
   const activeSection: AdminSection = sections.includes(section)
     ? section
@@ -62,9 +84,13 @@ export default function Admin() {
     <div className={styles.root}>
       <aside className={`${styles.sidebar} ${menuOpen ? styles.sidebarOpen : ""}`}>
         <div className={styles.brand}><img src="/img/WFFPeru.webp" alt="WFF Perú" /><p>Centro de contenidos</p></div>
-        <nav className={styles.nav} aria-label="Secciones administrativas">
-          {sections.map((item) => <button key={item} className={activeSection === item ? styles.active : ""} onClick={() => choose(item)}>{sectionInfo[item].label}</button>)}
-        </nav>
+        <AdminSidebarNav
+          sections={sections}
+          active={activeSection}
+          labels={Object.fromEntries(Object.entries(sectionInfo).map(([key, info]) => [key, info.label])) as Record<AdminSection, string>}
+          badges={pending}
+          onChoose={choose}
+        />
         <div className={styles.userArea}><strong>{user.display_name}</strong><span>@{user.username}</span><button className={styles.logout} onClick={logout}>Cerrar sesión</button></div>
       </aside>
       {menuOpen && <button className={styles.overlay} aria-label="Cerrar menú" onClick={() => setMenuOpen(false)} />}
@@ -78,9 +104,10 @@ export default function Admin() {
           <>
             {activeSection === "articles" && <ArticlesManager token={token} currentUsername={user.username} />}
             {activeSection === "muro" && <MuroManager token={token} currentUsername={user.username} />}
-            {activeSection === "classes" && <ClassesManager token={token} />}
+            {activeSection === "banners" && <BannersManager token={token} />}
             {activeSection === "milestones" && <MilestonesManager token={token} />}
             {activeSection === "volunteers" && <VolunteersManager token={token} />}
+            {activeSection === "sections" && <SectionsManager token={token} />}
             {activeSection === "users" && <UsersManager token={token} currentUserId={user.id} />}
             {activeSection === "audit" && <AuditLogsManager token={token} />}
           </>

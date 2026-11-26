@@ -6,6 +6,9 @@ import { TopBar } from "../components/Header/TopBar";
 import { ApiError, apiRequest } from "../services/api";
 import type { MuroAuthorView, MuroCategory, MuroStatus } from "../types/muro";
 import styles from "./Muro.module.css";
+import { RichTextEditor } from "../components/editor/RichTextEditor";
+import { toEditorBody } from "../utils/richText";
+import { sanitizeHtml } from "../utils/sanitizeHtml";
 
 const STATUS_LABEL: Record<MuroStatus, string> = {
   pending: "En revisión",
@@ -111,9 +114,13 @@ export default function MuroMiReflexion() {
                   <label htmlFor="mr-title">Título</label>
                   <input id="mr-title" value={post.title} disabled={!editable} onChange={(e) => update({ title: e.target.value })} maxLength={160} />
                 </div>
-                <div className={`${styles.field} ${styles.fieldFull}`}>
-                  <label htmlFor="mr-body">Contenido</label>
-                  <textarea id="mr-body" value={post.body} disabled={!editable} onChange={(e) => update({ body: e.target.value })} maxLength={6000} />
+                <div className={`${styles.editorField} ${styles.fieldFull}`}>
+                  <label>Contenido</label>
+                  {editable ? (
+                    <RichTextEditor basic value={toEditorBody(post.body)} onChange={(body) => update({ body })} />
+                  ) : (
+                    <div className={`${styles.body} ${styles.richBody}`} dangerouslySetInnerHTML={{ __html: sanitizeHtml(toEditorBody(post.body)) }} />
+                  )}
                 </div>
                 {editable && (
                   <div className={styles.fieldFull}>

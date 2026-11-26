@@ -13,6 +13,14 @@ import { usePageMeta } from "../seo/pageMeta";
 
 const edition = (value: number) => String(value).padStart(2, "0");
 
+/** Titular con la última palabra destacada en rojo (estilo editorial). */
+function Headline({ text }: { text: string }) {
+  const words = text.trim().split(/\s+/);
+  if (words.length < 2) return <>{text}</>;
+  const last = words.pop();
+  return <>{words.join(" ")} <em>{last}</em></>;
+}
+
 export default function VoluntarioDetalle() {
   const { t } = useLanguage();
   const { slug } = useParams();
@@ -40,7 +48,7 @@ export default function VoluntarioDetalle() {
   }, [slug, t]);
 
   const related = useMemo(
-    () => allStories.filter((story) => story.id !== item?.id).slice(0, 3),
+    () => allStories.filter((story) => story.id !== item?.id && !story.cover_only).slice(0, 3),
     [allStories, item?.id],
   );
 
@@ -51,7 +59,7 @@ export default function VoluntarioDetalle() {
           description: (item.headline || item.name).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 200),
           path: `/voluntarios-destacados/${slug}`,
           type: "article",
-          image: mediaUrl(item.portrait_image) || undefined,
+          image: mediaUrl(item.cover_image || item.portrait_image) || undefined,
         }
       : null,
   );
@@ -70,27 +78,25 @@ export default function VoluntarioDetalle() {
             </Link>
 
             <header className={styles.volunteerArticleHero}>
-              <div className={styles.articleCoverMini}>
-                <div className={styles.coverMasthead}>
-                  <strong>WFF</strong>
-                  <span>PERÚ CHAPTER</span>
-                </div>
-                <span className={styles.coverEdition}>N.º {edition(item.edition_number)}</span>
-                <span className={styles.coverVertical}>{t("volunteer.chapterPride")}</span>
-                <div className={styles.coverPortrait}>
-                  <img src={mediaUrl(item.portrait_image)} alt={item.name} />
-                </div>
-                <div className={styles.coverIdentity}>
-                  <h2>{item.name}</h2>
-                  <p>{item.area || item.role || "World Food Forum Perú"}</p>
-                </div>
-              </div>
+              <span className={styles.heroCircle} aria-hidden="true" />
+              <svg className={styles.heroFlower} viewBox="0 0 160 220" aria-hidden="true" focusable="false">
+                <path d="M160 0V96Q96 96 96 48 96 0 160 0Z" fill="#ee4f27" />
+                <path d="M96 96H160V140Q96 140 96 96Z" fill="#ff6b7f" />
+                <path d="M40 150Q40 110 80 110V150Z" fill="#ffb400" />
+                <path d="M80 110Q120 110 120 150H80Z" fill="#4a90d9" />
+                <path d="M80 150H120Q120 190 80 190Z" fill="#4a90d9" />
+                <path d="M40 150H80V190Q40 190 40 150Z" fill="#ff6b7f" />
+                <path d="M0 150Q0 128 22 128H40V150Z" fill="#ffd166" />
+              </svg>
+              <img className={styles.articleCoverImage} src={mediaUrl(item.cover_image || item.portrait_image)} alt={item.name} />
 
               <div className={styles.articleHeadlineBlock}>
-                <span>N.º {edition(item.edition_number)}</span>
-                <h1>{item.headline}</h1>
+                <div className={styles.heroPills}>
+                  <span className={styles.pillIssue}>N.º {edition(item.edition_number)}</span>
+                  {item.area && <span className={styles.pillArea}>{item.area}</span>}
+                </div>
+                <h1><Headline text={item.headline || item.name} /></h1>
                 <div className={styles.articleByline}>
-                  {/* <span aria-hidden="true">◉</span> */}
                   <div>
                     <strong>{item.name}</strong>
                     <small>{item.role || item.area}</small>
@@ -111,35 +117,35 @@ export default function VoluntarioDetalle() {
                   <blockquote className={styles.articleQuote}>
                     <span>“</span>
                     <p>{item.quote}</p>
+                    <span className={styles.quoteClose} aria-hidden="true">”</span>
                   </blockquote>
-                )}
-
-                {item.gallery.length > 0 && (
-                  <section className={styles.articleGallerySection}>
-                    <h2>{t("volunteer.action")}</h2>
-                    <div className={styles.editorialGallery}>
-                      {item.gallery.map((image, index) => (
-                        <img
-                          key={`${image}-${index}`}
-                          src={mediaUrl(image)}
-                          alt={`${item.name}, imagen ${index + 1}`}
-                          loading="lazy"
-                        />
-                      ))}
-                    </div>
-                  </section>
                 )}
               </article>
 
               <aside className={styles.volunteerArticleAside}>
-                <section>
-                  <h2>{t("volunteer.aboutStory")}</h2>
+                <section className={styles.storyCard}>
+                  <div className={styles.storyCardHead}>
+                    <span className={styles.storyCardIcon} aria-hidden="true">
+                      <svg viewBox="0 0 24 24" focusable="false"><path d="M12 6.5C10 5 7 4.5 4 5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V5c-3-.5-6 0-8 1.5ZM12 6.5V19.5" /></svg>
+                    </span>
+                    <h2>{t("volunteer.aboutStory")}</h2>
+                  </div>
                   <dl>
-                    {item.area && <><dt>{t("volunteer.area")}</dt><dd>{item.area}</dd></>}
                     {item.role && <><dt>{t("volunteer.role")}</dt><dd>{item.role}</dd></>}
                     {item.project && <><dt>{t("volunteer.project")}</dt><dd>{item.project}</dd></>}
                     {item.city && <><dt>{t("volunteer.city")}</dt><dd>{item.city}</dd></>}
                   </dl>
+                  {(item.linkedin_url || item.instagram_url || item.website_url) && (
+                    <div className={styles.storyLinks}>
+                      <span className={styles.storyLinksTitle}>
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg>
+                        {t("volunteer.links")}
+                      </span>
+                      {item.linkedin_url && <a href={item.linkedin_url} target="_blank" rel="noreferrer">LinkedIn ↗</a>}
+                      {item.instagram_url && <a href={item.instagram_url} target="_blank" rel="noreferrer">Instagram ↗</a>}
+                      {item.website_url && <a href={item.website_url} target="_blank" rel="noreferrer">{t("volunteer.website")}</a>}
+                    </div>
+                  )}
                 </section>
 
                 {related.length > 0 && (
@@ -149,7 +155,7 @@ export default function VoluntarioDetalle() {
                       {related.map((story) => (
                         <Link to={`/voluntarios-destacados/${story.slug}`} key={story.id}>
                           <div className={styles.relatedPortrait}>
-                            <img src={mediaUrl(story.portrait_image)} alt={story.name} loading="lazy" />
+                            <img src={mediaUrl(story.cover_image || story.portrait_image)} alt={story.name} loading="lazy" />
                           </div>
                           <div>
                             <small>N.º {edition(story.edition_number)}</small>
@@ -162,13 +168,6 @@ export default function VoluntarioDetalle() {
                     </div>
                   </section>
                 )}
-
-                <section className={styles.articleSocials}>
-                  <h2>{t("volunteer.links")}</h2>
-                  {item.linkedin_url && <a href={item.linkedin_url} target="_blank" rel="noreferrer">LinkedIn ↗</a>}
-                  {item.instagram_url && <a href={item.instagram_url} target="_blank" rel="noreferrer">Instagram ↗</a>}
-                  {item.website_url && <a href={item.website_url} target="_blank" rel="noreferrer">{t("volunteer.website")}</a>}
-                </section>
               </aside>
             </div>
           </div>

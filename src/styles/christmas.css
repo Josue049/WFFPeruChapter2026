@@ -1,0 +1,136 @@
+/* =========================================================
+   MODO NAVIDAD (se activa desde el panel: clase en <html>)
+   ========================================================= */
+
+/* Barra superior: fondo cálido, guirnalda de focos y ramas en las esquinas. */
+html.theme-navidad .top-bar {
+  min-height: 84px;
+  background-color: #fff8f2 !important;
+}
+
+html.theme-navidad .top-bar .container {
+  position: relative;
+  z-index: 6;
+}
+
+.navidad-deco {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.navidad-focos {
+  position: absolute;
+  top: 0;
+  left: 7%;
+  right: 24%;
+  z-index: 5;
+  height: 46px;
+  background: url("/img/navidad/focos.webp") repeat-x center top / auto 100%;
+  animation: navidad-brillo 2.8s ease-in-out infinite;
+}
+
+.navidad-rama {
+  position: absolute;
+  top: 0;
+  z-index: 5;
+  width: clamp(110px, 13vw, 210px);
+  height: auto;
+}
+
+.navidad-rama--izquierda { left: 0; }
+.navidad-rama--derecha { right: 0; }
+
+@keyframes navidad-brillo {
+  0%, 100% { filter: drop-shadow(0 0 2px rgba(255, 190, 40, .25)); }
+  50% { filter: drop-shadow(0 0 9px rgba(255, 190, 40, .85)); }
+}
+
+/* Menú: tarjeta redondeada sobre el fondo cálido. */
+html.theme-navidad .nav-bar {
+  background: linear-gradient(to bottom, #fff8f2 50%, transparent 50%);
+}
+
+html.theme-navidad .nav-bar nav.navbar {
+  background-color: #fff !important;
+}
+
+/* El menú fijo (al desplazarse) va a todo el ancho, con esquinas rectas. */
+html.theme-navidad .app-layout .nav-bar nav.navbar {
+  border-radius: 14px 14px 0 0;
+}
+
+/* Barra de secciones con pinos a la derecha. */
+html.theme-navidad .nav-2 {
+  height: 30px;
+  background:
+    url("/img/navidad/pinos.webp") no-repeat right 28px bottom 3px / auto 24px,
+    linear-gradient(90deg, #ff7a72 0%, #ffb400 100%);
+}
+
+html.theme-navidad .app-layout .nav-2 {
+  border-radius: 0 0 14px 14px;
+}
+
+html.theme-navidad .nav-2 ul {
+  padding-right: 90px;
+}
+
+/* Gorro sobre «Únete al Capítulo» (el botón conserva el degradado del de idiomas). */
+html.theme-navidad .nav-join-slot {
+  position: relative;
+}
+
+html.theme-navidad .nav-join-slot::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -8px;
+  width: 50px;
+  height: 45px;
+  margin-top: -43px;
+  background: url("/img/navidad/gorro.webp") no-repeat center / contain;
+  transform: rotate(8deg);
+  pointer-events: none;
+  z-index: 3;
+}
+
+@media (max-width: 991px) {
+  html.theme-navidad .nav-join-slot { width: fit-content; }
+}
+
+/* Celulares y tabletas (sin barra superior): focos superpuestos al menú y sin pinos. */
+@media (max-width: 991.98px) {
+  html.theme-navidad .app-layout .nav-bar::before {
+    content: "";
+    /* Superpuestas al menú: no ocupan espacio ni bloquean los toques. */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    height: 48px;
+    /* Una sola guirnalda centrada; en tabletas no pasa de 520 px de ancho. */
+    background: url("/img/navidad/focos.webp") no-repeat center top / min(100%, 520px) auto;
+    pointer-events: none;
+    animation: navidad-brillo 2.8s ease-in-out infinite;
+  }
+
+  html.theme-navidad .app-layout .nav-bar nav.navbar,
+  html.theme-navidad .app-layout .nav-2 {
+    border-radius: 0;
+  }
+
+  html.theme-navidad .nav-2 {
+    background: linear-gradient(90deg, #ff7a72 0%, #ffb400 100%);
+  }
+
+  html.theme-navidad .nav-2 ul {
+    padding-right: 50px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navidad-focos,
+  html.theme-navidad .app-layout .nav-bar::before { animation: none; }
+}

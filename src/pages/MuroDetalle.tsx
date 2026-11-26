@@ -8,6 +8,8 @@ import { ApiError, apiRequest } from "../services/api";
 import type { MuroPostPublic } from "../types/muro";
 import { mediaUrl } from "../utils/mediaUrl";
 import styles from "./Muro.module.css";
+import { isHtml } from "../utils/richText";
+import { sanitizeHtml } from "../utils/sanitizeHtml";
 
 export default function MuroDetalle() {
   const { t, locale } = useLanguage();
@@ -86,7 +88,11 @@ export default function MuroDetalle() {
                   ))}
                 </div>
               )}
-              <div className={styles.body}>{post.body}</div>
+              {isHtml(post.body) ? (
+                <div className={`${styles.body} ${styles.richBody}`} dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.body) }} />
+              ) : (
+                <div className={styles.body}>{post.body}</div>
+              )}
               <div className={styles.share}>
                 <strong>{t("muro.copyLink")}:</strong>
                 <button type="button" className={styles.ghost} onClick={copy}>

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import "../../styles/nav-areas.css";
 import { SubNav } from "./SubNav";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useLanguage } from "../../i18n/LanguageContext";

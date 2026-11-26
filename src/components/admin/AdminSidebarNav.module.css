@@ -1,0 +1,137 @@
+.nav {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+  margin-top: 14px;
+  padding-right: 2px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.group {
+  display: grid;
+  gap: 2px;
+}
+
+.groupHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 4px 10px;
+  border: 0;
+  background: transparent;
+  color: #a58c7a;
+  font: inherit;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.groupHead:hover:not(:disabled) {
+  color: #d94f26;
+}
+
+.groupHead:disabled {
+  cursor: default;
+}
+
+.groupHead > span:first-child {
+  flex: 1;
+}
+
+.chevron {
+  flex: none;
+  transition: transform 0.18s ease;
+  transform: rotate(-90deg);
+}
+
+.chevronOpen {
+  transform: none;
+}
+
+.groupDot,
+.badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #ef5b2a;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.badgeEmpty {
+  background: #eee4db;
+  color: #8a7a6d;
+}
+
+.list {
+  display: grid;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #665a51;
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.item:hover,
+.itemActive {
+  background: linear-gradient(90deg, #ffede1, #fff4dd);
+  color: #d94f26;
+  box-shadow: inset 3px 0 0 #ef5b2a;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  opacity: 0.85;
+}
+
+.itemActive .icon {
+  opacity: 1;
+}
+
+.label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron,
+  .item {
+    transition: none;
+  }
+}

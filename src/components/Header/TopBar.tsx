@@ -1,6 +1,16 @@
+import { useSiteSections } from "../../hooks/useSiteSections";
+
 export function TopBar() {
+  const { christmas } = useSiteSections();
   return (
-    <div className="container-fluid pt-3 d-none d-lg-block bg-light">
+    <div className="container-fluid position-relative pt-3 d-none d-lg-block bg-light top-bar">
+      {christmas && (
+        <div className="navidad-deco" aria-hidden="true">
+          <div className="navidad-focos" />
+          <img className="navidad-rama navidad-rama--izquierda" src="/img/navidad/rama-izquierda.webp" alt="" />
+          <img className="navidad-rama navidad-rama--derecha" src="/img/navidad/rama-derecha.webp" alt="" />
+        </div>
+      )}
       <div className="container">
         <div className="row">
           {/* <div className="flex-start vertical-align col-lg-6">

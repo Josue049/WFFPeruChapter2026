@@ -220,6 +220,9 @@
 .richText { font-size: 1.08rem; line-height: 1.85; color: #373d37; }
 .richText h2, .richText h3 { font-family: Georgia, "Times New Roman", serif; color: var(--forest); margin-top: 2em; }
 .richText img { max-width: 100%; height: auto; }
+.richText span[data-size="small"] { font-size: .82em; }
+.richText span[data-size="large"] { font-size: 1.25em; }
+.richText span[data-size="xlarge"] { font-size: 1.55em; }
 .asideFacts { border-top: 3px solid var(--orange); padding-top: 20px; }
 .asideFacts dl { margin: 0; }
 .asideFacts dt { margin-top: 18px; color: #9b581f; font-size: .72rem; text-transform: uppercase; letter-spacing: .12em; font-weight: 800; }
@@ -668,9 +671,8 @@
 .relatedPortrait img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center bottom;
-  filter: grayscale(1);
+  object-fit: cover;
+  object-position: center top;
 }
 .relatedVolunteerList small,
 .relatedVolunteerList strong,
@@ -1843,4 +1845,209 @@
   font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: 0.08em;
+}
+.articleCoverImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  box-shadow: 0 13px 30px rgba(0, 0, 0, .07);
+}
+@media (max-width: 620px) {
+  .articleCoverImage { width: min(100%, 330px); margin: 0 auto; }
+}
+
+/* ===== Detalle de voluntario: rediseño editorial (portada, titular naranja, tarjeta lateral, cita naranja) ===== */
+.volunteerArticlePage {
+  --vol-accent: #ef5b2a;
+  --vol-accent-bright: #ef5b2a;
+  --vol-soft: #fff3ea;
+  --vol-soft-line: #fadcc9;
+  font-family: "Poppins", Arial, sans-serif;
+}
+.volunteerArticlePage .volunteerArticleShell { width: min(1240px, calc(100% - 38px)); padding: 28px 0 90px; }
+.volunteerArticlePage .backLink { color: var(--vol-accent); font: 600 13px/1.4 "Poppins", Arial, sans-serif; }
+.volunteerArticlePage .backLink:hover { text-decoration: underline; }
+
+/* Hero */
+.volunteerArticlePage .volunteerArticleHero {
+  position: relative;
+  grid-template-columns: minmax(280px, 38%) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+  margin-top: 22px;
+  padding: 36px 0 56px;
+  border-bottom: 0;
+}
+.volunteerArticlePage .volunteerArticleHero > * { position: relative; z-index: 1; }
+.heroCircle {
+  position: absolute !important;
+  z-index: 0 !important;
+  left: -78px;
+  bottom: 26px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: #fc6862;
+}
+.heroFlower {
+  position: absolute !important;
+  z-index: 0 !important;
+  top: 0;
+  right: -34px;
+  width: clamp(90px, 13vw, 150px);
+  height: auto;
+  pointer-events: none;
+}
+.volunteerArticlePage .articleCoverImage,
+.volunteerArticlePage .articleCoverMini { box-shadow: 0 22px 44px rgba(40, 30, 20, .22); }
+
+.heroPills { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.pillIssue,
+.pillArea {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font: 700 11px/1.2 "Poppins", Arial, sans-serif;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.pillIssue { background: var(--vol-accent); color: #fff; }
+.pillArea { border: 1px solid var(--vol-soft-line); background: #fff; color: var(--vol-accent); }
+
+.volunteerArticlePage .articleHeadlineBlock h1 {
+  max-width: 640px;
+  margin: 20px 0 22px;
+  font: 800 clamp(2.2rem, 4.6vw, 3.9rem)/1.06 "Poppins", Arial, sans-serif;
+  letter-spacing: -.03em;
+  color: #111;
+}
+.volunteerArticlePage .articleHeadlineBlock h1 em {
+  display: block;
+  margin-top: .04em;
+  font: 800 1.3em/1 Georgia, "Times New Roman", serif;
+  font-style: normal;
+  letter-spacing: -.04em;
+  text-transform: uppercase;
+  color: var(--vol-accent-bright);
+}
+.volunteerArticlePage .articleByline { display: block; }
+.volunteerArticlePage .articleByline strong { font: 700 14px/1.3 "Poppins", Arial, sans-serif; letter-spacing: .03em; text-transform: uppercase; color: #111; }
+.volunteerArticlePage .articleByline small { margin-top: 3px; font: 400 12px/1.4 "Poppins", Arial, sans-serif; color: #777; }
+.volunteerArticlePage .articleHeadlineBlock > p { max-width: 620px; margin: 22px 0 0; font: 400 14px/1.8 "Poppins", Arial, sans-serif; color: #333; }
+
+/* Cuerpo + tarjeta lateral */
+.volunteerArticlePage .volunteerArticleLayout {
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: clamp(32px, 5vw, 64px);
+  justify-content: stretch;
+  align-items: start;
+  padding-top: 44px;
+}
+.volunteerArticlePage .volunteerStoryBody .richText {
+  padding-left: clamp(18px, 2.4vw, 30px);
+  border-left: 3px solid var(--vol-accent);
+  font: 400 14px/1.85 "Poppins", Arial, sans-serif;
+  color: #222;
+}
+.volunteerArticlePage .volunteerStoryBody .richText > p:first-child::first-letter {
+  float: none;
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+}
+.volunteerArticlePage .richText strong { color: #111; }
+.volunteerArticlePage .richText h2,
+.volunteerArticlePage .richText h3 { font: 800 clamp(1.5rem, 2.6vw, 2.1rem)/1.2 Georgia, "Times New Roman", serif; margin-top: 1.6em; }
+
+.volunteerArticlePage .volunteerArticleAside > .storyCard {
+  padding: 22px 24px 24px;
+  border: 1px solid #ececec;
+  border-top: 1px solid #ececec;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(40, 30, 20, .08);
+}
+.storyCardHead { display: flex; align-items: center; gap: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--vol-soft-line); }
+.storyCardIcon { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; width: 38px; height: 38px; border: 2px solid var(--vol-accent); border-radius: 50%; color: var(--vol-accent); }
+.storyCardIcon svg, .storyLinksTitle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.volunteerArticlePage .volunteerArticleAside .storyCard h2 { margin: 0; font: 700 1.25rem/1.2 Georgia, "Times New Roman", serif; color: #111; }
+.volunteerArticlePage .volunteerArticleAside .storyCard dt { margin-top: 18px; color: var(--vol-accent); font: 700 11px/1.3 "Poppins", Arial, sans-serif; letter-spacing: .16em; }
+.volunteerArticlePage .volunteerArticleAside .storyCard dd { margin-top: 4px; font: 400 13px/1.5 "Poppins", Arial, sans-serif; color: #222; }
+.storyLinks { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--vol-soft-line); }
+.storyLinksTitle { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; font: 700 1.05rem/1.2 Georgia, "Times New Roman", serif; color: #111; }
+.storyLinksTitle svg { width: 26px; height: 26px; color: var(--vol-accent); }
+.storyLinks a { display: block; padding: 8px 0; border-bottom: 1px solid var(--vol-soft-line); color: var(--vol-accent); font: 600 13px/1.4 "Poppins", Arial, sans-serif; text-decoration: none; }
+.storyLinks a:last-child { border-bottom: 0; }
+.storyLinks a:hover { text-decoration: underline; }
+
+/* Cita naranja */
+.volunteerArticlePage .articleQuote {
+  margin: 48px 0;
+  padding: 34px 40px 34px 96px;
+  border-radius: 14px;
+  background: linear-gradient(110deg, #ef5b2a 0%, #ef7d22 60%, #e9921f 100%);
+  color: #fff;
+  font: italic 500 clamp(1.1rem, 1.7vw, 1.4rem)/1.5 Georgia, "Times New Roman", serif;
+  box-shadow: 0 14px 30px rgba(239, 91, 42, .28);
+}
+.volunteerArticlePage .articleQuote > span { left: 28px; top: 14px; color: #fff; font-size: 5rem; opacity: .95; }
+
+/* Galería / impacto */
+.volunteerArticlePage .articleGallerySection h2 { font: 800 clamp(1.5rem, 2.6vw, 2.1rem)/1.2 Georgia, "Times New Roman", serif; }
+.volunteerArticlePage .editorialGallery img { border-radius: 16px; box-shadow: 0 10px 26px rgba(40, 30, 20, .14); }
+
+@media (max-width: 850px) {
+  .volunteerArticlePage .volunteerArticleLayout { grid-template-columns: 1fr; }
+  .volunteerArticlePage .volunteerArticleAside { grid-template-columns: 1fr; }
+  .heroCircle { left: -40px; width: 110px; height: 110px; }
+}
+@media (max-width: 620px) {
+  .volunteerArticlePage .volunteerArticleHero { grid-template-columns: 1fr; padding-bottom: 36px; }
+  .heroFlower { width: 80px; right: -18px; }
+  .heroCircle { display: none; }
+  .volunteerArticlePage .articleHeadlineBlock h1 { font-size: 2.3rem; }
+  .volunteerArticlePage .articleQuote { padding: 56px 24px 26px; }
+  .volunteerArticlePage .articleQuote > span { left: 22px; top: 6px; font-size: 4rem; }
+}
+
+/* ===== Historia de voluntario: tipografía de revista y letra capital =====
+   La clase repetida da prioridad sobre los estilos anteriores y vale también para la vista previa del panel. */
+.volunteerStoryBody .richText.richText {
+  font: 400 17.5px/1.75 "Source Serif 4", Georgia, "Times New Roman", serif;
+  color: #222;
+}
+.volunteerStoryBody .richText.richText h2,
+.volunteerStoryBody .richText.richText h3 {
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  text-align: left;
+}
+/* Texto justificado, con guiones para que no queden huecos grandes. */
+.volunteerStoryBody .richText.richText,
+.volunteerStoryBody .richText.richText :where(p, div, li, blockquote) {
+  text-align: justify;
+  hyphens: auto;
+}
+.volunteerStoryBody .richText.richText > p:first-child::first-letter,
+.volunteerStoryBody .richText.richText > div:first-child > p:first-of-type::first-letter {
+  float: left;
+  margin: .06em .1em 0 0;
+  color: #ef5b2a;
+  font: 700 4.4em/.82 "Playfair Display", Georgia, "Times New Roman", serif;
+}
+/* Cita en letra corrida legible, con comillas de apertura y cierre. */
+.volunteerArticlePage .articleQuote { padding-right: 96px; }
+.volunteerArticlePage .articleQuote p { font: 400 clamp(1.1rem, 1.65vw, 1.32rem)/1.7 "Courgette", "Segoe Script", cursive; text-align: justify; hyphens: auto; }
+.volunteerArticlePage .articleQuote > span.quoteClose { left: auto; top: auto; right: 28px; bottom: -22px; }
+@media (max-width: 620px) {
+  .volunteerArticlePage .articleQuote { padding-right: 24px; padding-bottom: 64px; }
+  .volunteerArticlePage .articleQuote > span.quoteClose { right: 22px; bottom: -14px; }
+}
+/* La historia va sobre una hoja blanca que conserva la raya de color a la izquierda. */
+.volunteerArticlePage .volunteerStoryBody .richText.richText {
+  padding: clamp(20px, 3vw, 40px);
+  border-radius: 0 16px 16px 0;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(40, 30, 20, .08);
 }

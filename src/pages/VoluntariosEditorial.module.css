@@ -1,0 +1,425 @@
+/* VOLUNTARIOS DESTACADOS — portada editorial inspirada en publicaciones impresas.
+   Aislado de la página de detalle y del navbar del WFF Perú. */
+.page {
+  --forest: #1f4839;
+  --ink: #181a17;
+  --muted: #656762;
+  --orange: #e96b37;
+  min-height: 70vh;
+  background: transparent;
+  color: var(--ink);
+  padding-bottom: 60px;
+}
+.page :where(h1, h2, h3, p) { margin-top: 0; }
+.page :where(a) { text-decoration: none; color: inherit; }
+.page :where(a:hover, a:focus-visible) { text-decoration: none; color: inherit; }
+.page :where(button) { font-family: inherit; }
+.page :where(a:focus-visible, button:focus-visible) { outline: 3px solid #dd8429; outline-offset: 4px; }
+
+.masthead {
+  width: min(1300px, calc(100% - 64px));
+  margin: 0 auto;
+  padding: clamp(56px, 7vw, 100px) 0 clamp(26px, 3vw, 40px);
+  text-align: center;
+}
+.mastheadKicker {
+  display: block;
+  margin: 0 0 12px;
+  font: 700 10px/1.4 "Poppins", Arial, sans-serif;
+  letter-spacing: .28em;
+  color: var(--forest);
+}
+.mastheadKicker span { padding: 0 8px; color: var(--orange); }
+.masthead h1 {
+  margin: 0;
+  font: 400 clamp(1.1rem, 5.6vw, 4rem)/1.05 "Playfair Display", "Bodoni MT", Didot, Georgia, serif;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+.mastheadBottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 18px;
+  padding: 8px 1px 0;
+  border-top: 1px solid #d2d4ce;
+  color: #858981;
+  font: 600 9px/1.3 "Poppins", Arial, sans-serif;
+  letter-spacing: .11em;
+}
+.content { width: min(1300px, calc(100% - 64px)); margin: 0 auto; }
+.status { margin: 0; padding: 75px 15px; text-align: center; color: var(--muted); font-size: 16px; }
+.error { color: #a4392f; }
+
+/* La composición de tres columnas reproduce la edición destacada de la referencia. */
+.featuredSection {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.17fr) minmax(0, .85fr);
+  gap: clamp(18px, 3vw, 42px);
+  align-items: stretch;
+  padding: 28px clamp(20px, 3.25vw, 44px);
+  background: #fbf9f5;
+}
+.featuredText { min-width: 0; padding-top: 14px; }
+.featuredSectionWide { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.featuredSectionWide .featuredCoverLink { max-width: 520px; }
+.fineLabel,
+.sideStoryCategory,
+.topicTag {
+  display: inline-block;
+  width: fit-content;
+  border: 1px solid #d6d8d3;
+  padding: 3px 7px;
+  color: #626964;
+  font: 650 9px/1.25 "Poppins", Arial, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .035em;
+}
+.featuredStoryLink { display: block; margin-top: 17px; }
+.featuredStoryLink h2 {
+  margin: 0;
+  font: 400 clamp(1.65rem, 3.25vw, 3.35rem)/1.03 Georgia, "Times New Roman", serif;
+  letter-spacing: -.04em;
+  transition: color .2s ease;
+}
+.featuredStoryLink:hover h2 { color: var(--forest); }
+.topicTag { margin: 20px 0 0; border-color: #dfe7dd; background: #eef2e9; color: var(--forest); }
+.featuredDescription {
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 16px 0 0;
+  color: #575b56;
+  font: 400 13px/1.7 "Poppins", Arial, sans-serif;
+}
+.featuredByline { margin: 14px 0 0; color: #777b75; font: 500 11px/1.5 "Poppins", Arial, sans-serif; }
+.readMore {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  margin-top: 26px;
+  padding: 14px 26px;
+  border-radius: 999px;
+  background: var(--orange);
+  color: #fff !important;
+  font: 700 12px/1.2 "Poppins", Arial, sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  box-shadow: 0 8px 18px rgba(245, 125, 20, .32);
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.readMore:hover { color: #fff !important; background: #000; transform: translateY(-2px); box-shadow: 0 12px 22px rgba(0, 0, 0, .25); }
+.readMore:focus-visible { outline: 3px solid #000; outline-offset: 3px; }
+.featuredCoverLink {
+  display: block;
+  align-self: center;
+  width: 100%;
+  max-width: 395px;
+  margin: 0 auto;
+  padding: 9px;
+  background: #000;
+  box-shadow: 0 1px 3px #30291b23;
+  transition: transform .25s ease;
+}
+.featuredCoverLink:hover { transform: translateY(-4px); }
+.featuredCoverLink .magazineCover { border-color: #fff; }
+.featuredCoverImage { display: block; width: 100%; height: auto; }
+.featuredCoverEmpty { display: grid; place-items: center; width: 100%; aspect-ratio: 4 / 5; background: #f1f1ee; color: #777; font-size: 13px; }
+.sideStories { min-width: 0; border-left: 1px solid #d9d9d3; padding: 4px 0 4px clamp(14px, 2.1vw, 28px); }
+.sideStory { display: block; margin-bottom: 23px; }
+.sideStory:last-child { margin-bottom: 0; }
+.sideStory h3 { margin: 9px 0 4px; font: 400 clamp(1.05rem, 1.55vw, 1.45rem)/1.15 Georgia, "Times New Roman", serif; letter-spacing: -.023em; transition: color .2s; }
+.sideStory:hover h3 { color: var(--orange); }
+.sideStory small { color: #858580; font: 500 10px/1.4 "Poppins", Arial, sans-serif; }
+.sideStoriesNote { padding: 20px 0; }
+.sideStoriesNote p { margin: 14px 0 0; font: 400 14px/1.7 Georgia, serif; color: var(--muted); }
+
+/* Portada compartida por el destacado y la grilla de ediciones. */
+.magazineCover {
+  --cover-color: #d0dcd0;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: block;
+  width: 100%;
+  aspect-ratio: 0.765;
+  border: 1px solid #cbd1c9;
+  background: var(--cover-color);
+  color: var(--ink);
+}
+.coverSage { --cover-color: #d9e0d5; }
+.coverGold { --cover-color: #e5d0a2; }
+.coverOrange { --cover-color: #e3b3a2; }
+.coverSky { --cover-color: #bbcfd1; }
+.coverHead {
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 5.5% 6% 5%;
+  background: rgba(251, 250, 246, .96);
+  border-bottom: 1px solid #3333332d;
+}
+.coverOverline { display: block; font: 700 clamp(5px, .6vw, 8px)/1.2 "Poppins", Arial, sans-serif; letter-spacing: .08em; }
+.coverBrand { display: flex; align-items: baseline; justify-content: space-between; gap: 5px; }
+.coverBrand strong { font: 500 clamp(38px, 5vw, 80px)/.94 Georgia, "Times New Roman", serif; letter-spacing: -.082em; }
+.coverBrand span { font: 800 clamp(10px, 1.1vw, 19px)/1 "Poppins", Arial, sans-serif; letter-spacing: -.055em; color: #d55226; }
+.coverCollection { display: block; margin-top: 3px; color: var(--forest); font: 700 clamp(6px, .66vw, 9px)/1.4 "Poppins", Arial, sans-serif; letter-spacing: .18em; text-transform: uppercase; }
+.coverIssue {
+  position: absolute;
+  z-index: 5;
+  top: 30%;
+  left: 6%;
+  padding: 5px 7px;
+  background: #f1b22b;
+  color: #201f1b;
+  font: 800 clamp(7px, .73vw, 10px)/1.1 "Poppins", Arial, sans-serif;
+  letter-spacing: .05em;
+}
+.coverPhoto { position: absolute; inset: 22% 0 0; z-index: 1; overflow: hidden; }
+.coverPhoto img { width: 100%; height: 100%; object-fit: cover; object-position: center 22%; transition: transform .48s ease; }
+.coverImageFallback { display: flex; height: 100%; justify-content: center; align-items: center; color: #ffffff4a; font: 500 90px/.9 Georgia, serif; }
+.coverGradient { position: absolute; z-index: 2; inset: 49% 0 0; background: linear-gradient(180deg, transparent 5%, rgba(16, 39, 31, .20) 25%, rgba(9, 29, 23, .88) 100%); }
+.coverTitleBlock { position: absolute; z-index: 3; bottom: 5%; left: 7%; right: 7%; color: #fff; }
+.coverTitleBlock > span { display: block; width: fit-content; margin-bottom: 7px; padding: 4px 6px; background: #efb637; color: #252219; font: 800 clamp(6px, .63vw, 9px)/1.2 "Poppins", Arial, sans-serif; text-transform: uppercase; letter-spacing: .08em; }
+.coverTitleBlock strong { display: block; font: 600 clamp(1.5rem, 2.5vw, 2.65rem)/.96 Georgia, "Times New Roman", serif; letter-spacing: -.035em; text-shadow: 0 1px 5px #0005; overflow-wrap: anywhere; }
+.coverTitleBlock small { display: block; margin-top: 9px; font: 750 clamp(8px, .75vw, 11px)/1.2 "Poppins", Arial, sans-serif; text-transform: uppercase; letter-spacing: .055em; }
+.coverBottomRule { position: absolute; z-index: 4; bottom: 0; left: 0; right: 0; height: 4px; background: #e56e39; }
+
+.issuesSection { padding-top: clamp(45px, 5vw, 74px); scroll-margin-top: 30px; }
+.issuesHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 8px 13px;
+  margin-bottom: 18px;
+  background: #000;
+  color: #fff;
+}
+.issuesHeader h2 { margin: 0; font: 500 clamp(1rem, 1.45vw, 1.25rem)/1.1 Georgia, serif; text-transform: uppercase; }
+.issuesHeader span { font: 600 9px/1.3 "Poppins", Arial, sans-serif; text-transform: uppercase; letter-spacing: .13em; color: #f4c493; }
+.issueGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px 25px; }
+.issueCard { min-width: 0; }
+.issueLink { display: block; }
+.issueLink .magazineCover { transition: box-shadow .27s ease, transform .27s ease; }
+.issueLink:hover .magazineCover { box-shadow: 0 14px 24px #20332621; transform: translateY(-4px); }
+.issueLink:hover .coverPhoto img { transform: scale(1.045); }
+.issueCaption { padding-top: 8px; }
+.issueCaption h3 { margin: 0 0 3px; font: 600 clamp(14px, 1.25vw, 17px)/1.22 Georgia, serif; }
+.issueCaption p { margin: 0; font: 550 clamp(8px, .75vw, 10px)/1.5 "Poppins", Arial, sans-serif; color: #82847f; text-transform: uppercase; }
+.issueCaption p span { padding: 0 3px; color: #b7b7b3; }
+.pagination { display: flex; justify-content: center; align-items: center; gap: 5px; margin-top: 43px; }
+.pagination button { display: inline-flex; align-items: center; justify-content: center; min-width: 38px; height: 38px; padding: 0 9px; border: 0; border-radius: 50%; background: transparent; color: #222; font-size: 14px; font-weight: 700; cursor: pointer; transition: background .2s; }
+.pagination button:hover:not(:disabled) { background: #f3e8d6; }
+.pagination button:disabled { opacity: .28; cursor: not-allowed; }
+.pagination .pageActive, .pagination .pageActive:hover { background: #f5b719 !important; color: #000; }
+.pagination .pageArrow { margin: 0 8px; border: 1px solid #252925; border-radius: 50%; font-size: 19px; font-weight: 400; }
+.pageEllipsis { padding: 0 6px; font-weight: 700; }
+
+@media (max-width: 1080px) {
+  .featuredSection { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, .9fr); gap: 20px; padding: 22px; }
+  .featuredStoryLink h2 { font-size: clamp(1.6rem, 3.1vw, 2.6rem); }
+  .sideStory { margin-bottom: 17px; }
+  .sideStory h3 { font-size: clamp(.94rem, 1.7vw, 1.24rem); }
+  .sideStory small { font-size: 9px; }
+  .issueGrid { gap: 25px 17px; }
+}
+@media (max-width: 800px) {
+  .masthead { width: min(100% - 32px, 720px); padding-top: 64px; }
+  .content { width: min(100% - 32px, 720px); }
+  .featuredSection { grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); gap: 24px; padding: 22px; }
+  .featuredText { padding-top: 6px; }
+  .featuredStoryLink h2 { font-size: clamp(1.6rem, 4.6vw, 3rem); }
+  .sideStories { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px 25px; padding: 19px 0 0; border-left: 0; border-top: 1px solid #dedfd9; }
+  .sideStory { margin: 0; }
+  .sideStoriesNote { grid-column: 1 / -1; }
+  .issueGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .coverBrand strong { font-size: clamp(30px, 5.5vw, 62px); }
+  .coverTitleBlock strong { font-size: clamp(1.25rem, 3vw, 2rem); }
+}
+@media (max-width: 570px) {
+  .page { padding-bottom: 65px; }
+  .masthead { width: calc(100% - 26px); padding: 48px 0 18px; }
+  .mastheadKicker { font-size: 8px; letter-spacing: .18em; }
+  .masthead h1 { font-size: clamp(1.1rem, 5.6vw, 2.7rem); line-height: 1.05; letter-spacing: .01em; }
+  .mastheadBottom { margin-top: 13px; font-size: 7px; }
+  .content { width: calc(100% - 24px); }
+  .featuredSection { grid-template-columns: 1fr; gap: 17px; padding: 23px 19px; }
+  .featuredText { padding: 0; }
+  .featuredStoryLink { margin-top: 11px; }
+  .featuredStoryLink h2 { font-size: clamp(2rem, 8vw, 3.2rem); }
+  .featuredDescription { -webkit-line-clamp: 4; font-size: 12px; }
+  .topicTag { margin-top: 12px; }
+  .readMore { margin-top: 16px; }
+  .featuredCoverLink { max-width: 360px; padding: 7px; }
+  .sideStories { gap: 18px; }
+  .sideStory h3 { font-size: 16px; }
+  .issueGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 23px 12px; }
+  .issuesSection { padding-top: 42px; }
+  .issuesHeader { padding: 9px 10px; }
+  .issuesHeader h2 { font-size: 14px; }
+  .issuesHeader span { display: none; }
+  .coverOverline { font-size: 5px; }
+  .coverBrand strong { font-size: clamp(30px, 10vw, 48px); }
+  .coverBrand span { font-size: clamp(8px, 2.2vw, 12px); }
+  .coverCollection { font-size: 6px; }
+  .coverIssue { font-size: 6px; padding: 3px 5px; }
+  .coverTitleBlock strong { font-size: clamp(1.05rem, 4.75vw, 1.55rem); }
+  .coverTitleBlock small { font-size: 7px; }
+  .coverTitleBlock > span { font-size: 5px; }
+  .issueCaption h3 { font-size: 13px; }
+  .issueCaption p { font-size: 8px; }
+  .pagination { margin-top: 28px; gap: 1px; }
+  .pagination button { min-width: 32px; height: 32px; padding: 0 6px; font-size: 12px; }
+  .pagination .pageArrow { margin: 0 3px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page :where(a, img, button) { transition: none !important; }
+}
+
+/* ===== Rediseño: cabecera centrada, tarjeta blanca con portada, ediciones en tarjetas ===== */
+.page { --grad: linear-gradient(90deg, #ff7a72 0%, #ffb400 100%); overflow-x: clip; font-family: "Poppins", Arial, sans-serif; }
+
+.masthead { padding: clamp(80px, 9vw, 120px) 0 clamp(30px, 4vw, 56px); }
+.mastheadKicker {
+  margin: 0 0 6px;
+  font: 600 clamp(11px, 1.1vw, 14px)/1.4 "Poppins", Arial, sans-serif;
+  letter-spacing: .38em;
+  color: var(--orange);
+}
+.masthead h1 {
+  font: 800 clamp(2rem, 5vw, 3.4rem)/1.1 "Poppins", Arial, sans-serif;
+  text-transform: capitalize;
+  letter-spacing: -.01em;
+  white-space: normal;
+  color: #111;
+}
+
+.featuredWrap { position: relative; width: min(1060px, 100%); margin: 0 auto; }
+.decoTop { position: absolute; z-index: 0; top: -52px; right: -62px; width: clamp(90px, 14vw, 160px); height: auto; }
+.decoBottom { position: absolute; z-index: 0; bottom: -26px; left: -58px; width: clamp(120px, 21vw, 230px); height: auto; }
+
+.featuredSection,
+.featuredSectionWide {
+  position: relative;
+  z-index: 1;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 44px);
+  align-items: center;
+  padding: clamp(24px, 3.4vw, 44px);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 18px 44px rgba(40, 30, 20, .13);
+}
+.featuredText { padding: 0; }
+.fineLabel, .topicTag { border-radius: 3px; font-weight: 700; letter-spacing: .04em; }
+.fineLabel { border-color: var(--orange); color: #111; background: #fff; }
+.featuredStoryLink { margin-top: 20px; }
+.featuredStoryLink h2 { font: 800 clamp(1.6rem, 2.8vw, 2.3rem)/1.18 "Poppins", Arial, sans-serif; letter-spacing: -.01em; color: #111; }
+.topicTag { margin-top: 16px; border-color: #dbe8cf; background: #eaf3e0; color: #1f4839; }
+.featuredDescription { margin-top: 18px; color: #1d1d1d; font: 400 14px/1.75 "Poppins", Arial, sans-serif; }
+.readMore {
+  margin-top: 26px;
+  padding: 13px 30px;
+  background: var(--grad);
+  font: 600 14px/1.2 "Poppins", Arial, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  box-shadow: 0 8px 20px rgba(255, 122, 80, .38);
+}
+.readMore:hover { background: var(--grad); filter: brightness(.95); box-shadow: 0 12px 24px rgba(255, 122, 80, .45); }
+.featuredSectionWide .featuredCoverLink, .featuredCoverLink { max-width: 100%; padding: 0; background: none; box-shadow: 0 14px 34px rgba(0, 0, 0, .28); }
+.sideStories { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px 28px; padding: 20px 0 0; border-left: 0; border-top: 1px solid #eee; }
+.sideStory { margin: 0; }
+
+.issuesSection { padding-top: clamp(56px, 7vw, 96px); }
+.issuesHeader { display: block; padding: 0; margin: 0 0 clamp(24px, 3vw, 40px); background: none; color: #111; text-align: center; }
+.issuesHeader span { display: block; margin-bottom: 4px; font: 600 clamp(11px, 1.1vw, 14px)/1.4 "Poppins", Arial, sans-serif; letter-spacing: .38em; color: var(--orange); text-transform: uppercase; }
+.issuesHeader h2 { font: 800 clamp(1.6rem, 3.4vw, 2.5rem)/1.15 "Poppins", Arial, sans-serif; text-transform: capitalize; }
+.issueGrid { width: min(1100px, 100%); margin: 0 auto; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+.issueCard {
+  overflow: hidden;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(40, 30, 20, .1);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.issueCard:hover { transform: translateY(-4px); box-shadow: 0 16px 34px rgba(40, 30, 20, .16); }
+.issueLink .magazineCover { border: 0; box-shadow: none !important; transform: none !important; }
+.issueCaption { padding: 14px 18px 16px; }
+.issueCaption h3 { margin: 0 0 4px; font: 700 clamp(15px, 1.4vw, 18px)/1.25 "Poppins", Arial, sans-serif; color: #111; }
+.issueCaption p { font: 500 clamp(11px, .95vw, 13px)/1.5 "Poppins", Arial, sans-serif; color: #666; text-transform: none; }
+
+@media (max-width: 800px) {
+  .decoTop, .decoBottom { display: none; }
+  .featuredSection, .featuredSectionWide { grid-template-columns: 1fr; }
+  .featuredCoverLink { max-width: 420px !important; }
+  .issueGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+}
+@media (max-width: 570px) {
+  .masthead { padding-top: 64px; }
+  .mastheadKicker { letter-spacing: .26em; font-size: 10px; }
+  .issueGrid { grid-template-columns: 1fr; }
+  .issueCard { max-width: 420px; margin: 0 auto; width: 100%; }
+}
+
+/* ===== Efecto de página que se abre al pasar sobre la portada ===== */
+.coverCurl { position: relative; display: block; overflow: hidden; }
+.pageCurl {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 30%;
+  height: auto;
+  overflow: visible;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0);
+  transform-origin: 100% 100%;
+  transition: transform .5s cubic-bezier(.25, .8, .3, 1), opacity .2s ease .3s;
+}
+.pageCurlFlap { filter: drop-shadow(-5px 4px 6px rgba(0, 0, 0, .28)); }
+.coverCurl:hover .pageCurl,
+a:focus-visible .pageCurl {
+  opacity: 1;
+  transform: scale(1);
+  transition: transform .5s cubic-bezier(.25, .8, .3, 1), opacity .1s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pageCurl, .coverCurl:hover .pageCurl { transition: none; }
+}
+
+/* Destello que cruza la portada junto con la página que se abre. */
+.coverCurl::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, .15) 43%, rgba(255, 255, 255, .6) 50%, rgba(255, 255, 255, .15) 57%, transparent 65%);
+  transform: translateX(110%);
+  pointer-events: none;
+}
+.pageCurl { z-index: 2; }
+.coverCurl:hover::after,
+a:focus-visible .coverCurl::after { animation: coverShine .9s ease-out; }
+@keyframes coverShine {
+  from { transform: translateX(110%); }
+  to { transform: translateX(-110%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .coverCurl:hover::after,
+  a:focus-visible .coverCurl::after { animation: none; }
+}
+
+/* Galería de ediciones sin bordes: sin esquinas redondeadas, marco ni sombra. */
+.issueCard,
+.issueCard:hover {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}

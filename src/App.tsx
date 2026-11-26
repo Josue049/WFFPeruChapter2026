@@ -20,21 +20,14 @@ import NotFound from "./pages/NotFound";
 import Politicasygobernanza from "./pages/politicasygobernanza";
 import Relacionamiento from "./pages/relacionamiento";
 import Voces from "./pages/Voces";
-import { FEATURES } from "./config/features";
+import { SectionGate } from "./components/SectionGate";
 import EnviarArticulo from "./pages/EnviarArticulo";
 
-// Muro y Clases se cargan bajo demanda para no aumentar el peso del sitio principal.
+// Muro se carga bajo demanda para no aumentar el peso del sitio principal.
 const Muro = lazy(() => import("./pages/Muro"));
 const MuroDetalle = lazy(() => import("./pages/MuroDetalle"));
 const MuroEnviar = lazy(() => import("./pages/MuroEnviar"));
 const MuroMiReflexion = lazy(() => import("./pages/MuroMiReflexion"));
-const CampusLayout = lazy(() => import("./pages/campus/CampusLayout"));
-const CampusDashboard = lazy(() => import("./pages/campus/CampusDashboard"));
-const CampusCourse = lazy(() => import("./pages/campus/CampusCourse"));
-const CampusLesson = lazy(() => import("./pages/campus/CampusLesson"));
-const CampusGrades = lazy(() => import("./pages/campus/CampusGrades"));
-const CampusAccount = lazy(() => import("./pages/campus/CampusAccount"));
-const CampusReset = lazy(() => import("./pages/campus/CampusReset"));
 
 function PageFallback() {
   return <p className="page-status" role="status">Cargando…</p>;
@@ -54,31 +47,25 @@ function App() {
           <Route path="/comunicaciones" element={<Comunicaciones />} />
           <Route path="/relacionamiento" element={<Relacionamiento />} />
           <Route path="/empoderamiento-femenino" element={<EmpoderamientoFemenino />} />
-          <Route path="/voces" element={<Voces />} />
-          <Route path="/voces/enviar" element={<EnviarArticulo />} />
-          <Route path="/voces/:slug" element={<Articulo />} />
-          {FEATURES.muro && (
-            <>
-              <Route path="/muro" element={<Muro />} />
-              <Route path="/muro/enviar" element={<MuroEnviar />} />
-              <Route path="/muro/mi-reflexion/:token" element={<MuroMiReflexion />} />
-              <Route path="/muro/:slug" element={<MuroDetalle />} />
-            </>
-          )}
-          {FEATURES.clases && (
-            <Route path="/clases" element={<CampusLayout />}>
-              <Route index element={<CampusDashboard />} />
-              <Route path="curso/:courseId" element={<CampusCourse />} />
-              <Route path="leccion/:lessonId" element={<CampusLesson />} />
-              <Route path="notas" element={<CampusGrades />} />
-              <Route path="cuenta" element={<CampusAccount />} />
-              <Route path="restablecer/:token" element={<CampusReset />} />
-            </Route>
-          )}
-          <Route path="/hitos" element={<Hitos />} />
-          <Route path="/hitos/:slug" element={<HitoDetalle />} />
-          <Route path="/voluntarios-destacados" element={<VoluntariosDestacados />} />
-          <Route path="/voluntarios-destacados/:slug" element={<VoluntarioDetalle />} />
+          <Route element={<SectionGate name="voces" />}>
+            <Route path="/voces" element={<Voces />} />
+            <Route path="/voces/enviar" element={<EnviarArticulo />} />
+            <Route path="/voces/:slug" element={<Articulo />} />
+          </Route>
+          <Route element={<SectionGate name="muro" />}>
+            <Route path="/muro" element={<Muro />} />
+            <Route path="/muro/enviar" element={<MuroEnviar />} />
+            <Route path="/muro/mi-reflexion/:token" element={<MuroMiReflexion />} />
+            <Route path="/muro/:slug" element={<MuroDetalle />} />
+          </Route>
+          <Route element={<SectionGate name="hitos" />}>
+            <Route path="/hitos" element={<Hitos />} />
+            <Route path="/hitos/:slug" element={<HitoDetalle />} />
+          </Route>
+          <Route element={<SectionGate name="voluntarios" />}>
+            <Route path="/voluntarios-destacados" element={<VoluntariosDestacados />} />
+            <Route path="/voluntarios-destacados/:slug" element={<VoluntarioDetalle />} />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Route>
 

@@ -55,7 +55,7 @@ export default async function handler(request, response) {
     );
   }
   for (const story of volunteers) {
-    if (!story.slug) continue;
+    if (!story.slug || story.cover_only) continue;
     urls.push(
       entry(`/voluntarios-destacados/${story.slug}`, {
         lastmod: day(story.updated_at),

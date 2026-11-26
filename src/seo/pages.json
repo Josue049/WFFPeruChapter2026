@@ -79,5 +79,5 @@
       "priority": "0.8"
     }
   },
-  "noindex": ["/loginadmin", "/admin", "/voces/enviar", "/clases", "/muro/mi-reflexion"]
+  "noindex": ["/loginadmin", "/admin", "/voces/enviar", "/muro/mi-reflexion"]
 }

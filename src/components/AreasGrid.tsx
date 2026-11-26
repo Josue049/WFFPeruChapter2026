@@ -1,4 +1,3 @@
-import "../styles/areas-grid.css";
 import { useLanguage } from "../i18n/LanguageContext";
 
 export default function AreasSection() {

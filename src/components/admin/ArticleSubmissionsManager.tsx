@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Article, ArticleSubmission } from "../../types";
 import { apiRequest } from "../../services/api";
-import { HtmlPreview } from "./HtmlPreview";
+import { StoryEditor } from "./StoryEditor";
+import { useStoryImages } from "./storyImages";
 import { ImageField } from "./ImageField";
 import styles from "./AdminForms.module.css";
 
@@ -30,6 +31,7 @@ export function ArticleSubmissionsManager({
   const [creatingTag, setCreatingTag] = useState(false);
   const [tagNotice, setTagNotice] = useState("");
   const canDelete = currentUsername === "WFFAdmin";
+  const storyImages = useStoryImages(token);
 
   const load = useCallback(async () => {
     setItems(await apiRequest<ArticleSubmission[]>("/article-submissions", {}, { token, redirectOnUnauthorized: true }));
@@ -99,7 +101,7 @@ export function ArticleSubmissionsManager({
     try {
       const updated = await apiRequest<ArticleSubmission>(`/article-submissions/${selectedId}`, {
         method: "PUT",
-        body: JSON.stringify({ ...form, reviewer_notes: form.reviewer_notes.trim() || null }),
+        body: JSON.stringify({ ...form, body: await storyImages.upload(form.body), reviewer_notes: form.reviewer_notes.trim() || null }),
       }, { token, redirectOnUnauthorized: true });
       await load();
       select(updated);
@@ -146,7 +148,7 @@ export function ArticleSubmissionsManager({
     try {
       await apiRequest(`/article-submissions/${selectedId}`, {
         method: "PUT",
-        body: JSON.stringify({ ...form, status: "in_review", reviewer_notes: form.reviewer_notes.trim() || null }),
+        body: JSON.stringify({ ...form, body: await storyImages.upload(form.body), status: "in_review", reviewer_notes: form.reviewer_notes.trim() || null }),
       }, { token, redirectOnUnauthorized: true });
       const article = await apiRequest<Article>(`/article-submissions/${selectedId}/publish`, { method: "POST" }, { token, redirectOnUnauthorized: true });
       await load();
@@ -165,7 +167,7 @@ export function ArticleSubmissionsManager({
     <div className={styles.manager}>
       <aside className={styles.listPanel}>
         <div className={styles.listHeader}>
-          <h2>Postulaciones</h2>
+          <h2>Postulados</h2>
           <p>Artículos enviados desde el formulario público.</p>
         </div>
         <input className={styles.search} placeholder="Buscar postulación…" value={search} onChange={(event) => setSearch(event.target.value)} />
@@ -243,7 +245,13 @@ export function ArticleSubmissionsManager({
               <Field label="Título" value={form.title} onChange={(title) => setForm({ ...form, title })} />
               <Field label="Breve descripción" value={form.subtitle} onChange={(subtitle) => setForm({ ...form, subtitle })} />
               <Field label="Fecha de publicación" type="date" value={form.publication_date ?? ""} onChange={(publication_date) => setForm({ ...form, publication_date })} />
-              <div className={styles.field}><label>Artículo</label><textarea rows={16} value={form.body} onChange={(event) => setForm({ ...form, body: event.target.value })} /><HtmlPreview value={form.body} /></div>
+              <StoryEditor
+                key={selectedId}
+                label="Artículo"
+                value={form.body}
+                onChange={(body) => setForm((current) => (current ? { ...current, body } : current))}
+                onRegisterImage={storyImages.register}
+              />
               <div className={styles.twoColumns}>
                 <div className={styles.field}><label>Estado</label><select value={form.status} onChange={(event) => setForm({ ...form, status: event.target.value as EditableSubmission["status"] })}><option value="pending">Pendiente</option><option value="in_review">En revisión</option><option value="rejected">Rechazado</option></select></div>
                 <div className={styles.field}><label>Notas internas del revisor</label><textarea rows={5} value={form.reviewer_notes ?? ""} onChange={(event) => setForm({ ...form, reviewer_notes: event.target.value })} /></div>

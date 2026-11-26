@@ -27,7 +27,7 @@ const normalizePath = (value) => {
 
 // Rutas reales de la SPA que no tienen ficha en pages.json (secciones
 // opcionales o privadas). Siguen respondiendo 200; las privadas llevan noindex.
-const KNOWN_SPA_PREFIXES = ["/muro", "/clases", "/admin", "/loginadmin", "/voces/enviar"];
+const KNOWN_SPA_PREFIXES = ["/muro", "/admin", "/loginadmin", "/voces/enviar"];
 const isKnownSpaPath = (path) => {
   const lower = path.toLowerCase(); // /Admin y /LoginAdmin son rutas válidas de la SPA
   return KNOWN_SPA_PREFIXES.some((prefix) => lower === prefix || lower.startsWith(`${prefix}/`));
@@ -187,7 +187,7 @@ async function resolveMeta(path) {
   match = /^\/voluntarios-destacados\/([^/]+)$/.exec(path);
   if (match) {
     const stories = await getJson("/volunteer-stories/published").catch(() => []);
-    const story = stories.find((item) => item.slug === match[1]);
+    const story = stories.find((item) => item.slug === match[1] && !item.cover_only);
     if (!story) return { notFound: true, path };
     return {
       title: `${story.name} | Voluntarios Destacados WFF Perú`,

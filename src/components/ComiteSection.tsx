@@ -20,13 +20,13 @@ export default function CommiteSection() {
       linkedin:
         "https://www.linkedin.com/in/ana-paula-guillen-yangali-a866881a2/",
     },
-    {
-      name: "Ronal Guevara",
-      roleKey: "nav.education",
-      image: "img/Ronal.webp",
-      instagram: "https://www.instagram.com/ronalguevarag/",
-      linkedin: "https://www.linkedin.com/in/ronal-guevara-guevara-9045172a1/",
-    },
+    // {
+    //   name: "Ronal Guevara",
+    //   roleKey: "nav.education",
+    //   image: "img/Ronal.webp",
+    //   instagram: "https://www.instagram.com/ronalguevarag/",
+    //   linkedin: "https://www.linkedin.com/in/ronal-guevara-guevara-9045172a1/",
+    // },
     {
       name: "Isabella Chancahuana",
       roleKey: "nav.science",

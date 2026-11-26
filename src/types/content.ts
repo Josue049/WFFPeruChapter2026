@@ -34,6 +34,10 @@ export interface VolunteerStory {
   instagram_url: string | null;
   website_url: string | null;
   published: boolean;
+  /** Diseño de portada propio; reemplaza la portada generada. */
+  cover_image?: string | null;
+  /** Edición anunciada solo con su portada, sin historia. */
+  cover_only?: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -63,10 +67,27 @@ export interface AdminUser {
   manage_volunteers: boolean;
   manage_users: boolean;
   manage_muro?: boolean;
-  manage_classes?: boolean;
   created_at: string;
   updated_at: string;
   last_login_at: string | null;
 }
 
-export type AdminSection = "articles" | "muro" | "milestones" | "volunteers" | "classes" | "users" | "audit";
+export type AdminSection = "articles" | "muro" | "milestones" | "volunteers" | "banners" | "sections" | "users" | "audit";
+
+export interface HeroSlide {
+  id: number;
+  image: string;
+  subtitle: string;
+  title: string;
+  button_text: string;
+  link_url: string;
+  subtitle_en: string;
+  title_en: string;
+  button_text_en: string;
+  overlay: number;
+  position: number;
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+

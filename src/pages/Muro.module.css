@@ -8,7 +8,7 @@
   --line: #e6dfd2;
   color: var(--ink);
   min-height: 70vh;
-  background: #fbfaf7;
+  background: transparent;
   padding-bottom: 72px;
 }
 
@@ -65,6 +65,72 @@
 .skeleton { break-inside: avoid; margin-bottom: 20px; border-radius: 20px; background: linear-gradient(90deg, #eee8da, #f6f1e6, #eee8da); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
 @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
 
+/* --- listado estilo Pinterest (sin cabecera grande) --- */
+/* Primera tarjeta: gris, con un “+” que lleva al formulario para compartir. */
+.pinAdd { width: 100%; border: 0; font: inherit; cursor: pointer; break-inside: avoid; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; margin: 0 0 16px; min-height: 240px; border-radius: 18px; background: #d9d6cf; color: #55524b; text-decoration: none; transition: background .2s, transform .2s; }
+.pinAdd:hover { background: #cfcbc3; color: #2f2d29; transform: translateY(-2px); }
+.pinAddIcon { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: rgba(255,255,255,.65); font-size: 2.6rem; font-weight: 300; line-height: 1; padding-bottom: 4px; }
+.pinAddText { font-size: .85rem; font-weight: 700; }
+.pinAdd:focus-visible { outline: 3px solid rgba(239,125,34,.55); outline-offset: 2px; }
+.pinPage { background: transparent; padding-bottom: 56px; }
+.pinWrap { width: min(1680px, calc(100% - 28px)); margin: 0 auto; padding-top: 18px; }
+
+.pinBar { padding: 6px 2px 18px; }
+.tabs { display: flex; align-items: center; gap: 6px; padding: 3px 0; overflow-x: auto; scrollbar-width: none; max-width: 100%; user-select: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { flex: none; border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 1.02rem; font-weight: 600; padding: 8px 14px 10px; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; }
+.tab:hover { color: var(--coral); }
+.tab[aria-pressed="true"] { border-bottom-color: var(--ink); }
+
+.pinSearch { flex: none; display: flex; align-items: center; gap: 8px; margin-right: 10px; border: 2px solid transparent; border-radius: 999px; padding: 0 12px; background: #e4e1da; transition: border-color .15s, background .15s; }
+.pinSearch:focus-within { border-color: var(--orange); background: #fff; }
+.searchIcon { flex: none; color: #6f6b63; }
+.pinSearch:focus-within .searchIcon { color: var(--coral); }
+.pinSearch input { user-select: text; border: 0; outline: 0; background: transparent; font: inherit; padding: 9px 0; width: 200px; min-width: 0; }
+
+.pinGrid { column-width: 236px; column-gap: 16px; }
+.pin { break-inside: avoid; display: block; margin: 0 0 16px; color: inherit; text-decoration: none; }
+.pin:hover { color: inherit; }
+.pinMedia { position: relative; overflow: hidden; border-radius: 18px; background: var(--cream); }
+.pinMedia img { display: block; width: 100%; height: auto; transition: transform .3s ease; }
+.pin:hover .pinMedia img { transform: scale(1.03); }
+.pinMedia::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,0); transition: background .2s; pointer-events: none; }
+.pin:hover .pinMedia::after { background: rgba(0,0,0,.14); }
+.pinTag { position: absolute; left: 10px; bottom: 10px; z-index: 1; color: #fff; font-size: .66rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; opacity: 0; transform: translateY(4px); transition: opacity .2s, transform .2s; }
+.pin:hover .pinTag, .pin:focus-visible .pinTag { opacity: 1; transform: none; }
+
+.pinNote { --c: var(--forest); position: relative; padding: 22px 20px 24px; border-radius: 18px; color: #fff; background: linear-gradient(150deg, var(--c), color-mix(in srgb, var(--c) 62%, #000)); display: grid; gap: 12px; }
+.pinNote p { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 1.12rem; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 9; -webkit-box-orient: vertical; overflow: hidden; }
+.pinNoteTag { justify-self: start; font-size: .64rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; background: rgba(255,255,255,.22); padding: 4px 10px; border-radius: 999px; }
+
+.pinInfo { display: grid; gap: 2px; padding: 8px 4px 0; }
+.pinInfo h2 { margin: 0; font-size: .92rem; font-weight: 700; line-height: 1.3; color: var(--ink); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.pinInfo span { font-size: .76rem; color: var(--muted); }
+
+.pinSkeleton { break-inside: avoid; margin-bottom: 16px; border-radius: 18px; background: linear-gradient(90deg, #e6e3dc, #efede8, #e6e3dc); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
+
+@media (max-width: 760px) {
+  .pinSearch input { width: 150px; }
+  .pinGrid { column-width: 150px; column-gap: 10px; }
+  .pin { margin-bottom: 10px; }
+  .pinTag { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pinMedia img, .pinTag, .pinAdd { transition: none; }
+  .pinSkeleton { animation: none; }
+}
+
+/* --- modal para compartir una reflexión --- */
+.modalBackdrop { position: fixed; inset: 0; z-index: 3000; display: flex; align-items: flex-start; justify-content: center; padding: clamp(12px, 4vh, 48px) 14px; background: rgba(20, 24, 21, .55); overflow-y: auto; }
+.modalPanel { position: relative; width: min(760px, 100%); background: #fff; border-radius: 24px; padding: clamp(22px, 4vw, 38px); box-shadow: 0 30px 90px rgba(0, 0, 0, .3); outline: none; animation: modalIn .22s ease; }
+.modalClose { position: absolute; top: 14px; right: 14px; width: 38px; height: 38px; border: 0; border-radius: 50%; background: #efefef; color: #333; font-size: 1.5rem; line-height: 1; cursor: pointer; }
+.modalClose:hover { background: #e2e2e2; }
+.modalTitle { margin: 0 40px 6px 0; font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.5rem, 3.4vw, 2.1rem); line-height: 1.15; color: #ef5b2a; background: linear-gradient(90deg, #ef5b2a, #e9a61f); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.modalIntro { margin: 0 0 22px; color: var(--muted, #6b726d); font-size: .95rem; line-height: 1.55; }
+.modalPanel .field textarea { min-height: 170px; }
+@keyframes modalIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .modalPanel { animation: none; } }
+
 /* --- detalle --- */
 .article { width: min(860px, calc(100% - 32px)); margin: 0 auto; padding-top: 40px; }
 .back { display: inline-block; margin-bottom: 18px; color: var(--forest); font-weight: 600; text-decoration: none; font-size: .9rem; }
@@ -110,3 +176,29 @@
   .tile { transition: none; }
   .skeleton { animation: none; }
 }
+
+/* --- selector de imágenes del formulario --- */
+.upload { position: relative; }
+.field input.uploadInput { position: absolute; width: 1px; height: 1px; padding: 0; opacity: 0; pointer-events: none; }
+.field label.uploadBox { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding: 16px; border: 2px dashed #e6c9ae; border-radius: 16px; background: #fffaf5; cursor: pointer; transition: border-color .2s, background .2s; }
+.field label.uploadBox:hover, .field label.uploadOver { border-color: #ef7d22; background: #fff3e8; }
+.uploadButton { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 999px; background: #e4e1da; color: #4a4640; font-size: .88rem; font-weight: 700; transition: transform .2s, box-shadow .2s; }
+.uploadBox:hover .uploadButton { transform: translateY(-1px); background: #d9d5cc; }
+.uploadHint { flex: 1; min-width: 180px; color: #7a6f66; font-size: .82rem; font-weight: 500; line-height: 1.45; }
+.uploadInput:focus-visible + .uploadBox { outline: 3px solid rgba(239, 125, 34, .45); outline-offset: 2px; }
+.uploadInput:disabled + .uploadBox { opacity: .55; cursor: not-allowed; }
+.uploadInput:disabled + .uploadBox .uploadButton { transform: none; box-shadow: none; }
+
+/* Botón de envío con el degradado del sitio. */
+button.submit { border: 0; background: linear-gradient(90deg, #ff7a72, #ffb400); color: #fff; box-shadow: 0 8px 18px rgba(255, 122, 80, .3); }
+button.submit:hover:not(:disabled) { background: linear-gradient(90deg, #ff7a72, #ffb400); color: #fff; filter: brightness(.96); box-shadow: 0 10px 22px rgba(255, 122, 80, .42); }
+button.submit:disabled { box-shadow: none; }
+
+/* --- reflexiones con formato --- */
+.editorField { display: grid; gap: 6px; margin-bottom: 18px; min-width: 0; }
+.editorField > label { font-weight: 700; font-size: .86rem; }
+.editorField [contenteditable] { min-height: 220px; max-height: 460px; }
+.body.richBody { white-space: normal; overflow-wrap: anywhere; }
+.richBody span[data-size="small"] { font-size: .82em; }
+.richBody span[data-size="large"] { font-size: 1.25em; }
+.richBody span[data-size="xlarge"] { font-size: 1.55em; }
