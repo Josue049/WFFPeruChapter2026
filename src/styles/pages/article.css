@@ -660,14 +660,20 @@ body {
     content: "”";
   }
 
+  /* En móvil las tarjetas ocupan todo el ancho de la pantalla. */
   .article-layout {
-    width: calc(100% - 28px);
+    width: 100%;
     margin-top: 25px;
+  }
+
+  .article-page .ArticuloCompleto {
+    padding: 0;
   }
 
   .article-page .bgDesktopWhite,
   .article-sidebar-inner {
-    border-radius: 14px;
+    border-width: 1px 0;
+    border-radius: 0;
   }
 
   .article-meta-row {
