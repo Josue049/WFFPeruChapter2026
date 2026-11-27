@@ -275,7 +275,7 @@ export default function Articulo() {
           <header className="article-head">
             <p className="article-kicker">
               <Link to="/voces">{t("article.category")}</Link>
-              <span aria-hidden="true">|</span>
+              <span className="article-kicker-sep" aria-hidden="true">|</span>
               <span>{t("article.article")}</span>
             </p>
 
@@ -319,6 +319,11 @@ export default function Articulo() {
                     )}
                   </div>
                   <div className="article-meta-right">
+                    <time className="FechaArticulo article-mobile-only" dateTime={post.date}>
+                      {t("article.published", {
+                        date: formatDate(post.date, locale),
+                      })}
+                    </time>
                     {(viewLoading || viewState?.articleId === post.id) && (
                       <span
                         className={`article-views ${
@@ -350,6 +355,14 @@ export default function Articulo() {
                 </div>
 
                 <div className="lineaWidth" />
+
+                <p className="article-readtime article-mobile-only">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                  </svg>
+                  {extra.minRead.replace("{n}", String(readingMinutes))}
+                </p>
 
                 <div style={{ position: "relative" }}>
                   <div

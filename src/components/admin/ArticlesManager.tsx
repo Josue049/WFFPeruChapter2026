@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { Article } from "../../types";
+import type { Article, ArticleSubmission } from "../../types";
 import { apiRequest } from "../../services/api";
 import { StoryEditor } from "./StoryEditor";
 import { useStoryImages } from "./storyImages";
@@ -57,7 +57,18 @@ function PublishedArticlesManager({ token }: { token: string }) {
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
   const [viewsByArticle, setViewsByArticle] = useState<Record<number, number | null>>({});
+  const [emailByArticle, setEmailByArticle] = useState<Record<number, string>>({});
   const storyImages = useStoryImages(token);
+
+  // El correo no forma parte del artículo (la API pública no debe exponerlo):
+  // se toma de la postulación que le dio origen.
+  useEffect(() => {
+    void apiRequest<ArticleSubmission[]>("/article-submissions?status_filter=published", {}, { token, redirectOnUnauthorized: true })
+      .then((submissions) => setEmailByArticle(Object.fromEntries(
+        submissions.flatMap((item) => item.published_article_id ? [[item.published_article_id, item.author_email]] : []),
+      )))
+      .catch(() => setMessage("No se pudieron cargar los correos de los postulantes."));
+  }, [token]);
 
   const load = useCallback(async () => {
     const articles = await apiRequest<Article[]>(
@@ -93,8 +104,8 @@ function PublishedArticlesManager({ token }: { token: string }) {
   }, [load]);
 
   const filtered = useMemo(
-    () => items.filter((item) => `${item.title} ${item.author_name} ${item.author_lastname}`.toLowerCase().includes(search.toLowerCase())),
-    [items, search],
+    () => items.filter((item) => `${item.title} ${item.author_name} ${item.author_lastname} ${emailByArticle[item.id] ?? ""}`.toLowerCase().includes(search.toLowerCase())),
+    [items, search, emailByArticle],
   );
 
   const select = (item: Article) => {
@@ -173,6 +184,7 @@ function PublishedArticlesManager({ token }: { token: string }) {
             <button key={item.id} className={`${styles.listItem} ${selectedId === item.id ? styles.listItemActive : ""}`} onClick={() => select(item)}>
               <strong>{item.title}</strong>
               <span>{item.author_name} {item.author_lastname}{item.tag_name ? ` · ${item.tag_name}` : ""}</span>
+              {emailByArticle[item.id] && <span style={{ overflowWrap: "anywhere" }}>{emailByArticle[item.id]}</span>}
               <small>{item.date} · {formatViews(item.id)}</small>
             </button>
           ))}
@@ -202,6 +214,12 @@ function PublishedArticlesManager({ token }: { token: string }) {
             <Field label="Apellido" value={form.author_lastname} onChange={(value) => setForm({ ...form, author_lastname: value })} />
           </div>
           <Field label="Cargo o entidad" value={form.author_cargo} onChange={(value) => setForm({ ...form, author_cargo: value })} />
+          {selectedId && emailByArticle[selectedId] && (
+            <div className={styles.field}>
+              <label htmlFor="article-author-email">Correo del postulante</label>
+              <input id="article-author-email" type="email" value={emailByArticle[selectedId]} readOnly />
+            </div>
+          )}
           <Field label="Título" value={form.title} onChange={(value) => setForm({ ...form, title: value })} />
           <Field label="Breve descripción" value={form.subtitle} onChange={(value) => setForm({ ...form, subtitle: value })} />
           <div className={styles.field}>

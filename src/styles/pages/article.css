@@ -517,6 +517,11 @@ body {
   padding: 20px 40px;
 }
 
+/* Fecha y tiempo de lectura propios de la vista móvil. */
+.article-page .article-mobile-only {
+  display: none;
+}
+
 /* =========================================================
    TABLET
    ========================================================= */
@@ -555,9 +560,104 @@ body {
    ========================================================= */
 
 @media (max-width: 768px) {
+  /* En móvil la cabecera va centrada: sección, autor, título y bajada.
+     Se reordena con CSS para no duplicar el marcado. */
   .article-head {
-    width: calc(100% - 28px);
-    padding-top: 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .article-kicker {
+    justify-content: center;
+    gap: 0.45rem;
+    margin-bottom: 30px;
+    color: #000;
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: none;
+  }
+
+  .article-kicker a {
+    color: #545454;
+  }
+
+  .article-kicker-sep {
+    font-size: 0;
+  }
+
+  .article-kicker-sep::after {
+    content: "/";
+    font-size: 14px;
+  }
+
+  .article-byline {
+    order: 1;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 0;
+  }
+
+  .article-byline-photo {
+    width: 110px;
+    height: 110px;
+    margin: 0 0 5px;
+    border-radius: 0;
+  }
+
+  .article-byline-author {
+    justify-items: center;
+  }
+
+  .article-byline-author strong {
+    color: #000;
+    font-size: 22px;
+    font-weight: 100;
+  }
+
+  .article-byline-author span {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  /* Fecha y tiempo de lectura vuelven a la tarjeta del contenido. */
+  .article-byline-meta {
+    display: none;
+  }
+
+  .article-page time.article-mobile-only {
+    display: block;
+  }
+
+  .article-page p.article-mobile-only {
+    display: flex;
+  }
+
+  .article-title {
+    order: 2;
+    margin: 38px 0 14px;
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
+    line-height: 1.08;
+  }
+
+  .article-sub {
+    order: 3;
+    color: #626262;
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+    font-style: italic;
+    line-height: 1.65;
+  }
+
+  .article-sub::before {
+    content: "“";
+  }
+
+  .article-sub::after {
+    content: "”";
   }
 
   .article-layout {
@@ -598,6 +698,10 @@ body {
 }
 
 @media (max-width: 480px) {
+  .article-sub {
+    font-size: 0.98rem;
+  }
+
   .article-page .ArticuloParrafos {
     padding: 24px 18px 30px;
   }
