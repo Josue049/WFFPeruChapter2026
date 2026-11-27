@@ -15,6 +15,8 @@ import muroStyles from "../../pages/Muro.module.css";
 
 const MAX_PHOTOS = 8;
 const PAGE_SIZE = 50;
+// Correo interno que el servidor asigna a lo creado desde el panel: no es de quien escribe, no se muestra.
+const TEAM_EMAIL = "redaccion@wffperu.org";
 const AUTHOR_ASPECTS = [{ label: "Cuadrado 1:1", value: 1 }];
 
 const STATUS_LABEL: Record<MuroStatus, string> = {
@@ -464,7 +466,7 @@ function PostsManager({
             <div className={styles.editorHeader}>
               <div>
                 <h2>{isPublished ? "Editar publicación" : "Revisar postulación"}</h2>
-                <p>{STATUS_LABEL[selected.status]} · enviada {formatDate(selected.submitted_at)} · {selected.author_email}</p>
+                <p>{STATUS_LABEL[selected.status]} · enviada {formatDate(selected.submitted_at)}{selected.author_email !== TEAM_EMAIL && ` · ${selected.author_email}`}</p>
                 {selected.status === "approved" && <p><a href={`/muro/${selected.slug}`} target="_blank" rel="noopener noreferrer">Ver en el Muro ↗</a></p>}
               </div>
               <div className={styles.actions}>
