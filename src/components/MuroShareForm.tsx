@@ -160,36 +160,49 @@ export function MuroShareForm({ onDone }: { onDone: () => void }) {
     <form onSubmit={submit} noValidate>
       {serverError && <div className={styles.error} role="alert">{serverError}</div>}
       <div className={styles.formGrid}>
-        <div className={`${styles.field} ${field("name")}`}>
-          <label htmlFor="mu-name">{t("muro.form.name")}</label>
-          <input id="mu-name" value={name} onChange={(e) => setName(e.target.value)} maxLength={120} autoComplete="name" aria-invalid={Boolean(errors.name)} />
-          {errors.name && <span className={styles.fieldError}>{errors.name}</span>}
-        </div>
-        <div className={`${styles.field} ${field("email")}`}>
-          <label htmlFor="mu-email">{t("muro.form.email")}</label>
-          <input id="mu-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} maxLength={320} autoComplete="email" aria-invalid={Boolean(errors.email)} />
-          {errors.email && <span className={styles.fieldError}>{errors.email}</span>}
-        </div>
-        <div className={`${styles.field} ${styles.fieldFull}`}>
-          <label htmlFor="mu-photo">{t("muro.form.photo")}</label>
-          <div className={styles.photoRow}>
-            {photoPreview && <img className={styles.photoPreview} src={photoPreview} alt="" />}
-            <div className={styles.upload}>
+        <div className={`${styles.identity} ${styles.fieldFull}`}>
+          <div className={styles.identityFields}>
+            <div className={`${styles.field} ${field("name")}`}>
+              <label htmlFor="mu-name">{t("muro.form.name")}</label>
+              <input id="mu-name" value={name} onChange={(e) => setName(e.target.value)} maxLength={120} autoComplete="name" aria-invalid={Boolean(errors.name)} />
+              {errors.name && <span className={styles.fieldError}>{errors.name}</span>}
+            </div>
+            <div className={`${styles.field} ${field("email")}`}>
+              <label htmlFor="mu-email">{t("muro.form.email")}</label>
+              <input id="mu-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} maxLength={320} autoComplete="email" aria-invalid={Boolean(errors.email)} />
+              {errors.email && <span className={styles.fieldError}>{errors.email}</span>}
+            </div>
+          </div>
+          <div className={`${styles.field} ${styles.photoColumn}`}>
+            <span className={styles.photoTitle}>{t("muro.form.photo")}</span>
+            <div className={styles.photoSlot}>
               <input
                 id="mu-photo"
                 className={styles.uploadInput}
                 type="file"
                 accept={IMAGE_TYPES.join(",")}
+                aria-label={t("muro.form.photo")}
                 onChange={(e) => { choosePhoto(e.target.files?.[0]); e.target.value = ""; }}
               />
-              <label htmlFor="mu-photo" className={styles.uploadBox}>
-                <span className={styles.uploadButton}>{t(photo ? "muro.form.photoChange" : "muro.form.photoUpload")}</span>
-                <span className={styles.uploadHint}>{t("muro.form.photoHint")}</span>
+              <label htmlFor="mu-photo" className={styles.photoSquare} title={t("muro.form.photoHint")}>
+                {photoPreview ? (
+                  <img src={photoPreview} alt="" />
+                ) : (
+                  <>
+                    <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <circle cx="12" cy="8" r="4" />
+                      <path d="M4 21a8 8 0 0 1 16 0" />
+                    </svg>
+                    <span>{t("muro.form.photoUpload")}</span>
+                  </>
+                )}
               </label>
+              {photo && (
+                <button type="button" className={styles.photoRemove} onClick={() => setPhoto(null)} aria-label={t("muro.form.remove")} title={t("muro.form.remove")}>×</button>
+              )}
             </div>
-            {photo && <button type="button" className={styles.ghost} onClick={() => setPhoto(null)}>{t("muro.form.remove")}</button>}
+            {errors.photo && <span className={styles.fieldError}>{errors.photo}</span>}
           </div>
-          {errors.photo && <span className={styles.fieldError}>{errors.photo}</span>}
         </div>
         <div className={`${styles.field} ${field("title")}`}>
           <label htmlFor="mu-title">{t("muro.form.titleField")}</label>

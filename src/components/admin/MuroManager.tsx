@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiError, apiRequest } from "../../services/api";
 import type { MuroAdminPage, MuroCategory, MuroPostAdmin, MuroStatus } from "../../types/muro";
 import { getContrastTextColor } from "../../utils/color";
 import { optimizeEditorialImageFile } from "../../utils/imageOptimizer";
 import { mediaUrl } from "../../utils/mediaUrl";
 import styles from "./AdminForms.module.css";
+import { ImageField } from "./ImageField";
 import { cleanMuroHtml, isHtml, toEditorBody, visibleLength } from "../../utils/richText";
 import { RichTextEditor } from "../editor/RichTextEditor";
 import { ModeSwitch } from "../editor/ModeSwitch";
@@ -14,6 +15,7 @@ import muroStyles from "../../pages/Muro.module.css";
 
 const MAX_PHOTOS = 8;
 const PAGE_SIZE = 50;
+const AUTHOR_ASPECTS = [{ label: "Cuadrado 1:1", value: 1 }];
 
 const STATUS_LABEL: Record<MuroStatus, string> = {
   pending: "Pendiente",
@@ -32,7 +34,7 @@ const SUBMISSION_FILTERS: [MuroStatus, string][] = [
 
 type View = "published" | "submissions" | "tags";
 type ReviewAction = "approve" | "observe" | "reject" | "withdraw" | "reopen";
-type Draft = { title: string; author_name: string; body: string; category_id: number };
+type Draft = { title: string; author_name: string; author_photo: string; body: string; category_id: number };
 
 const REVIEW_MESSAGE: Record<ReviewAction, string> = {
   approve: "Publicada en el Muro.",
@@ -50,6 +52,7 @@ const errorText = (error: unknown, fallback: string) => (error instanceof ApiErr
 const toDraft = (post: MuroPostAdmin): Draft => ({
   title: post.title,
   author_name: post.author_name,
+  author_photo: post.author_photo ?? "",
   body: toEditorBody(post.body),
   category_id: post.category?.id ?? 0,
 });
@@ -118,7 +121,7 @@ function PostsManager({
   const [categories, setCategories] = useState<MuroCategory[]>([]);
   const [selected, setSelected] = useState<MuroPostAdmin | null>(initial);
   const [creating, setCreating] = useState(false);
-  const [draft, setDraft] = useState<Draft>(initial ? toDraft(initial) : { title: "", author_name: "", body: "", category_id: 0 });
+  const [draft, setDraft] = useState<Draft>(initial ? toDraft(initial) : { title: "", author_name: "", author_photo: "", body: "", category_id: 0 });
   const [publishNow, setPublishNow] = useState(true);
   const [newPhotos, setNewPhotos] = useState<File[]>([]);
   const [notes, setNotes] = useState(initial?.reviewer_notes ?? "");
@@ -127,8 +130,6 @@ function PostsManager({
   const [isError, setIsError] = useState(false);
   const [busy, setBusy] = useState(false);
   const [editorMode, setEditorMode] = useState<EditorMode>("write");
-  const [newAuthorPhoto, setNewAuthorPhoto] = useState<File | null>(null);
-  const newAuthorPhotoUrl = useObjectUrl(newAuthorPhoto);
   const requestId = useRef(0);
 
   const auth = { token, redirectOnUnauthorized: true };
@@ -189,10 +190,9 @@ function PostsManager({
   const startCreate = () => {
     setSelected(null);
     setCreating(true);
-    setDraft({ title: "", author_name: "Equipo WFF Perú", body: "", category_id: categories[0]?.id ?? 0 });
+    setDraft({ title: "", author_name: "Equipo WFF Perú", author_photo: "", body: "", category_id: categories[0]?.id ?? 0 });
     setPublishNow(true);
     setNewPhotos([]);
-    setNewAuthorPhoto(null);
     notify("");
   };
 
@@ -222,29 +222,6 @@ function PostsManager({
     return apiRequest<MuroPostAdmin>(`/admin/muro/posts/${id}/images`, { method: "POST", body }, auth);
   };
 
-  const uploadAuthorPhoto = async (id: number, file: File) => {
-    const body = new FormData();
-    body.append("image", await optimizeEditorialImageFile(file));
-    return apiRequest<MuroPostAdmin>(`/admin/muro/posts/${id}/author-photo`, { method: "POST", body }, auth);
-  };
-
-  const changeAuthorPhoto = (file: File) =>
-    run(async () => {
-      if (!selected) return;
-      setSelected(await uploadAuthorPhoto(selected.id, file));
-      notify("Foto del autor actualizada.");
-      await load();
-    }, "No se pudo subir la foto del autor");
-
-  const removeAuthorPhoto = () => {
-    if (!selected || !window.confirm("¿Quitar la foto del autor?")) return;
-    void run(async () => {
-      setSelected(await apiRequest<MuroPostAdmin>(`/admin/muro/posts/${selected.id}/author-photo`, { method: "DELETE" }, auth));
-      notify("Foto del autor quitada.");
-      await load();
-    }, "No se pudo quitar la foto del autor");
-  };
-
   const createPost = () =>
     run(async () => {
       let created = await apiRequest<MuroPostAdmin>(
@@ -253,13 +230,6 @@ function PostsManager({
         auth,
       );
       let photoError = "";
-      if (newAuthorPhoto) {
-        try {
-          created = await uploadAuthorPhoto(created.id, newAuthorPhoto);
-        } catch (error) {
-          photoError = errorText(error, "error desconocido");
-        }
-      }
       if (newPhotos.length) {
         try {
           created = await uploadPhotos(created.id, newPhotos);
@@ -269,7 +239,6 @@ function PostsManager({
         }
       }
       setNewPhotos([]);
-      setNewAuthorPhoto(null);
       // Un borrador no pertenece a "Publicados": se cierra para no confundir.
       if (created.status === "approved" || !isPublished) select(created);
       else close();
@@ -343,8 +312,6 @@ function PostsManager({
     <div className={`${styles.status} ${isError ? styles.statusError : ""}`} role="status">{message}</div>
   );
 
-  const authorPhoto = creating ? newAuthorPhotoUrl : selected?.author_photo ? mediaUrl(selected.author_photo) : "";
-
   const fields = (
     <>
       <div className={styles.twoColumns}>
@@ -357,24 +324,14 @@ function PostsManager({
           <input id="muro-author" value={draft.author_name} onChange={(e) => setDraft({ ...draft, author_name: e.target.value })} maxLength={120} />
         </div>
       </div>
-      <div className={styles.field}>
-        <label>Foto del autor (opcional)</label>
-        <div className={muroStyles.photoRow}>
-          {authorPhoto && <img className={muroStyles.photoPreview} src={authorPhoto} alt="Foto del autor" />}
-          <PhotoAdder
-            single
-            label={authorPhoto ? "Cambiar foto" : "Elegir foto"}
-            disabled={busy}
-            onFiles={([file]) => (creating ? setNewAuthorPhoto(file) : void changeAuthorPhoto(file))}
-          />
-          {authorPhoto && (
-            <button type="button" className={styles.secondaryButton} disabled={busy} onClick={() => (creating ? setNewAuthorPhoto(null) : removeAuthorPhoto())}>
-              Quitar foto
-            </button>
-          )}
-        </div>
-        <small>{creating ? "Se recorta en cuadrado." : "Se recorta en cuadrado. El cambio se guarda al instante."}</small>
-      </div>
+      <ImageField
+        label="Foto del autor"
+        value={draft.author_photo}
+        token={token}
+        aspects={AUTHOR_ASPECTS}
+        maxOutputWidth={640}
+        onChange={(author_photo) => setDraft((current) => ({ ...current, author_photo }))}
+      />
       <div className={styles.field}>
         <label htmlFor="muro-tag">Etiqueta</label>
         <select id="muro-tag" value={draft.category_id} onChange={(e) => setDraft({ ...draft, category_id: Number(e.target.value) })}>
@@ -407,7 +364,7 @@ function PostsManager({
           <MuroPreview
             draft={draft}
             category={categories.find((c) => c.id === draft.category_id)}
-            authorPhoto={authorPhoto}
+            authorPhoto={draft.author_photo ? mediaUrl(draft.author_photo) : ""}
             images={creating ? [] : selected?.images ?? []}
             publishedAt={creating ? null : selected?.published_at ?? null}
           />
@@ -619,14 +576,7 @@ function MuroPreview({
   );
 }
 
-/** URL temporal para mostrar un archivo aún no subido. */
-function useObjectUrl(file: File | null) {
-  const url = useMemo(() => (file ? URL.createObjectURL(file) : ""), [file]);
-  useEffect(() => () => { if (url) URL.revokeObjectURL(url); }, [url]);
-  return url;
-}
-
-function PhotoAdder({ label, disabled, onFiles, single = false }: { label: string; disabled: boolean; onFiles: (files: File[]) => void; single?: boolean }) {
+function PhotoAdder({ label, disabled, onFiles }: { label: string; disabled: boolean; onFiles: (files: File[]) => void }) {
   const inputRef = useRef<HTMLInputElement>(null);
   return (
     <div>
@@ -637,7 +587,7 @@ function PhotoAdder({ label, disabled, onFiles, single = false }: { label: strin
         ref={inputRef}
         className={styles.hiddenInput}
         type="file"
-        multiple={!single}
+        multiple
         accept="image/jpeg,image/png,image/webp"
         onChange={(event) => {
           const files = Array.from(event.target.files ?? []);
