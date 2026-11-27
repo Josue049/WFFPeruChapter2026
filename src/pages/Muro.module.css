@@ -195,7 +195,7 @@ button.submit:hover:not(:disabled) { background: linear-gradient(90deg, #ff7a72,
 button.submit:disabled { box-shadow: none; }
 
 /* --- foto del autor --- */
-.authorRow { display: flex; align-items: center; gap: 12px; }
+.authorRow { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
 .authorRow p { margin: 0; }
 .authorPhoto { flex: none; width: 52px; height: 52px; border-radius: 50%; object-fit: cover; }
 
