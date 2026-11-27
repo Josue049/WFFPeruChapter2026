@@ -1,12 +1,16 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ApiError, apiRequest } from "../../services/api";
 import type { MuroAdminPage, MuroCategory, MuroPostAdmin, MuroStatus } from "../../types/muro";
 import { getContrastTextColor } from "../../utils/color";
 import { optimizeEditorialImageFile } from "../../utils/imageOptimizer";
 import { mediaUrl } from "../../utils/mediaUrl";
 import styles from "./AdminForms.module.css";
-import { toEditorBody, visibleLength } from "../../utils/richText";
+import { cleanMuroHtml, isHtml, toEditorBody, visibleLength } from "../../utils/richText";
 import { RichTextEditor } from "../editor/RichTextEditor";
+import { ModeSwitch } from "../editor/ModeSwitch";
+import type { EditorMode } from "../editor/ModeSwitch";
+import editorStyles from "./StoryEditor.module.css";
+import muroStyles from "../../pages/Muro.module.css";
 
 const MAX_PHOTOS = 8;
 const PAGE_SIZE = 50;
@@ -51,7 +55,7 @@ const toDraft = (post: MuroPostAdmin): Draft => ({
 });
 
 const isValidDraft = (draft: Draft) =>
-  draft.title.trim().length >= 5 && draft.author_name.trim().length >= 2 && visibleLength(draft.body) >= 20;
+  draft.title.trim().length >= 5 && draft.author_name.trim().length >= 2 && visibleLength(cleanMuroHtml(draft.body)) >= 20;
 
 export function MuroManager({ token, currentUsername }: { token: string; currentUsername: string }) {
   const [view, setView] = useState<View>("published");
@@ -122,6 +126,9 @@ function PostsManager({
   const [message, setMessage] = useState(initial ? REVIEW_MESSAGE.approve : "");
   const [isError, setIsError] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [editorMode, setEditorMode] = useState<EditorMode>("write");
+  const [newAuthorPhoto, setNewAuthorPhoto] = useState<File | null>(null);
+  const newAuthorPhotoUrl = useObjectUrl(newAuthorPhoto);
   const requestId = useRef(0);
 
   const auth = { token, redirectOnUnauthorized: true };
@@ -185,6 +192,7 @@ function PostsManager({
     setDraft({ title: "", author_name: "Equipo WFF Perú", body: "", category_id: categories[0]?.id ?? 0 });
     setPublishNow(true);
     setNewPhotos([]);
+    setNewAuthorPhoto(null);
     notify("");
   };
 
@@ -214,6 +222,29 @@ function PostsManager({
     return apiRequest<MuroPostAdmin>(`/admin/muro/posts/${id}/images`, { method: "POST", body }, auth);
   };
 
+  const uploadAuthorPhoto = async (id: number, file: File) => {
+    const body = new FormData();
+    body.append("image", await optimizeEditorialImageFile(file));
+    return apiRequest<MuroPostAdmin>(`/admin/muro/posts/${id}/author-photo`, { method: "POST", body }, auth);
+  };
+
+  const changeAuthorPhoto = (file: File) =>
+    run(async () => {
+      if (!selected) return;
+      setSelected(await uploadAuthorPhoto(selected.id, file));
+      notify("Foto del autor actualizada.");
+      await load();
+    }, "No se pudo subir la foto del autor");
+
+  const removeAuthorPhoto = () => {
+    if (!selected || !window.confirm("¿Quitar la foto del autor?")) return;
+    void run(async () => {
+      setSelected(await apiRequest<MuroPostAdmin>(`/admin/muro/posts/${selected.id}/author-photo`, { method: "DELETE" }, auth));
+      notify("Foto del autor quitada.");
+      await load();
+    }, "No se pudo quitar la foto del autor");
+  };
+
   const createPost = () =>
     run(async () => {
       let created = await apiRequest<MuroPostAdmin>(
@@ -222,6 +253,13 @@ function PostsManager({
         auth,
       );
       let photoError = "";
+      if (newAuthorPhoto) {
+        try {
+          created = await uploadAuthorPhoto(created.id, newAuthorPhoto);
+        } catch (error) {
+          photoError = errorText(error, "error desconocido");
+        }
+      }
       if (newPhotos.length) {
         try {
           created = await uploadPhotos(created.id, newPhotos);
@@ -231,6 +269,7 @@ function PostsManager({
         }
       }
       setNewPhotos([]);
+      setNewAuthorPhoto(null);
       // Un borrador no pertenece a "Publicados": se cierra para no confundir.
       if (created.status === "approved" || !isPublished) select(created);
       else close();
@@ -304,6 +343,8 @@ function PostsManager({
     <div className={`${styles.status} ${isError ? styles.statusError : ""}`} role="status">{message}</div>
   );
 
+  const authorPhoto = creating ? newAuthorPhotoUrl : selected?.author_photo ? mediaUrl(selected.author_photo) : "";
+
   const fields = (
     <>
       <div className={styles.twoColumns}>
@@ -317,16 +358,61 @@ function PostsManager({
         </div>
       </div>
       <div className={styles.field}>
+        <label>Foto del autor (opcional)</label>
+        <div className={muroStyles.photoRow}>
+          {authorPhoto && <img className={muroStyles.photoPreview} src={authorPhoto} alt="Foto del autor" />}
+          <PhotoAdder
+            single
+            label={authorPhoto ? "Cambiar foto" : "Elegir foto"}
+            disabled={busy}
+            onFiles={([file]) => (creating ? setNewAuthorPhoto(file) : void changeAuthorPhoto(file))}
+          />
+          {authorPhoto && (
+            <button type="button" className={styles.secondaryButton} disabled={busy} onClick={() => (creating ? setNewAuthorPhoto(null) : removeAuthorPhoto())}>
+              Quitar foto
+            </button>
+          )}
+        </div>
+        <small>{creating ? "Se recorta en cuadrado." : "Se recorta en cuadrado. El cambio se guarda al instante."}</small>
+      </div>
+      <div className={styles.field}>
         <label htmlFor="muro-tag">Etiqueta</label>
         <select id="muro-tag" value={draft.category_id} onChange={(e) => setDraft({ ...draft, category_id: Number(e.target.value) })}>
           {!draft.category_id && <option value={0}>Sin etiqueta</option>}
           {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
       </div>
-      <div style={{ display: "grid", gap: 8, minWidth: 0 }}>
-        <strong>Contenido</strong>
-        <RichTextEditor basic value={draft.body} onChange={(body) => setDraft((current) => ({ ...current, body }))} placeholder="Mínimo 20 caracteres" />
-        <small>{visibleLength(draft.body)} caracteres</small>
+      <div className={editorStyles.field}>
+        <div className={editorStyles.head}>
+          <strong>Contenido</strong>
+          <ModeSwitch mode={editorMode} onChange={setEditorMode} withHtml />
+        </div>
+        {editorMode === "write" && (
+          <RichTextEditor basic value={cleanMuroHtml(draft.body)} onChange={(body) => setDraft((current) => ({ ...current, body }))} placeholder="Mínimo 20 caracteres" />
+        )}
+        {editorMode === "html" && (
+          <>
+            <textarea
+              className={editorStyles.code}
+              aria-label="Contenido en HTML"
+              value={draft.body}
+              spellCheck={false}
+              onChange={(e) => setDraft({ ...draft, body: e.target.value })}
+              placeholder="<p>Escribe o pega aquí el HTML…</p>"
+            />
+            <small>Etiquetas admitidas: p, br, div, strong, b, em, i y span con data-size (small, normal, large, xlarge). Lo demás se elimina al guardar.</small>
+          </>
+        )}
+        {editorMode === "preview" && (
+          <MuroPreview
+            draft={draft}
+            category={categories.find((c) => c.id === draft.category_id)}
+            authorPhoto={authorPhoto}
+            images={creating ? [] : selected?.images ?? []}
+            publishedAt={creating ? null : selected?.published_at ?? null}
+          />
+        )}
+        <small>{visibleLength(cleanMuroHtml(draft.body))} caracteres</small>
       </div>
     </>
   );
@@ -491,7 +577,56 @@ function PostsManager({
   );
 }
 
-function PhotoAdder({ label, disabled, onFiles }: { label: string; disabled: boolean; onFiles: (files: File[]) => void }) {
+/** Cómo se verá la reflexión en su página pública. */
+function MuroPreview({
+  draft,
+  category,
+  authorPhoto,
+  images,
+  publishedAt,
+}: {
+  draft: Draft;
+  category: MuroCategory | undefined;
+  authorPhoto: string;
+  images: MuroPostAdmin["images"];
+  publishedAt: string | null;
+}) {
+  const body = cleanMuroHtml(draft.body);
+  return (
+    <div className={muroStyles.page} style={{ minHeight: 0, padding: "20px 0", border: "1px solid #dcd2c7", borderRadius: 14, background: "#fff" }}>
+      <article className={muroStyles.article} style={{ paddingTop: 0 }}>
+        {category && <span className={muroStyles.tag} style={{ background: category.color }}>{category.name}</span>}
+        <h1>{draft.title || "Sin título"}</h1>
+        <div className={muroStyles.authorRow}>
+          {authorPhoto && <img className={muroStyles.authorPhoto} src={authorPhoto} alt="" />}
+          <p className={muroStyles.articleMeta}>
+            Por {draft.author_name}
+            {publishedAt && ` · ${new Date(publishedAt).toLocaleDateString("es-PE", { day: "numeric", month: "long", year: "numeric" })}`}
+          </p>
+        </div>
+        {images.length > 0 && (
+          <div className={`${muroStyles.gallery} ${images.length === 1 ? muroStyles.gallerySingle : ""}`}>
+            {images.map((image) => <img key={image.id} src={mediaUrl(image.url)} alt="" loading="lazy" />)}
+          </div>
+        )}
+        {isHtml(body) ? (
+          <div className={`${muroStyles.body} ${muroStyles.richBody}`} dangerouslySetInnerHTML={{ __html: body }} />
+        ) : (
+          <div className={muroStyles.body}>{body}</div>
+        )}
+      </article>
+    </div>
+  );
+}
+
+/** URL temporal para mostrar un archivo aún no subido. */
+function useObjectUrl(file: File | null) {
+  const url = useMemo(() => (file ? URL.createObjectURL(file) : ""), [file]);
+  useEffect(() => () => { if (url) URL.revokeObjectURL(url); }, [url]);
+  return url;
+}
+
+function PhotoAdder({ label, disabled, onFiles, single = false }: { label: string; disabled: boolean; onFiles: (files: File[]) => void; single?: boolean }) {
   const inputRef = useRef<HTMLInputElement>(null);
   return (
     <div>
@@ -502,7 +637,7 @@ function PhotoAdder({ label, disabled, onFiles }: { label: string; disabled: boo
         ref={inputRef}
         className={styles.hiddenInput}
         type="file"
-        multiple
+        multiple={!single}
         accept="image/jpeg,image/png,image/webp"
         onChange={(event) => {
           const files = Array.from(event.target.files ?? []);

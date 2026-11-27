@@ -37,6 +37,7 @@ export interface MuroPostPublic {
   slug: string;
   title: string;
   author_name: string;
+  author_photo: string | null;
   body: string;
   category: MuroCategory | null;
   images: MuroImage[];
@@ -51,6 +52,7 @@ export interface MuroPostAdmin {
   title: string;
   author_name: string;
   author_email: string;
+  author_photo: string | null;
   body: string;
   category: MuroCategory | null;
   status: MuroStatus;

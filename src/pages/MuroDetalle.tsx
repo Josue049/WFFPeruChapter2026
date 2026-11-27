@@ -70,10 +70,13 @@ export default function MuroDetalle() {
                 <span className={styles.tag} style={{ background: post.category.color }}>{post.category.name}</span>
               )}
               <h1>{post.title}</h1>
-              <p className={styles.articleMeta}>
-                {t("muro.by", { name: post.author_name })}
-                {post.published_at && ` · ${new Date(post.published_at).toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric" })}`}
-              </p>
+              <div className={styles.authorRow}>
+                {post.author_photo && <img className={styles.authorPhoto} src={mediaUrl(post.author_photo)} alt="" />}
+                <p className={styles.articleMeta}>
+                  {t("muro.by", { name: post.author_name })}
+                  {post.published_at && ` · ${new Date(post.published_at).toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric" })}`}
+                </p>
+              </div>
               {post.images.length > 0 && (
                 <div className={`${styles.gallery} ${post.images.length === 1 ? styles.gallerySingle : ""}`}>
                   {post.images.map((image) => (

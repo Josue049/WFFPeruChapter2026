@@ -19,7 +19,7 @@ interface Created {
   manage_token: string;
 }
 
-type Errors = Partial<Record<"name" | "email" | "title" | "category" | "body" | "terms" | "images", string>>;
+type Errors = Partial<Record<"name" | "email" | "title" | "category" | "body" | "terms" | "images" | "photo", string>>;
 
 /** Formulario para compartir una reflexión (se muestra dentro del modal del Muro). */
 export function MuroShareForm({ onDone }: { onDone: () => void }) {
@@ -37,11 +37,22 @@ export function MuroShareForm({ onDone }: { onDone: () => void }) {
   const [errors, setErrors] = useState<Errors>({});
   const [serverError, setServerError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [photo, setPhoto] = useState<File | null>(null);
   const [dragging, setDragging] = useState(false);
   const [created, setCreated] = useState<Created | null>(null);
 
   const previews = useMemo(() => files.map((file) => URL.createObjectURL(file)), [files]);
   useEffect(() => () => previews.forEach((url) => URL.revokeObjectURL(url)), [previews]);
+
+  const photoPreview = useMemo(() => (photo ? URL.createObjectURL(photo) : ""), [photo]);
+  useEffect(() => () => { if (photoPreview) URL.revokeObjectURL(photoPreview); }, [photoPreview]);
+
+  const choosePhoto = (file: File | undefined) => {
+    if (!file) return;
+    const valid = IMAGE_TYPES.includes(file.type) && file.size <= MAX_IMAGE_BYTES;
+    if (valid) setPhoto(file);
+    setErrors((current) => ({ ...current, photo: valid ? undefined : t("muro.form.invalidImage") }));
+  };
 
   const loadToken = () =>
     apiRequest<{ token: string }>("/muro/form-token")
@@ -103,6 +114,7 @@ export function MuroShareForm({ onDone }: { onDone: () => void }) {
         }),
       );
       files.forEach((file) => data.append("images", file));
+      if (photo) data.append("author_photo", photo);
       setCreated(await apiRequest<Created>("/muro/submissions", { method: "POST", body: data }));
     } catch (error) {
       setServerError(error instanceof ApiError ? error.message : t("muro.error"));
@@ -121,6 +133,7 @@ export function MuroShareForm({ onDone }: { onDone: () => void }) {
     setBody("");
     setTerms(false);
     setFiles([]);
+    setPhoto(null);
     setErrors({});
     void loadToken();
   };
@@ -156,6 +169,27 @@ export function MuroShareForm({ onDone }: { onDone: () => void }) {
           <label htmlFor="mu-email">{t("muro.form.email")}</label>
           <input id="mu-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} maxLength={320} autoComplete="email" aria-invalid={Boolean(errors.email)} />
           {errors.email && <span className={styles.fieldError}>{errors.email}</span>}
+        </div>
+        <div className={`${styles.field} ${styles.fieldFull}`}>
+          <label htmlFor="mu-photo">{t("muro.form.photo")}</label>
+          <div className={styles.photoRow}>
+            {photoPreview && <img className={styles.photoPreview} src={photoPreview} alt="" />}
+            <div className={styles.upload}>
+              <input
+                id="mu-photo"
+                className={styles.uploadInput}
+                type="file"
+                accept={IMAGE_TYPES.join(",")}
+                onChange={(e) => { choosePhoto(e.target.files?.[0]); e.target.value = ""; }}
+              />
+              <label htmlFor="mu-photo" className={styles.uploadBox}>
+                <span className={styles.uploadButton}>{t(photo ? "muro.form.photoChange" : "muro.form.photoUpload")}</span>
+                <span className={styles.uploadHint}>{t("muro.form.photoHint")}</span>
+              </label>
+            </div>
+            {photo && <button type="button" className={styles.ghost} onClick={() => setPhoto(null)}>{t("muro.form.remove")}</button>}
+          </div>
+          {errors.photo && <span className={styles.fieldError}>{errors.photo}</span>}
         </div>
         <div className={`${styles.field} ${field("title")}`}>
           <label htmlFor="mu-title">{t("muro.form.titleField")}</label>

@@ -194,6 +194,14 @@ button.submit { border: 0; background: linear-gradient(90deg, #ff7a72, #ffb400);
 button.submit:hover:not(:disabled) { background: linear-gradient(90deg, #ff7a72, #ffb400); color: #fff; filter: brightness(.96); box-shadow: 0 10px 22px rgba(255, 122, 80, .42); }
 button.submit:disabled { box-shadow: none; }
 
+/* --- foto del autor --- */
+.photoRow { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.photoRow .upload { flex: 1; min-width: 220px; }
+.photoPreview { flex: none; width: 76px; height: 76px; border-radius: 50%; object-fit: cover; border: 1px solid #e6dfd2; }
+.authorRow { display: flex; align-items: center; gap: 12px; }
+.authorRow p { margin: 0; }
+.authorPhoto { flex: none; width: 52px; height: 52px; border-radius: 50%; object-fit: cover; }
+
 /* --- reflexiones con formato --- */
 .editorField { display: grid; gap: 6px; margin-bottom: 18px; min-width: 0; }
 .editorField > label { font-weight: 700; font-size: .86rem; }
