@@ -326,6 +326,18 @@ function PostsManager({
           <input id="muro-author" value={draft.author_name} onChange={(e) => setDraft({ ...draft, author_name: e.target.value })} maxLength={120} />
         </div>
       </div>
+      {!creating && selected && (
+        <div className={styles.field}>
+          <label htmlFor="muro-author-email">Correo del postulante</label>
+          <input
+            id="muro-author-email"
+            type="text"
+            readOnly
+            value={selected.author_email === TEAM_EMAIL ? "" : selected.author_email}
+            placeholder="Sin correo: publicación creada desde el panel"
+          />
+        </div>
+      )}
       <ImageField
         label="Foto del autor"
         value={draft.author_photo}
@@ -384,7 +396,7 @@ function PostsManager({
           <p>{isPublished ? "Reflexiones visibles en el Muro." : "Enviadas por la comunidad y borradores."}{total === null ? "" : ` · ${total}`}</p>
           {isPublished && <button className={styles.newButton} disabled={busy} onClick={startCreate}>+ Nueva publicación</button>}
         </div>
-        <input className={styles.search} placeholder="Buscar por título, autor o contenido…" value={search} onChange={(e) => setSearch(e.target.value)} />
+        <input className={styles.search} placeholder="Buscar por título, autor, correo o contenido…" value={search} onChange={(e) => setSearch(e.target.value)} />
         <div className={styles.field} style={{ padding: "0 16px 10px" }}>
           <select aria-label="Filtrar por etiqueta" value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
             <option value="">Todas las etiquetas</option>
@@ -410,6 +422,7 @@ function PostsManager({
             <button key={post.id} disabled={busy} className={`${styles.listItem} ${selected?.id === post.id ? styles.listItemActive : ""}`} onClick={() => select(post)}>
               <strong>{post.title}</strong>
               <span>{post.author_name}{post.category ? ` · ${post.category.name}` : ""}</span>
+              <span style={{ overflowWrap: "anywhere" }}>{post.author_email === TEAM_EMAIL ? "Sin correo (creada desde el panel)" : post.author_email}</span>
               <small>{isPublished ? `Publicada ${formatDate(post.published_at)}` : `Enviada ${formatDate(post.submitted_at)}`}</small>
             </button>
           ))}
@@ -466,7 +479,7 @@ function PostsManager({
             <div className={styles.editorHeader}>
               <div>
                 <h2>{isPublished ? "Editar publicación" : "Revisar postulación"}</h2>
-                <p>{STATUS_LABEL[selected.status]} · enviada {formatDate(selected.submitted_at)}{selected.author_email !== TEAM_EMAIL && ` · ${selected.author_email}`}</p>
+                <p>{STATUS_LABEL[selected.status]} · enviada {formatDate(selected.submitted_at)}</p>
                 {selected.status === "approved" && <p><a href={`/muro/${selected.slug}`} target="_blank" rel="noopener noreferrer">Ver en el Muro ↗</a></p>}
               </div>
               <div className={styles.actions}>
