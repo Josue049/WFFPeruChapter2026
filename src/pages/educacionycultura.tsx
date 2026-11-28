@@ -14,7 +14,7 @@ export const Inicio: FC = () => {
         variant="static"
         label={t("area.strategic")}
         title={t("nav.education").toUpperCase()}
-        subtitle="Ana Paula Guillen y Ronal Guevara"
+        subtitle="Ana Paula Guillen"
         backgroundImage="/img/FondoFAO4.webp"
         backgroundAlign="top"
       />
