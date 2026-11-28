@@ -36,7 +36,11 @@ const SUBMISSION_FILTERS: [MuroStatus, string][] = [
 
 type View = "published" | "submissions" | "tags";
 type ReviewAction = "approve" | "observe" | "reject" | "withdraw" | "reopen";
-type Draft = { title: string; author_name: string; author_photo: string; body: string; category_id: number };
+type Draft = { title: string; author_name: string; author_email: string; author_photo: string; body: string; category_id: number };
+
+const EMAIL_PATTERN = /^[^@\s]{1,64}@[^@\s]{1,255}\.[^@\s.]{2,}$/;
+/** Correo que se muestra y edita: el interno del panel equivale a "sin correo". */
+const shownEmail = (email: string) => (email === TEAM_EMAIL ? "" : email);
 
 const REVIEW_MESSAGE: Record<ReviewAction, string> = {
   approve: "Publicada en el Muro.",
@@ -54,6 +58,7 @@ const errorText = (error: unknown, fallback: string) => (error instanceof ApiErr
 const toDraft = (post: MuroPostAdmin): Draft => ({
   title: post.title,
   author_name: post.author_name,
+  author_email: shownEmail(post.author_email),
   author_photo: post.author_photo ?? "",
   body: toEditorBody(post.body),
   category_id: post.category?.id ?? 0,
@@ -123,7 +128,7 @@ function PostsManager({
   const [categories, setCategories] = useState<MuroCategory[]>([]);
   const [selected, setSelected] = useState<MuroPostAdmin | null>(initial);
   const [creating, setCreating] = useState(false);
-  const [draft, setDraft] = useState<Draft>(initial ? toDraft(initial) : { title: "", author_name: "", author_photo: "", body: "", category_id: 0 });
+  const [draft, setDraft] = useState<Draft>(initial ? toDraft(initial) : { title: "", author_name: "", author_email: "", author_photo: "", body: "", category_id: 0 });
   const [publishNow, setPublishNow] = useState(true);
   const [newPhotos, setNewPhotos] = useState<File[]>([]);
   const [notes, setNotes] = useState(initial?.reviewer_notes ?? "");
@@ -192,7 +197,7 @@ function PostsManager({
   const startCreate = () => {
     setSelected(null);
     setCreating(true);
-    setDraft({ title: "", author_name: "Equipo WFF Perú", author_photo: "", body: "", category_id: categories[0]?.id ?? 0 });
+    setDraft({ title: "", author_name: "Equipo WFF Perú", author_email: "", author_photo: "", body: "", category_id: categories[0]?.id ?? 0 });
     setPublishNow(true);
     setNewPhotos([]);
     notify("");
@@ -211,10 +216,21 @@ function PostsManager({
     }
   };
 
+  const emailChanged = selected !== null && draft.author_email.trim().toLowerCase() !== shownEmail(selected.author_email).toLowerCase();
+  const emailInvalid = emailChanged && draft.author_email.trim() !== "" && !EMAIL_PATTERN.test(draft.author_email.trim());
+
   const putDraft = (id: number) =>
     apiRequest<MuroPostAdmin>(
       `/admin/muro/posts/${id}`,
-      { method: "PUT", body: JSON.stringify({ ...draft, category_id: draft.category_id || undefined }) },
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          ...draft,
+          category_id: draft.category_id || undefined,
+          // Solo se envía si cambió, para no revalidar correos antiguos.
+          author_email: emailChanged ? draft.author_email.trim() : undefined,
+        }),
+      },
       auth,
     );
 
@@ -228,7 +244,7 @@ function PostsManager({
     run(async () => {
       let created = await apiRequest<MuroPostAdmin>(
         "/admin/muro/posts",
-        { method: "POST", body: JSON.stringify({ ...draft, category_id: draft.category_id || categories[0]?.id, publish: publishNow }) },
+        { method: "POST", body: JSON.stringify({ ...draft, author_email: undefined, category_id: draft.category_id || categories[0]?.id, publish: publishNow }) },
         auth,
       );
       let photoError = "";
@@ -259,6 +275,11 @@ function PostsManager({
 
   const review = (action: ReviewAction) => {
     if (!selected) return;
+    // Estas acciones no guardan el formulario: el aviso saldría al correo anterior.
+    if (action !== "approve" && emailChanged) {
+      notify("Primero pulsa «Guardar cambios» para aplicar el nuevo correo.", true);
+      return;
+    }
     if ((action === "observe" || action === "reject") && notes.trim().length < 5) {
       notify("Escribe un comentario de revisión para el autor (mínimo 5 caracteres).", true);
       return;
@@ -331,11 +352,17 @@ function PostsManager({
           <label htmlFor="muro-author-email">Correo del postulante</label>
           <input
             id="muro-author-email"
-            type="text"
-            readOnly
-            value={selected.author_email === TEAM_EMAIL ? "" : selected.author_email}
-            placeholder="Sin correo: publicación creada desde el panel"
+            type="email"
+            value={draft.author_email}
+            maxLength={320}
+            autoComplete="off"
+            aria-invalid={emailInvalid}
+            onChange={(e) => setDraft({ ...draft, author_email: e.target.value })}
+            placeholder="Sin correo"
           />
+          <small className={emailInvalid ? styles.error : undefined}>
+            {emailInvalid ? "Escribe un correo válido o deja el campo vacío." : "No se muestra al público. Puedes corregirlo o dejarlo vacío."}
+          </small>
         </div>
       )}
       <ImageField
@@ -485,8 +512,8 @@ function PostsManager({
               <div className={styles.actions}>
                 {currentUsername === "WFFAdmin" && <button className={styles.dangerButton} disabled={busy} onClick={remove}>Eliminar</button>}
                 {currentStatus === "approved" && <button className={styles.secondaryButton} disabled={busy} onClick={() => review("withdraw")}>Retirar del Muro</button>}
-                <button className={isPublished ? styles.primaryButton : styles.secondaryButton} disabled={busy || !isValidDraft(draft)} onClick={() => void saveEdits()}>Guardar cambios</button>
-                {currentStatus !== "approved" && <button className={styles.primaryButton} disabled={busy || !isValidDraft(draft)} onClick={() => review("approve")}>{busy ? "Procesando…" : "Aprobar y publicar"}</button>}
+                <button className={isPublished ? styles.primaryButton : styles.secondaryButton} disabled={busy || !isValidDraft(draft) || emailInvalid} onClick={() => void saveEdits()}>Guardar cambios</button>
+                {currentStatus !== "approved" && <button className={styles.primaryButton} disabled={busy || !isValidDraft(draft) || emailInvalid} onClick={() => review("approve")}>{busy ? "Procesando…" : "Aprobar y publicar"}</button>}
               </div>
             </div>
             <div className={styles.formGrid}>
