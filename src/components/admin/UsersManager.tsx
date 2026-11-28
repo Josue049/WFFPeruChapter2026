@@ -37,6 +37,7 @@ interface UserForm {
   manage_volunteers: boolean;
   manage_users: boolean;
   manage_muro: boolean;
+  manage_certificates: boolean;
 }
 
 
@@ -55,6 +56,7 @@ const emptyUser =
     manage_volunteers: true,
     manage_users: false,
     manage_muro: true,
+    manage_certificates: false,
   });
 
 
@@ -193,6 +195,9 @@ export function UsersManager({
 
       manage_muro:
         Boolean(item.manage_muro),
+
+      manage_certificates:
+        Boolean(item.manage_certificates),
     });
 
     setMessage("");
@@ -235,6 +240,7 @@ export function UsersManager({
           true,
 
         manage_muro: true,
+        manage_certificates: true,
       });
 
       return;
@@ -263,6 +269,7 @@ export function UsersManager({
           false,
 
         manage_muro: true,
+        manage_certificates: false,
       });
 
       return;
@@ -306,6 +313,9 @@ export function UsersManager({
 
               manage_muro:
                 form.manage_muro,
+
+              manage_certificates:
+                form.manage_certificates,
 
               ...(form.password
                 ? {
@@ -1084,6 +1094,14 @@ export function UsersManager({
               checked={form.manage_muro}
               onChange={(manage_muro) =>
                 setForm({ ...form, role: "custom", manage_muro })
+              }
+            />
+
+            <Check
+              label="Emitir y revocar certificados"
+              checked={form.manage_certificates}
+              onChange={(manage_certificates) =>
+                setForm({ ...form, role: "custom", manage_certificates })
               }
             />
 

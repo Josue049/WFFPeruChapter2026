@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { clearAuthToken, getAuthToken } from "../auth/session";
 import { ArticlesManager } from "../components/admin/ArticlesManager";
 import { AdminSidebarNav } from "../components/admin/AdminSidebarNav";
@@ -14,6 +14,9 @@ import { apiRequest } from "../services/api";
 import type { AdminSection, AdminUser } from "../types";
 import styles from "./AdminDashboard.module.css";
 
+const CertificatesManager = lazy(() => import("../components/admin/certificates/CertificatesManager"));
+const CERTIFICATES_PATH = "/admin/certificados";
+
 const sectionInfo: Record<AdminSection, { label: string; title: string; description: string }> = {
   articles: { label: "Voces", title: "Artículos y voces", description: "Publica y actualiza las columnas del capítulo." },
   muro: { label: "Muro", title: "Muro de reflexiones", description: "Gestiona las reflexiones publicadas, las postulaciones de la comunidad y las etiquetas." },
@@ -22,6 +25,7 @@ const sectionInfo: Record<AdminSection, { label: string; title: string; descript
   banners: { label: "Banner de inicio", title: "Banner de la pantalla principal", description: "Cambia las imágenes, textos y botones del carrusel de inicio." },
   sections: { label: "Secciones", title: "Secciones del sitio", description: "Activa o desactiva cada espacio público: Voces, Muro, Hitos y Voluntarios." },
   users: { label: "Accesos", title: "Usuarios y permisos", description: "Crea cuentas individuales y limita sus funciones." },
+  certificates: { label: "Certificados", title: "Certificados", description: "Emite, administra y verifica los certificados del capítulo." },
   audit: { label: "Actividad", title: "Registro de actividad", description: "Revisa quién cambió qué y cuándo dentro del centro de contenidos." },
 };
 
@@ -30,6 +34,7 @@ export default function Admin() {
   const navigate = useNavigate();
   const [user, setUser] = useState<AdminUser | null>(null);
   const [section, setSection] = useState<AdminSection>("articles");
+  const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [loadError, setLoadError] = useState("");
   const [pending, setPending] = useState<Partial<Record<AdminSection, number>>>({});
@@ -64,21 +69,31 @@ export default function Admin() {
     user.manage_muro && "muro",
     user.manage_milestones && "milestones",
     user.manage_volunteers && "volunteers",
+    user.manage_certificates && "certificates",
     canManageMedia && "banners",
     user.manage_users && "sections",
     user.manage_users && "users",
     user.manage_users && "audit",
   ].filter(Boolean) as AdminSection[] : [], [user, canManageMedia]);
 
-  const activeSection: AdminSection = sections.includes(section)
-    ? section
+  // Certificados tiene ruta propia; la URL manda sobre la sección elegida.
+  const requested: AdminSection = pathname.replace(/\/+$/, "") === CERTIFICATES_PATH
+    ? "certificates"
+    : section === "certificates" ? "articles" : section;
+  const activeSection: AdminSection = sections.includes(requested)
+    ? requested
     : (sections[0] ?? "articles");
 
   if (loadError) return <main className={styles.loading}>{loadError}</main>;
   if (!token || !user) return <main className={styles.loading}>Cargando panel…</main>;
 
   const logout = () => { clearAuthToken(); navigate("/loginadmin", { replace: true }); };
-  const choose = (next: AdminSection) => { setSection(next); setMenuOpen(false); };
+  const choose = (next: AdminSection) => {
+    setSection(next);
+    setMenuOpen(false);
+    const path = next === "certificates" ? CERTIFICATES_PATH : "/admin";
+    if (pathname !== path) navigate(path);
+  };
 
   return (
     <div className={styles.root}>
@@ -107,6 +122,11 @@ export default function Admin() {
             {activeSection === "banners" && <BannersManager token={token} />}
             {activeSection === "milestones" && <MilestonesManager token={token} />}
             {activeSection === "volunteers" && <VolunteersManager token={token} />}
+            {activeSection === "certificates" && (
+              <Suspense fallback={<p role="status">Cargando…</p>}>
+                <CertificatesManager token={token} />
+              </Suspense>
+            )}
             {activeSection === "sections" && <SectionsManager token={token} />}
             {activeSection === "users" && <UsersManager token={token} currentUserId={user.id} />}
             {activeSection === "audit" && <AuditLogsManager token={token} />}

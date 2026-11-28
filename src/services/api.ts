@@ -35,11 +35,7 @@ async function readErrorMessage(response: Response): Promise<string> {
   }
 }
 
-export async function apiRequest<T>(
-  path: string,
-  init: RequestInit = {},
-  options: RequestOptions = {},
-): Promise<T> {
+async function sendRequest(path: string, init: RequestInit, options: RequestOptions): Promise<Response> {
   const headers = new Headers(init.headers);
 
   if (init.body && !(init.body instanceof FormData) && !headers.has("Content-Type")) {
@@ -65,6 +61,24 @@ export async function apiRequest<T>(
     throw new ApiError(await readErrorMessage(response), response.status);
   }
 
+  return response;
+}
+
+/** Descarga un archivo (PDF, imagen, ZIP…) de la API. */
+export async function apiBlob(
+  path: string,
+  init: RequestInit = {},
+  options: RequestOptions = {},
+): Promise<Blob> {
+  return (await sendRequest(path, init, options)).blob();
+}
+
+export async function apiRequest<T>(
+  path: string,
+  init: RequestInit = {},
+  options: RequestOptions = {},
+): Promise<T> {
+  const response = await sendRequest(path, init, options);
   if (response.status === 204) return undefined as T;
   return (await response.json()) as T;
 }

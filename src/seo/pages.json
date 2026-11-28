@@ -77,7 +77,14 @@
       "description": "Historias de las y los voluntarios que hacen posible el Capítulo WFF Perú.",
       "nav": "Voluntarios Destacados",
       "priority": "0.8"
+    },
+    "/certificados": {
+      "title": "Validación de certificados | WFF Perú Chapter",
+      "description": "Comprueba con su código la autenticidad de los certificados emitidos por el Capítulo WFF Perú.",
+      "nav": "Certificados",
+      "priority": "0.5",
+      "hideFromMenu": true
     }
   },
-  "noindex": ["/loginadmin", "/admin", "/voces/enviar", "/muro/mi-reflexion"]
+  "noindex": ["/loginadmin", "/admin", "/voces/enviar", "/muro/mi-reflexion", "/certificados/validar"]
 }

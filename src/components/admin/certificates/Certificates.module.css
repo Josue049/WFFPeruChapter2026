@@ -1,0 +1,84 @@
+/* Complementa AdminForms.module.css con lo propio de certificados. */
+.root { display: grid; gap: 4px; min-width: 0; }
+
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
+.stats div { background: #fff; border: 1px solid #e8e0d5; border-radius: 18px; padding: 14px 18px; box-shadow: 0 16px 45px rgba(54, 43, 28, .05); }
+.stats span { display: block; color: #8f5f42; font-size: .75rem; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; }
+.stats strong { font-size: 1.9rem; color: #20261f; }
+
+.tabs { justify-self: start; flex-wrap: wrap; max-width: 100%; }
+.modes { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.modes button { border: 1px solid #d7d0c6; background: #fff; color: #4e554d; border-radius: 999px; padding: 8px 16px; font-weight: 700; cursor: pointer; }
+.modes button[aria-pressed="true"] { border-color: #ef7d22; background: #fff5ea; color: #a85a12; }
+
+.generator { display: grid; grid-template-columns: minmax(300px, 420px) minmax(0, 1fr); gap: 24px; align-items: start; }
+.form { display: grid; gap: 15px; align-content: start; min-width: 0; }
+.previewColumn { position: sticky; top: 24px; min-width: 0; }
+
+.paper { background: #fff; border: 1px solid #e8e0d5; border-radius: 12px; overflow: hidden; box-shadow: 0 16px 45px rgba(54, 43, 28, .1); aspect-ratio: 3 / 2; display: grid; place-items: center; align-self: start; width: 100%; }
+.paper img { display: block; width: 100%; height: auto; transition: opacity .2s; }
+.paper p { color: #72786f; padding: 16px; text-align: center; margin: 0; }
+.stale { opacity: .5; }
+
+.buttons { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; margin-top: 6px; }
+.buttons button:disabled, .buttons label:has(input:disabled), .pager button:disabled, .verifyForm button:disabled, .rowActions button:disabled { opacity: .5; cursor: not-allowed; }
+
+.hint { color: #72786f; font-size: .86rem; margin: 6px 0; }
+.error, .success, .warning { border-radius: 12px; padding: 10px 14px; margin: 8px 0; font-size: .9rem; overflow-wrap: anywhere; }
+.error { background: #fdecea; color: #a1281c; border: 1px solid #f5c2bc; }
+.success { background: #e8f5ec; color: #1d6b38; border: 1px solid #b8dfc5; }
+.warning { background: #fff5e1; color: #85540b; border: 1px solid #f1d49b; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+
+.badge { display: inline-block; border-radius: 999px; padding: 3px 10px; font-size: .75rem; font-weight: 800; white-space: nowrap; }
+.badgeValid { background: #e2f3e8; color: #1d6b38; }
+.badgeRevoked { background: #fbe4e1; color: #a1281c; }
+
+.filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 16px; align-items: end; }
+.filters label { display: grid; gap: 6px; }
+.table { min-width: 960px; }
+.code { font-family: ui-monospace, Consolas, monospace; font-size: .8rem !important; white-space: nowrap; }
+.rowActions { display: flex; flex-wrap: wrap; gap: 4px 10px; min-width: 170px; }
+.rowActions button { border: 0; background: transparent; padding: 0; color: #c9521f; font-weight: 800; font-size: .8rem; cursor: pointer; }
+.rowActions .dangerLink { color: #a1281c; text-decoration: underline; }
+.pager { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 16px; flex-wrap: wrap; font-size: .86rem; color: #72786f; }
+
+.backdrop { position: fixed; inset: 0; z-index: 2000; background: rgba(20, 24, 21, .55); display: flex; align-items: flex-start; justify-content: center; padding: clamp(10px, 4vh, 48px) 12px; overflow-y: auto; }
+.modal { width: min(640px, 100%); background: #fff; border-radius: 20px; padding: clamp(16px, 3vw, 28px); outline: none; box-shadow: 0 30px 90px rgba(0, 0, 0, .3); }
+.modalWide { width: min(1100px, 100%); }
+.modalHeader { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; margin-bottom: 16px; }
+.modalHeader h2 { margin: 0; font-size: 1.15rem; color: #20261f; overflow-wrap: anywhere; }
+
+.details { margin: 0 0 12px; display: grid; }
+.details div { display: grid; grid-template-columns: minmax(130px, 34%) minmax(0, 1fr); gap: 10px; padding: 8px 0; border-bottom: 1px solid #eee7de; }
+.details dt { color: #8f5f42; font-weight: 800; font-size: .8rem; }
+.details dd { margin: 0; font-size: .9rem; overflow-wrap: anywhere; }
+
+.verifyForm { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; margin-bottom: 8px; }
+.verifyForm > div { flex: 1 1 320px; }
+.verifyResult { display: grid; grid-template-columns: minmax(300px, 440px) minmax(0, 1fr); gap: 24px; align-items: start; margin-top: 12px; }
+
+.bulk { display: grid; gap: 18px; }
+.step { margin: 0; font-size: 1.1rem; color: #20261f; }
+.commonFields { border: 0; padding: 0; margin: 12px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; align-items: start; min-width: 0; }
+.fileButton { display: inline-flex; align-items: center; position: relative; margin: 0; }
+.fileButton input { position: absolute; inset: 0; opacity: 0; width: 100%; cursor: pointer; font-size: 0; }
+.fileButton:focus-within { outline: 3px solid rgba(239, 125, 34, .45); outline-offset: 2px; }
+.summaryLine { font-weight: 700; color: #4b4e49; }
+.cellInput { width: 100%; min-width: 220px; border: 1px solid #dcd5cb; border-radius: 10px; padding: 8px 10px; background: #fdfcf9; }
+.rowError { color: #a1281c; margin: 0 0 4px; font-size: .82rem; }
+.rowWarning { color: #85540b; margin: 0 0 4px; font-size: .82rem; }
+.progress { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 14px 0; font-size: .88rem; }
+.progress progress { flex: 1 1 240px; accent-color: #ef7d22; }
+
+@media (max-width: 1180px) {
+  .generator, .verifyResult { grid-template-columns: minmax(0, 1fr); }
+  .previewColumn { position: static; }
+}
+
+@media (max-width: 620px) {
+  .stats { gap: 8px; }
+  .stats div { padding: 10px; }
+  .stats span { font-size: .65rem; }
+  .tabs { border-radius: 18px !important; }
+  .details div { grid-template-columns: 1fr; gap: 2px; }
+}

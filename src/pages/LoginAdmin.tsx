@@ -22,8 +22,11 @@ export default function LoginAdmin() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  // Página que pidió iniciar sesión (p. ej. /admin/certificados).
+  const destination = (location.state as LocationState | null)?.from || "/admin";
+
   if (hasUsableAuthToken()) {
-    return <Navigate to="/admin" replace />;
+    return <Navigate to={destination} replace />;
   }
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -38,7 +41,6 @@ export default function LoginAdmin() {
       });
 
       setAuthToken(data.access_token);
-      const destination = (location.state as LocationState | null)?.from || "/admin";
       navigate(destination, { replace: true });
     } catch (requestError) {
       const message =

@@ -28,6 +28,7 @@ const Muro = lazy(() => import("./pages/Muro"));
 const MuroDetalle = lazy(() => import("./pages/MuroDetalle"));
 const MuroEnviar = lazy(() => import("./pages/MuroEnviar"));
 const MuroMiReflexion = lazy(() => import("./pages/MuroMiReflexion"));
+const Certificados = lazy(() => import("./pages/Certificados"));
 
 function PageFallback() {
   return <p className="page-status" role="status">Cargando…</p>;
@@ -66,6 +67,9 @@ function App() {
             <Route path="/voluntarios-destacados" element={<VoluntariosDestacados />} />
             <Route path="/voluntarios-destacados/:slug" element={<VoluntarioDetalle />} />
           </Route>
+          <Route path="/certificados" element={<Certificados />} />
+          <Route path="/certificados/validar" element={<Certificados />} />
+          <Route path="/certificados/validar/:codigo" element={<Certificados />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 
@@ -77,7 +81,15 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
+        <Route
+          path="/admin/certificados"
+          element={
+            <ProtectedRoute>
+              <Admin />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="/loginadmin" element={<LoginAdmin />} />
 
         <Route path="/Admin" element={<Navigate to="/admin" replace />} />

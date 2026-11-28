@@ -123,7 +123,8 @@ const header = readFileSync("src/components/Header.tsx", "utf8");
 ok(/<h1 className="display-4[^"]*"/.test(header) && !/<h3 className="display-4/.test(header), "cabecera de sección: el título de la página es el H1");
 ok(footerLinks.every((l) => pages.pages[l]), "footer: todos los destinos existen en pages.json");
 const navbar = readFileSync("src/components/Header/NavBar.tsx", "utf8") + readFileSync("src/components/Header/SubNav.tsx", "utf8");
-for (const path of Object.keys(pages.pages).filter((x) => x !== "/")) ok(navbar.includes(`"${path}"`), `menú principal enlaza ${path}`);
+// "hideFromMenu": páginas a las que se llega por enlace directo o código QR.
+for (const path of Object.keys(pages.pages).filter((x) => x !== "/" && !pages.pages[x].hideFromMenu)) ok(navbar.includes(`"${path}"`), `menú principal enlaza ${path}`);
 
 const robots = readFileSync("public/robots.txt", "utf8");
 ok(robots.includes(`Sitemap: ${ORIGIN}/sitemap.xml`), "robots.txt declara el sitemap");

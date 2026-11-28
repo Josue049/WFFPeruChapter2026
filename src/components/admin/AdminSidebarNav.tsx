@@ -11,6 +11,7 @@ interface Group {
 
 const GROUPS: Group[] = [
   { id: "content", label: "Contenido", items: ["articles", "muro", "milestones", "volunteers"] },
+  { id: "certificates", label: "Certificación", items: ["certificates"] },
   { id: "site", label: "Sitio web", items: ["banners", "sections"] },
   { id: "admin", label: "Administración", items: ["users", "audit"] },
 ];
@@ -49,6 +50,14 @@ const ICONS: Record<AdminSection, ReactNode> = {
     <Icon>
       <circle cx="12" cy="8" r="3.4" />
       <path d="M5 20a7 7 0 0 1 14 0" />
+    </Icon>
+  ),
+  certificates: (
+    <Icon>
+      <rect x="3" y="4" width="18" height="12" rx="2" />
+      <path d="M7 8h10M7 12h5" />
+      <circle cx="16" cy="16" r="2.6" />
+      <path d="m14.6 18.4-.8 3 2.2-1.2 2.2 1.2-.8-3" />
     </Icon>
   ),
   banners: (

@@ -11,6 +11,7 @@ const entityLabels: Record<string, string> = {
   volunteer_story: "Voluntarios",
   volunteer_highlight: "Portada voluntarios",
   admin_user: "Usuarios",
+  certificate: "Certificados",
 };
 
 type DiffSide = "before" | "after";
@@ -440,6 +441,9 @@ function actionLabel(value: string) {
       DELETE: "Eliminó",
       REVIEW: "Revisó",
       PUBLISH: "Publicó",
+      REVOKE: "Revocó",
+      IMPORT: "Importó",
+      DOWNLOAD: "Descargó",
     } as Record<string, string>
   )[value] ?? value;
 }

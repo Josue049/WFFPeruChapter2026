@@ -67,12 +67,13 @@ export interface AdminUser {
   manage_volunteers: boolean;
   manage_users: boolean;
   manage_muro?: boolean;
+  manage_certificates?: boolean;
   created_at: string;
   updated_at: string;
   last_login_at: string | null;
 }
 
-export type AdminSection = "articles" | "muro" | "milestones" | "volunteers" | "banners" | "sections" | "users" | "audit";
+export type AdminSection = "articles" | "muro" | "milestones" | "volunteers" | "banners" | "sections" | "users" | "audit" | "certificates";
 
 export interface HeroSlide {
   id: number;
